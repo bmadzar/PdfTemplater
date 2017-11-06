@@ -5,35 +5,33 @@ namespace PdfTemplater\Layout;
 
 interface Document
 {
-    public function setTitle(string $title);
+    public function setTitle(?string $title): void;
 
-    public function getTitle(): string;
+    public function getTitle(): ?string;
 
-    public function setAuthor(string $author);
+    public function setAuthor(?string $author): void;
 
-    public function getAuthor(): string;
+    public function getAuthor(): ?string;
 
-    public function setDescription(string $description);
+    public function setDescription(?string $description): void;
 
-    public function getDescription(): string;
+    public function getDescription(): ?string;
 
-    public function setCopyright(string $copyright);
+    public function setCopyright(?string $copyright): void;
 
-    public function getCopyright(): string;
+    public function getCopyright(): ?string;
 
-    public function setPages(array $pages);
+    public function setPages(array $pages): void;
 
     public function getPages() : array;
 
-    public function setPage(int $number, Page $page);
+    public function setPage(int $number, Page $page): void;
 
-    public function getPage(int $number): Page;
+    public function getPage(int $number): ?Page;
 
-    public function setFilename(string $filename);
+    public function removePage(int $number): bool;
+
+    public function setFilename(string $filename): void;
 
     public function getFilename(): string;
-
-    public function setUnits(string $units);
-
-    public function getUnits(): string;
 }
