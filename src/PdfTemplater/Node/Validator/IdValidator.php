@@ -1,6 +1,8 @@
 <?php
 
-namespace PdfTemplater\Node;
+namespace PdfTemplater\Node\Validator;
+
+use PdfTemplater\Node\Node;
 
 /**
  * Class IdValidator
