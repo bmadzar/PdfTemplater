@@ -1,0 +1,15 @@
+{
+  "name": "bmadzar/PdfTemplater",
+  "description": "A library for creating PDF documents from textual templates.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Boris Madzar",
+      "email": "boris.madzar@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "tecnickcom/tcpdf": "^6.2.13"
+  }
+}
