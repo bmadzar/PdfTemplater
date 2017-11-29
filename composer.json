@@ -11,5 +11,8 @@
   ],
   "require-dev": {
     "tecnickcom/tcpdf": "^6.2.13"
+  },
+  "require": {
+    "ramsey/uuid": "3.7.1"
   }
 }
