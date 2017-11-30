@@ -43,7 +43,13 @@ class XmlParser implements Parser
             throw new ParseLogicException('Document element has incorrect tag name!');
         }
 
-        $node = new BasicNode($element->tagName);
+        $node = new BasicNode(\strtolower($element->tagName));
+
+        /** @var \DOMAttr $attribute */
+        foreach ($element->attributes as $attribute) {
+            $node->setAttribute(\strtolower($attribute->name), $attribute->value);
+        }
+        unset($attribute);
 
         foreach ($element->getElementsByTagName('Page') as $pageElement) {
             $node->addChild($this->buildPage($pageElement));
@@ -65,7 +71,17 @@ class XmlParser implements Parser
             throw new ParseLogicException('Page element has incorrect tag name!');
         }
 
-        $node = new BasicNode($element->tagName);
+        $node = new BasicNode(\strtolower($element->tagName));
+
+        /** @var \DOMAttr $attribute */
+        foreach ($element->attributes as $attribute) {
+            if (\strtolower($attribute->name) === 'id') {
+                $node->setId($attribute->value);
+            } else {
+                $node->setAttribute(\strtolower($attribute->name), $attribute->value);
+            }
+        }
+        unset($attribute);
 
         /** @var \DOMNode $elementElement */
         foreach ($element->childNodes as $elementElement) {
@@ -87,7 +103,19 @@ class XmlParser implements Parser
      */
     private function buildElement(\DOMElement $element): Node
     {
-        $node = new BasicNode($element->tagName);
+        $node = new BasicNode(\strtolower($element->tagName));
+
+        /** @var \DOMAttr $attribute */
+        foreach ($element->attributes as $attribute) {
+            if (\strtolower($attribute->name) === 'id') {
+                $node->setId($attribute->value);
+            } else {
+                $node->setAttribute(\strtolower($attribute->name), $attribute->value);
+            }
+        }
+        unset($attribute);
+
+        $node->setAttribute('content', $element->textContent);
 
         return $node;
     }

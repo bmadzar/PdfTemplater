@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PdfTemplater\Parser;
 
 
+use PdfTemplater\Node\BasicNode;
 use PdfTemplater\Node\Node;
 
 /**
@@ -40,7 +41,24 @@ class JsonParser implements Parser
      */
     private function buildDocument(array $subtree): Node
     {
+        $node = new BasicNode('document');
 
+        foreach ($subtree['pages'] ?? [] as $id => $page) {
+            $child = $this->buildPage($page);
+            $child->setId($id);
+
+            $node->addChild($child);
+        }
+        unset($id, $page, $child);
+
+        foreach ($subtree as $key => $value) {
+            if ($key !== 'pages' && \is_scalar($value)) {
+                $node->setAttribute($key, (string)$value);
+            }
+        }
+        unset($key, $value);
+
+        return $node;
     }
 
     /**
@@ -51,7 +69,24 @@ class JsonParser implements Parser
      */
     private function buildPage(array $subtree): Node
     {
+        $node = new BasicNode('page');
 
+        foreach ($subtree['elements'] ?? [] as $id => $element) {
+            $child = $this->buildElement($element);
+            $child->setId($id);
+
+            $node->addChild($child);
+        }
+        unset($id, $element, $child);
+
+        foreach ($subtree as $key => $value) {
+            if ($key !== 'elements' && \is_scalar($value)) {
+                $node->setAttribute($key, (string)$value);
+            }
+        }
+        unset($key, $value);
+
+        return $node;
     }
 
     /**
@@ -62,6 +97,19 @@ class JsonParser implements Parser
      */
     private function buildElement(array $subtree): Node
     {
+        if (!isset($subtree['type'])) {
+            throw new ParseLogicException('No element type set!');
+        }
 
+        $node = new BasicNode($subtree['type']);
+
+        foreach ($subtree as $key => $value) {
+            if (\is_scalar($value)) {
+                $node->setAttribute($key, (string)$value);
+            }
+        }
+        unset($key, $value);
+
+        return $node;
     }
 }
