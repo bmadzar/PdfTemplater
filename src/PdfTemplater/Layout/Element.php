@@ -78,20 +78,6 @@ interface Element
     public function getHeight(): float;
 
     /**
-     * Sets the URL for the link.
-     *
-     * @param null|string $link
-     */
-    public function setLink(?string $link): void;
-
-    /**
-     * Gets the URL for the link.
-     *
-     * @return null|string
-     */
-    public function getLink(): ?string;
-
-    /**
      * Sets the unique identifier.
      *
      * @param string $id
