@@ -6,6 +6,7 @@ namespace PdfTemplater\Parser;
 
 use PdfTemplater\Node\BasicNode;
 use PdfTemplater\Node\Node;
+use PdfTemplater\Node\Validator\IdValidator;
 
 /**
  * Class XmlParser
@@ -28,7 +29,15 @@ class XmlParser implements Parser
         $xmlTree = new \DOMDocument();
         $xmlTree->loadXML($data, \LIBXML_COMPACT | \LIBXML_NONET);
 
-        return $this->buildDocument($xmlTree->documentElement);
+        $nodeTree = $this->buildDocument($xmlTree->documentElement);
+
+        $validator = new IdValidator();
+
+        if (!$validator->validate($nodeTree)) {
+            throw new ParseLogicException('Duplicate ID found in tree!');
+        }
+
+        return $nodeTree;
     }
 
     /**

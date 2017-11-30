@@ -6,6 +6,7 @@ namespace PdfTemplater\Parser;
 
 use PdfTemplater\Node\BasicNode;
 use PdfTemplater\Node\Node;
+use PdfTemplater\Node\Validator\IdValidator;
 
 /**
  * Class JsonParser
@@ -30,7 +31,15 @@ class JsonParser implements Parser
             throw new ParseSyntaxException('Could not parse JSON. [ ' . \json_last_error_msg() . ' ]', \json_last_error());
         }
 
-        return $this->buildDocument($jsonTree);
+        $nodeTree = $this->buildDocument($jsonTree);
+
+        $validator = new IdValidator();
+
+        if (!$validator->validate($nodeTree)) {
+            throw new ParseLogicException('Duplicate ID found in tree!');
+        }
+
+        return $nodeTree;
     }
 
     /**
