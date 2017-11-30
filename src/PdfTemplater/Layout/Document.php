@@ -13,60 +13,43 @@ namespace PdfTemplater\Layout;
 interface Document
 {
     /**
-     * Set the Document title.
+     * Sets the full set of metadata. The metadata collection is an associative array.
      *
-     * @param null|string $title
+     * @param string[] $metadata
      */
-    public function setTitle(?string $title): void;
+    public function setMetadata(array $metadata): void;
 
     /**
-     * Gets the Document title.
+     * Gets the full set of metadata. Can be empty.
      *
+     * @return string[]
+     */
+    public function getMetadata(): array;
+
+    /**
+     * Sets the metadata value at the given $key to the given $value.
+     *
+     * @param string $key
+     * @param string $value
+     */
+    public function setMetadataValue(string $key, string $value): void;
+
+    /**
+     * Gets the metadata value at the given $key. Can be empty.
+     *
+     * @param string $key
      * @return null|string
      */
-    public function getTitle(): ?string;
+    public function getMetadataValue(string $key): ?string;
 
     /**
-     * Sets the Document author.
+     * Checks if there exists a metadata value with the given key. Note that an existent but
+     * falsey value will still return TRUE.
      *
-     * @param null|string $author
+     * @param string $key
+     * @return bool
      */
-    public function setAuthor(?string $author): void;
-
-    /**
-     * Gets the Document author
-     *
-     * @return null|string
-     */
-    public function getAuthor(): ?string;
-
-    /**
-     * Sets the Document description.
-     *
-     * @param null|string $description
-     */
-    public function setDescription(?string $description): void;
-
-    /**
-     * Gets the Document description.
-     *
-     * @return null|string
-     */
-    public function getDescription(): ?string;
-
-    /**
-     * Sets the Document copyright.
-     *
-     * @param null|string $copyright
-     */
-    public function setCopyright(?string $copyright): void;
-
-    /**
-     * Gets the Document copyright.
-     *
-     * @return null|string
-     */
-    public function getCopyright(): ?string;
+    public function hasMetadataValue(string $key): bool;
 
     /**
      * Sets the full set of Pages. Pages should be indexed numerically.
