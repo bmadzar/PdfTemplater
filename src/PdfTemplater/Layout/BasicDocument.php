@@ -110,7 +110,7 @@ class BasicDocument implements Document
     {
         foreach ($pages as $number => $page) {
             if ($page instanceof Page && \is_numeric($number)) {
-                $this->setPage((int)$number, $page);
+                $this->addPage($page);
             } else {
                 throw new LayoutArgumentException('Invalid Page supplied!');
             }
@@ -129,14 +129,13 @@ class BasicDocument implements Document
     }
 
     /**
-     * Sets an individual Page at the provided index.
+     * Adds a page to the set of Pages.
      *
-     * @param int  $number
      * @param Page $page
      */
-    public function setPage(int $number, Page $page): void
+    public function addPage(Page $page): void
     {
-        $this->pages[$number] = $page;
+        $this->pages[$page->getNumber()] = $page;
     }
 
     /**

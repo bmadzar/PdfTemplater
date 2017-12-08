@@ -66,12 +66,11 @@ interface Document
     public function getPages(): array;
 
     /**
-     * Sets an individual Page at the provided index.
+     * Adds an individual Page to the current set of Pages.
      *
-     * @param int  $number
      * @param Page $page
      */
-    public function setPage(int $number, Page $page): void;
+    public function addPage(Page $page): void;
 
     /**
      * Gets the Page at the given index. Returns NULL if there is no such Page.

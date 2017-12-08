@@ -18,6 +18,14 @@ namespace PdfTemplater\Node;
 interface Node
 {
     /**
+     * Node constructor.
+     *
+     * @param string   $type
+     * @param string[] $attributes
+     */
+    public function __construct(string $type, array $attributes = []);
+
+    /**
      * Sets or replaces the set of child Nodes.
      *
      * @param Node[] $nodes The set of child Nodes.
@@ -105,4 +113,48 @@ interface Node
      * @return null|Node The Node, or NULL if nothing is found.
      */
     public function findById(string $id): ?Node;
+
+    /**
+     * Gets the type of node.
+     *
+     * @return string
+     */
+    public function getType(): string;
+
+    /**
+     * Sets the type of node.
+     *
+     * @param string $type
+     */
+    public function setType(string $type);
+
+    /**
+     * Gets the entire attribute set. The attribute set is an associative array of strings.
+     *
+     * @return string[]
+     */
+    public function getAttributes(): array;
+
+    /**
+     * Sets the entire attribute set.
+     *
+     * @param string[] $attributes
+     */
+    public function setAttributes(array $attributes);
+
+    /**
+     * Gets the value of the attribute identified by $key.
+     *
+     * @param string $key
+     * @return null|string
+     */
+    public function getAttribute(string $key): ?string;
+
+    /**
+     * Sets the value of the attribute identified by $key.
+     *
+     * @param string $key
+     * @param string $value
+     */
+    public function setAttribute(string $key, string $value);
 }
