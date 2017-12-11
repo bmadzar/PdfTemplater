@@ -1,10 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Layout;
+namespace PdfTemplater\Layout\Basic;
 
 
-class BasicElement implements Element
+use PdfTemplater\Layout\Element as ElementInterface;
+use PdfTemplater\Layout\LayoutArgumentException;
+
+/**
+ * Class Element
+ *
+ * A simple implementation of the common Element interface.
+ *
+ * @package PdfTemplater\Layout\Basic
+ */
+class Element implements ElementInterface
 {
     /**
      * @var string The element identifier.

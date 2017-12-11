@@ -1,9 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Builder;
+namespace PdfTemplater\Builder\Basic;
 
-
+/**
+ * Class Box
+ *
+ * The basic unit of a page layout is a Box. Used to resolve relative constraints.
+ *
+ * @package PdfTemplater\Builder\Basic
+ */
 class Box
 {
     /**

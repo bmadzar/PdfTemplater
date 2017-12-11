@@ -1,16 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Builder;
+namespace PdfTemplater\Builder\Basic;
 
 
-use PdfTemplater\Layout\BasicDocument;
-use PdfTemplater\Layout\BasicLayer;
-use PdfTemplater\Layout\BasicPage;
-use PdfTemplater\Layout\Document;
+use PdfTemplater\Builder\Builder as BuilderInterface;
+use PdfTemplater\Builder\BuildException;
+use PdfTemplater\Layout\Basic\Document;
+use PdfTemplater\Layout\Basic\Element;
+use PdfTemplater\Layout\Basic\ElementFactory;
+use PdfTemplater\Layout\Basic\Layer;
+use PdfTemplater\Layout\Basic\Page;
+use PdfTemplater\Layout\Document as DocumentInterface;
 use PdfTemplater\Node\Node;
 
-class BasicBuilder implements Builder
+/**
+ * Class Builder
+ *
+ * A basic implementation of the Builder interface.
+ *
+ * @package PdfTemplater\Builder\Basic
+ */
+class Builder implements BuilderInterface
 {
     private const PAGE_BOX_ID = "\0";
 
@@ -20,7 +31,7 @@ class BasicBuilder implements Builder
      * @param Node $rootNode The tree of Nodes obtained from the Parser.
      * @return Document The final, laid-out Document.
      */
-    public function build(Node $rootNode): Document
+    public function build(Node $rootNode): DocumentInterface
     {
         return $this->buildDocument($rootNode);
     }
@@ -29,15 +40,15 @@ class BasicBuilder implements Builder
      * Builds a Document from a Node tree.
      *
      * @param Node $rootNode
-     * @return BasicDocument
+     * @return Document
      */
-    protected function buildDocument(Node $rootNode): BasicDocument
+    protected function buildDocument(Node $rootNode): DocumentInterface
     {
         if ($rootNode->getType() !== 'document') {
             throw new BuildException('Root node must be a document!');
         }
 
-        $document = new BasicDocument();
+        $document = new Document();
 
         foreach (['author', 'title', 'keywords'] as $item) {
             $document->setMetadataValue($item, $rootNode->getAttribute($item));
@@ -124,9 +135,9 @@ class BasicBuilder implements Builder
      * Builds a page from a Node tree.
      *
      * @param Node $pageNode
-     * @return BasicPage
+     * @return Page
      */
-    protected function buildPage(Node $pageNode): BasicPage
+    protected function buildPage(Node $pageNode): Page
     {
         if (!$this->checkPageNumber($pageNode->getAttribute('number'))) {
             throw new BuildException('Page number must be an integer 0 or greater.');
@@ -140,7 +151,7 @@ class BasicBuilder implements Builder
             throw new BuildException('Page height must be a float 0 or greater.');
         }
 
-        $page = new BasicPage((int)$pageNode->getAttribute('number'));
+        $page = new Page((int)$pageNode->getAttribute('number'));
 
         $page->setWidth((float)$pageNode->getAttribute('width'));
         $page->setHeight((float)$pageNode->getAttribute('height'));
@@ -155,10 +166,10 @@ class BasicBuilder implements Builder
     /**
      * Creates, arranges and lays out the elements for a page.
      *
-     * @param Node[]    $elementNodes
-     * @param BasicPage $page
+     * @param Node[] $elementNodes
+     * @param Page   $page
      */
-    private function placeElements(array $elementNodes, BasicPage $page): void
+    private function placeElements(array $elementNodes, Page $page): void
     {
         $boxes = $this->createBoxes($elementNodes);
 
@@ -175,20 +186,9 @@ class BasicBuilder implements Builder
         $layers = $this->separateIntoLayers($elementNodes);
 
         foreach ($layers as $num => $layerElements) {
-            $layer = new BasicLayer($num);
+            $layer = $this->buildLayer($num, $layerElements);
 
-            foreach ($layerElements as $element) {
-                switch ($element->getType()) {
-                    case 'rectangle':
-                    case 'text':
-                    case 'image':
-                    case 'line':
-                    case 'oval':
-                    default:
-                        throw new BuildException('Invalid Element type encountered!');
-                }
-            }
-            unset($element);
+            $this->applyLayout($layer, $boxes);
         }
         unset($layer, $layerElements);
     }
@@ -351,6 +351,66 @@ class BasicBuilder implements Builder
                 }
             }
             unset($box);
+        }
+    }
+
+    /**
+     * Builds an Element from a Node.
+     *
+     * @param Node $elementNode
+     * @return Element
+     */
+    protected function buildElement(Node $elementNode): Element
+    {
+        $factory = new ElementFactory();
+
+        $element = $factory->createElement($elementNode->getType(), $elementNode->getId());
+
+        $factory->setExtendedAttributes($element, $elementNode->getAttributes());
+
+        return $element;
+    }
+
+    /**
+     * Builds a Layer from a set of Elements.
+     *
+     * @param int    $num
+     * @param Node[] $elementNodes
+     * @return Layer
+     */
+    protected function buildLayer(int $num, array $elementNodes): Layer
+    {
+        $layer = new Layer($num);
+
+        foreach ($elementNodes as $elementNode) {
+            $layer->addElement($this->buildElement($elementNode));
+        }
+        unset($elementNode);
+
+        return $layer;
+    }
+
+    /**
+     * Applies the dimensions of a set of Boxes to the elements in a Layer.
+     *
+     * @param Layer $layer
+     * @param Box[] $boxes
+     */
+    private function applyLayout(Layer $layer, array $boxes): void
+    {
+        foreach ($layer->getElements() as $element) {
+            if (isset($boxes[$element->getId()])) {
+                $box = $boxes[$element->getId()];
+
+                if (!$box->isResolved() || !$box->isValid()) {
+                    throw new BuildException('Attempted to apply an unresolved or invalid Box!');
+                }
+
+                $element->setLeft($box->getLeft());
+                $element->setTop($box->getTop());
+                $element->setHeight($box->getHeight());
+                $element->setWidth($box->getWidth());
+            }
         }
     }
 }

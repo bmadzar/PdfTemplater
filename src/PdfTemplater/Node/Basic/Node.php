@@ -1,21 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Node;
+namespace PdfTemplater\Node\Basic;
 
+use PdfTemplater\Node\Node as NodeInterface;
 use Ramsey\Uuid\Uuid;
 
 /**
- * Class BasicNode
+ * Class Node
  *
  * Standard implementation of the Node interface.
  *
- * @package PdfTemplater\Node
+ * @package PdfTemplater\Node\Basic
  */
-class BasicNode implements Node
+class Node implements NodeInterface
 {
     /**
-     * @var Node[]
+     * @var NodeInterface[]
      */
     private $children;
 
@@ -25,7 +26,7 @@ class BasicNode implements Node
     private $id;
 
     /**
-     * @var Node
+     * @var NodeInterface
      */
     private $parent;
 
@@ -40,7 +41,7 @@ class BasicNode implements Node
     private $attributes;
 
     /**
-     * BasicNode constructor.
+     * Node constructor.
      *
      * @param string   $type
      * @param string[] $attributes
@@ -57,7 +58,7 @@ class BasicNode implements Node
     /**
      * Sets or replaces the set of child Nodes.
      *
-     * @param Node[] $nodes The set of child Nodes.
+     * @param NodeInterface[] $nodes The set of child Nodes.
      */
     public function setChildren(array $nodes): void
     {
@@ -67,7 +68,7 @@ class BasicNode implements Node
     /**
      * Gets the set of child Nodes. The set may be empty.
      *
-     * @return Node[] The set of child Nodes.
+     * @return NodeInterface[] The set of child Nodes.
      */
     public function getChildren(): array
     {
@@ -88,9 +89,9 @@ class BasicNode implements Node
      * Adds a Node as a child of this Node. The Node should ensure that there is no
      * duplication of children.
      *
-     * @param Node $childNode The Node to add.
+     * @param NodeInterface $childNode The Node to add.
      */
-    public function addChild(Node $childNode): void
+    public function addChild(NodeInterface $childNode): void
     {
         $this->children[$childNode->getId()] = $childNode;
     }
@@ -99,9 +100,9 @@ class BasicNode implements Node
      * Removes a Node from the set of children. Nothing should happen if the child Node
      * is not actually in the set of this Node's children.
      *
-     * @param Node $childNode The Node to remove.
+     * @param NodeInterface $childNode The Node to remove.
      */
-    public function removeChild(Node $childNode): void
+    public function removeChild(NodeInterface $childNode): void
     {
         unset($this->children[$childNode->getId()]);
     }
@@ -110,10 +111,10 @@ class BasicNode implements Node
      * Checks if the Node is in the set of this Node's children. Only the immediate
      * children should be checked.
      *
-     * @param Node $childNode The Node to find.
+     * @param NodeInterface $childNode The Node to find.
      * @return bool True if $childNode is one of the immediate children of this Node.
      */
-    public function hasChild(Node $childNode): bool
+    public function hasChild(NodeInterface $childNode): bool
     {
         return isset($this->children[$childNode->getId()]);
     }
@@ -121,9 +122,9 @@ class BasicNode implements Node
     /**
      * Sets a reference to the parent Node. Can be NULL if this is the root of the tree.
      *
-     * @param null|Node $parent The parent Node.
+     * @param null|NodeInterface $parent The parent Node.
      */
-    public function setParent(?Node $parent): void
+    public function setParent(?NodeInterface $parent): void
     {
         $this->parent = $parent;
     }
@@ -131,9 +132,9 @@ class BasicNode implements Node
     /**
      * Gets the parent Node. Can be NULL if this is the root of the tree.
      *
-     * @return null|Node The parent Node.
+     * @return null|NodeInterface The parent Node.
      */
-    public function getParent(): ?Node
+    public function getParent(): ?NodeInterface
     {
         return $this->parent;
     }
@@ -172,9 +173,9 @@ class BasicNode implements Node
      * Finds a child Node by its unique identifier.
      *
      * @param string $id The identifier to search for.
-     * @return null|Node The Node, or NULL if nothing is found.
+     * @return null|NodeInterface The Node, or NULL if nothing is found.
      */
-    public function findById(string $id): ?Node
+    public function findById(string $id): ?NodeInterface
     {
         if (isset($this->children[$id])) {
             return $this->children[$id];

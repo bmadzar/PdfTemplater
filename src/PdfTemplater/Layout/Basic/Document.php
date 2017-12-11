@@ -1,19 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Layout;
+namespace PdfTemplater\Layout\Basic;
 
 
+use PdfTemplater\Layout\Document as DocumentInterface;
+use PdfTemplater\Layout\LayoutArgumentException;
+use PdfTemplater\Layout\Page;
 use Ramsey\Uuid\Uuid;
 
 /**
- * Class BasicDocument
+ * Class Document
  *
  * A basic implementation of the Document interface using PHP arrays.
  *
- * @package PdfTemplater\Layout
+ * @package PdfTemplater\Layout\Basic
  */
-class BasicDocument implements Document
+class Document implements DocumentInterface
 {
     /**
      * @var string[]
@@ -31,7 +34,7 @@ class BasicDocument implements Document
     private $filename;
 
     /**
-     * BasicDocument constructor.
+     * Document constructor.
      */
     public function __construct()
     {

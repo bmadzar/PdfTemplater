@@ -1,30 +1,32 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Parser;
+namespace PdfTemplater\Parser\Xml;
 
 
-use PdfTemplater\Node\BasicNode;
-use PdfTemplater\Node\Node;
+use PdfTemplater\Node\Basic\Node;
+use PdfTemplater\Node\Node as NodeInterface;
 use PdfTemplater\Node\Validator\IdValidator;
+use PdfTemplater\Parser\ParseLogicException;
+use PdfTemplater\Parser\Parser as ParserInterface;
 
 /**
- * Class XmlParser
+ * Class Parser
  *
  * Parses a compatible XML string into a Node tree.
  *
- * @package PdfTemplater\Parser
+ * @package PdfTemplater\Parser\Xml
  */
-class XmlParser implements Parser
+class Parser implements ParserInterface
 {
 
     /**
      * Parses the input data stream into a tree of Nodes.
      *
      * @param string $data The input data to parse.
-     * @return Node The Node tree obtained from parsing $data.
+     * @return NodeInterface The Node tree obtained from parsing $data.
      */
-    public function parse(string $data): Node
+    public function parse(string $data): NodeInterface
     {
         $xmlTree = new \DOMDocument();
         $xmlTree->loadXML($data, \LIBXML_COMPACT | \LIBXML_NONET);
@@ -44,15 +46,15 @@ class XmlParser implements Parser
      * Builds a Node tree for a document.
      *
      * @param \DOMElement $element
-     * @return Node
+     * @return NodeInterface
      */
-    private function buildDocument(\DOMElement $element): Node
+    private function buildDocument(\DOMElement $element): NodeInterface
     {
         if ($element->tagName !== 'Document') {
             throw new ParseLogicException('Document element has incorrect tag name!');
         }
 
-        $node = new BasicNode(\strtolower($element->tagName));
+        $node = new Node(\strtolower($element->tagName));
 
         /** @var \DOMAttr $attribute */
         foreach ($element->attributes as $attribute) {
@@ -72,15 +74,15 @@ class XmlParser implements Parser
      * Builds a Node tree for a page.
      *
      * @param \DOMElement $element
-     * @return Node
+     * @return NodeInterface
      */
-    private function buildPage(\DOMElement $element): Node
+    private function buildPage(\DOMElement $element): NodeInterface
     {
         if ($element->tagName !== 'Page') {
             throw new ParseLogicException('Page element has incorrect tag name!');
         }
 
-        $node = new BasicNode(\strtolower($element->tagName));
+        $node = new Node(\strtolower($element->tagName));
 
         /** @var \DOMAttr $attribute */
         foreach ($element->attributes as $attribute) {
@@ -108,11 +110,11 @@ class XmlParser implements Parser
      * Builds a Node for an element. Elements should not have children.
      *
      * @param \DOMElement $element
-     * @return Node
+     * @return NodeInterface
      */
-    private function buildElement(\DOMElement $element): Node
+    private function buildElement(\DOMElement $element): NodeInterface
     {
-        $node = new BasicNode(\strtolower($element->tagName));
+        $node = new Node(\strtolower($element->tagName));
 
         /** @var \DOMAttr $attribute */
         foreach ($element->attributes as $attribute) {

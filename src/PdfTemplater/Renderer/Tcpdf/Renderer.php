@@ -1,33 +1,37 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Renderer;
+namespace PdfTemplater\Renderer\Tcpdf;
 
 
 use PdfTemplater\Layout\Document;
 use PdfTemplater\Layout\Element;
 use PdfTemplater\Layout\Page;
+use PdfTemplater\Renderer\RenderEnvironmentException;
+use PdfTemplater\Renderer\Renderer as RendererInterface;
+use PdfTemplater\Renderer\RenderInputException;
+use PdfTemplater\Renderer\RenderProcessException;
 
 /**
- * Class TcpdfRenderer
+ * Class Renderer
  *
  * Renders a PDF using TCPDF. Requires TCPDF be included in the autoload path.
  *
- * @package PdfTemplater\Renderer
+ * @package PdfTemplater\Renderer\Tcpdf
  */
-class TcpdfRenderer implements Renderer
+class Renderer implements RendererInterface
 {
     private const CREATOR = 'PdfTemplater';
 
     /**
-     * TcpdfRenderer constructor.
+     * Renderer constructor.
      *
      * @throws RenderEnvironmentException Thrown if TCPDF is not found.
      */
     public function __construct()
     {
         if (!\class_exists(\TCPDF::class, true)) {
-            throw new RenderEnvironmentException('TCPDF not found, cannot use TcpdfRenderer.');
+            throw new RenderEnvironmentException('TCPDF not found, cannot use Tcpdf\Renderer.');
         }
     }
 
@@ -57,7 +61,7 @@ class TcpdfRenderer implements Renderer
     /**
      * Sets the TCPDF document properties. (e.g. compression, protection)
      *
-     * @param \TCPDF   $pdf
+     * @param \TCPDF $pdf
      */
     protected function setDocumentProperties(\TCPDF $pdf)
     {

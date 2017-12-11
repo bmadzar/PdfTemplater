@@ -1,10 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Layout;
+namespace PdfTemplater\Layout\Basic;
 
 
-class BasicLayer implements Layer
+use PdfTemplater\Layout\Element;
+use PdfTemplater\Layout\Layer as LayerInterface;
+use PdfTemplater\Layout\LayoutArgumentException;
+
+/**
+ * Class Layer
+ *
+ * A basic implementation of a Layer.
+ *
+ * @package PdfTemplater\Layout\Basic
+ */
+class Layer implements LayerInterface
 {
 
     /**

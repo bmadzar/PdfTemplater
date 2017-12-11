@@ -1,29 +1,32 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Parser;
+namespace PdfTemplater\Parser\Json;
 
 
-use PdfTemplater\Node\BasicNode;
-use PdfTemplater\Node\Node;
+use PdfTemplater\Node\Basic\Node;
+use PdfTemplater\Node\Node as NodeInterface;
 use PdfTemplater\Node\Validator\IdValidator;
+use PdfTemplater\Parser\ParseLogicException;
+use PdfTemplater\Parser\Parser as ParserInterface;
+use PdfTemplater\Parser\ParseSyntaxException;
 
 /**
- * Class JsonParser
+ * Class Parser
  *
  * Parses a compatible JSON string into a Node tree.
  *
- * @package PdfTemplater\Parser
+ * @package PdfTemplater\Parser\Json
  */
-class JsonParser implements Parser
+class Parser implements ParserInterface
 {
     /**
      * Parses the input data stream into a tree of Nodes.
      *
      * @param string $data The input data to parse.
-     * @return Node The Node tree obtained from parsing $data.
+     * @return NodeInterface The Node tree obtained from parsing $data.
      */
-    public function parse(string $data): Node
+    public function parse(string $data): NodeInterface
     {
         $jsonTree = \json_decode($data, true);
 
@@ -46,11 +49,11 @@ class JsonParser implements Parser
      * Builds a Node tree for a document.
      *
      * @param array $subtree
-     * @return Node
+     * @return NodeInterface
      */
-    private function buildDocument(array $subtree): Node
+    private function buildDocument(array $subtree): NodeInterface
     {
-        $node = new BasicNode('document');
+        $node = new Node('document');
 
         foreach ($subtree['pages'] ?? [] as $id => $page) {
             $child = $this->buildPage($page);
@@ -74,11 +77,11 @@ class JsonParser implements Parser
      * Builds a Node tree for a page.
      *
      * @param array $subtree
-     * @return Node
+     * @return NodeInterface
      */
-    private function buildPage(array $subtree): Node
+    private function buildPage(array $subtree): NodeInterface
     {
-        $node = new BasicNode('page');
+        $node = new Node('page');
 
         foreach ($subtree['elements'] ?? [] as $id => $element) {
             $child = $this->buildElement($element);
@@ -102,15 +105,15 @@ class JsonParser implements Parser
      * Builds a Node for an element. Elements should not have children.
      *
      * @param array $subtree
-     * @return Node
+     * @return NodeInterface
      */
-    private function buildElement(array $subtree): Node
+    private function buildElement(array $subtree): NodeInterface
     {
         if (!isset($subtree['type'])) {
             throw new ParseLogicException('No element type set!');
         }
 
-        $node = new BasicNode($subtree['type']);
+        $node = new Node($subtree['type']);
 
         foreach ($subtree as $key => $value) {
             if (\is_scalar($value)) {

@@ -1,10 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace PdfTemplater\Layout;
+namespace PdfTemplater\Layout\Basic;
 
 
-class BasicPage implements Page
+use PdfTemplater\Layout\Layer;
+use PdfTemplater\Layout\LayoutArgumentException;
+use PdfTemplater\Layout\Page as PageInterface;
+
+/**
+ * Class Page
+ *
+ * A basic implementation of a Page.
+ *
+ * @package PdfTemplater\Layout\Basic
+ */
+class Page implements PageInterface
 {
     /**
      * @var int
