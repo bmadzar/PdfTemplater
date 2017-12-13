@@ -3,7 +3,13 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Layout;
 
-
+/**
+ * Interface BookmarkElement
+ *
+ * This interface should be implemented by all Elements that are for creating PDF bookmarks.
+ *
+ * @package PdfTemplater\Layout
+ */
 interface BookmarkElement extends Element
 {
     /**

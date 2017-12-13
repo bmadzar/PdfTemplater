@@ -3,7 +3,14 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Layout;
 
-
+/**
+ * Interface EllipseElement
+ *
+ * An ellipse, the dimensions of which are represented by the height and width of the Element.
+ * Ellipses can have a border and fill.
+ *
+ * @package PdfTemplater\Layout
+ */
 interface EllipseElement extends Element
 {
     /**

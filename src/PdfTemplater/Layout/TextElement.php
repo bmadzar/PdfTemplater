@@ -3,7 +3,13 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Layout;
 
-
+/**
+ * Interface TextElement
+ *
+ * A rectangle containing text.
+ *
+ * @package PdfTemplater\Layout
+ */
 interface TextElement extends RectangleElement
 {
     public const WRAP_HARD = 2;
