@@ -16,14 +16,33 @@ interface TextElement extends RectangleElement
     public const WRAP_SOFT = 1;
     public const WRAP_NONE = 0;
 
+    public const WRAPS = [
+        self::WRAP_HARD,
+        self::WRAP_SOFT,
+        self::WRAP_NONE,
+    ];
+
     public const ALIGN_JUSTIFY = 3;
     public const ALIGN_RIGHT = 2;
     public const ALIGN_CENTER = 1;
     public const ALIGN_LEFT = 0;
 
+    public const ALIGNS = [
+        self::ALIGN_JUSTIFY,
+        self::ALIGN_RIGHT,
+        self::ALIGN_CENTER,
+        self::ALIGN_LEFT,
+    ];
+
     public const VERTICAL_ALIGN_BOTTOM = 2;
     public const VERTICAL_ALIGN_MIDDLE = 1;
     public const VERTICAL_ALIGN_TOP = 0;
+
+    public const VERTICAL_ALIGNS = [
+        self::VERTICAL_ALIGN_BOTTOM,
+        self::VERTICAL_ALIGN_MIDDLE,
+        self::VERTICAL_ALIGN_TOP,
+    ];
 
     /**
      * Sets the text.
