@@ -53,6 +53,28 @@ class RgbColor implements Color
     }
 
     /**
+     * Creates an RgbColor from a hex string.
+     *
+     * @param string $hex
+     * @return RgbColor
+     */
+    public static function createFromHex(string $hex): self
+    {
+        $hex = \ltrim('#', \trim($hex));
+
+        if ((\strlen($hex) !== 3 && \strlen($hex) !== 6) || !\preg_match('/^[0-9af]+$/i', $hex)) {
+            throw new LayoutArgumentException('Invalid hex value supplied!');
+        }
+
+        return new self(
+            (float)\base_convert(\substr($hex, 0, 2), 16, 10),
+            (float)\base_convert(\substr($hex, 2, 2), 16, 10),
+            (float)\base_convert(\substr($hex, 4, 2), 16, 10),
+            1.0
+        );
+    }
+
+    /**
      * Sets the red value -- between 0 and 1.
      *
      * @param float $red
