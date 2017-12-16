@@ -79,4 +79,14 @@ class LineElement extends Element implements LineElementInterface
 
         return $this->lineColor;
     }
+
+    /**
+     * Verifies the line has a thickness and color.
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return parent::isValid() && $this->lineColor && $this->lineWidth !== null;
+    }
 }

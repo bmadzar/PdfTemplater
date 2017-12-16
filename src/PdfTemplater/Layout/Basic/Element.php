@@ -165,4 +165,15 @@ class Element implements ElementInterface
     {
         return $this->id;
     }
+
+    /**
+     * Elements can be partially constructed. This method should return true if and only if
+     * all mandatory values have been set.
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return true; // The constructor initializes everything
+    }
 }

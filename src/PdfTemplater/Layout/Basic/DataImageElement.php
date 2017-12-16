@@ -79,4 +79,15 @@ class DataImageElement extends RectangleElement implements ImageElement
             \unlink($this->temp);
         }
     }
+
+    /**
+     * Elements can be partially constructed. This method should return true if and only if
+     * all mandatory values have been set.
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return parent::isValid() && $this->data;
+    }
 }

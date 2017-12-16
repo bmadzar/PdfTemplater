@@ -285,7 +285,7 @@ class Builder implements BuilderInterface
         $val = $elementNode->getAttribute($dimension);
 
         if ($this->checkRelativeDimension($val)) {
-            $box->{'set' . \ucfirst($dimension) . 'Percentage'}((float)trim($val, " \t\n\r\0\x0B%") / 100);
+            $box->{'set' . \ucfirst($dimension) . 'Percentage'}((float)\trim($val, " \t\n\r\0\x0B%") / 100);
 
             // A percentage dimension must be relative to something
             // If no rel attribute is provided, they are relative to the page
@@ -367,6 +367,10 @@ class Builder implements BuilderInterface
         $element = $factory->createElement($elementNode->getType(), $elementNode->getId());
 
         $factory->setExtendedAttributes($element, $elementNode->getAttributes());
+
+        if (!$element->isValid()) {
+            throw new BuildException('Element cannot be built completely!');
+        }
 
         return $element;
     }

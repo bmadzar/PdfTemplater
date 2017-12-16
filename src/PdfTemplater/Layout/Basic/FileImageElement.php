@@ -62,4 +62,15 @@ class FileImageElement extends RectangleElement implements ImageElement
 
         return $this->file;
     }
+
+    /**
+     * Elements can be partially constructed. This method should return true if and only if
+     * all mandatory values have been set.
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return parent::isValid() && $this->file;
+    }
 }

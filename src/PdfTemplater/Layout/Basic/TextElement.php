@@ -262,4 +262,23 @@ class TextElement extends RectangleElement implements TextElementInterface
 
         return $this->color;
     }
+
+    /**
+     * Elements can be partially constructed. This method should return true if and only if
+     * all mandatory values have been set.
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return parent::isValid() &&
+            $this->text &&
+            $this->fontSize &&
+            $this->font &&
+            $this->lineSize &&
+            $this->color &&
+            $this->wrapMode &&
+            $this->alignMode &&
+            $this->verticalAlignMode;
+    }
 }
