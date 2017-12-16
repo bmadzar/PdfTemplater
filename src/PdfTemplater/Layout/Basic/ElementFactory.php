@@ -240,7 +240,28 @@ class ElementFactory
         } elseif (\preg_match('/^\s*hsla\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[3] / 255);
         } else {
-            throw new LayoutArgumentException('Invalid color value supplied!');
+
+            switch (\trim(\strtolower($color))) {
+                case 'blue':
+                    return new RgbColor(0.0, 0.0, 1.0, 1.0);
+                case 'red':
+                    return new RgbColor(1.0, 0.0, 0.0, 1.0);
+                case 'green':
+                    return new RgbColor(0.0, 1.0, 0.0, 1.0);
+                case 'yellow':
+                    return new RgbColor(1.0, 1.0, 0.0, 1.0);
+                case 'black':
+                    return new RgbColor(0.0, 0.0, 0.0, 1.0);
+                case 'white':
+                    return new RgbColor(1.0, 1.0, 1.0, 1.0);
+                case 'grey':
+                case 'gray':
+                    return new RgbColor(0.5, 0.5, 0.5, 1.0);
+                case 'transparent':
+                    return new RgbColor(1.0, 1.0, 1.0, 0.0);
+                default:
+                    throw new LayoutArgumentException('Invalid color value supplied!');
+            }
         }
     }
 }
