@@ -4,9 +4,15 @@ declare(strict_types=1);
 namespace PdfTemplater\Renderer\Tcpdf;
 
 
+use PdfTemplater\Layout\Basic\LineElement;
+use PdfTemplater\Layout\BookmarkElement;
 use PdfTemplater\Layout\Document;
 use PdfTemplater\Layout\Element;
+use PdfTemplater\Layout\EllipseElement;
+use PdfTemplater\Layout\ImageElement;
 use PdfTemplater\Layout\Page;
+use PdfTemplater\Layout\RectangleElement;
+use PdfTemplater\Layout\TextElement;
 use PdfTemplater\Renderer\RenderEnvironmentException;
 use PdfTemplater\Renderer\Renderer as RendererInterface;
 use PdfTemplater\Renderer\RenderInputException;
@@ -78,7 +84,21 @@ class Renderer implements RendererInterface
      */
     protected function renderElement(\TCPDF $pdf, Element $element)
     {
+        if ($element instanceof TextElement) {
 
+        } elseif ($element instanceof ImageElement) {
+
+        } elseif ($element instanceof RectangleElement) {
+
+        } elseif ($element instanceof EllipseElement) {
+
+        } elseif ($element instanceof LineElement) {
+
+        } elseif ($element instanceof BookmarkElement) {
+
+        } else {
+            throw new RenderProcessException('Renderer does not know how to draw this Element type!');
+        }
     }
 
     /**
