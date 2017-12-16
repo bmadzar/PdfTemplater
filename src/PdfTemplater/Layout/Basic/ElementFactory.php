@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Layout\Basic;
 
+use PdfTemplater\Layout\Color;
 use PdfTemplater\Layout\LayoutArgumentException;
 
 /**
@@ -61,7 +62,7 @@ class ElementFactory
             }
 
             if (!isset($attributes['font'], $attributes['fontsize']) || !\is_numeric($attributes['fontsize'])) {
-                throw new LayoutArgumentException('Missing attributes!');
+                throw new LayoutArgumentException('Missing attribute!');
             } else {
                 $element->setFont($attributes['font']);
                 $element->setFontSize((float)$attributes['fontsize']);
@@ -107,30 +108,139 @@ class ElementFactory
                 $element->setLineSize($element->getFontSize());
             }
 
+            if (isset($attributes['color'])) {
+                $element->setColor($this->toColor($attributes['color']));
+            } else {
+                $element->setColor(null);
+            }
+
         }
 
         if ($element instanceof RectangleElement) {
+            if (isset($attributes['strokewidth'])) {
+                if (!\is_numeric($attributes['strokewidth'])) {
+                    throw new LayoutArgumentException('Invalid attribute value!');
+                }
 
+                $element->setStrokeWidth((float)$attributes['strokewidth']);
+            } else {
+                $element->setStrokeWidth(null);
+            }
+
+            if (isset($attributes['stroke'])) {
+                $element->setStroke($this->toColor($attributes['stroke']));
+            } else {
+                $element->setStroke(null);
+            }
+
+
+            if (isset($attributes['fill'])) {
+                $element->setFill($this->toColor($attributes['fill']));
+            } else {
+                $element->setFill(null);
+            }
         }
 
         if ($element instanceof LineElement) {
+            if (isset($attributes['linewidth'])) {
+                if (!\is_numeric($attributes['linewidth'])) {
+                    throw new LayoutArgumentException('Invalid attribute value!');
+                }
 
+                $element->setStrokeWidth((float)$attributes['linewidth']);
+            } else {
+                $element->setStrokeWidth(null);
+            }
+
+            if (isset($attributes['linecolor'])) {
+                $element->setFill($this->toColor($attributes['linecolor']));
+            } else {
+                $element->setFill(null);
+            }
         }
 
         if ($element instanceof DataImageElement) {
-
+            if (isset($attributes['data']) && $attributes['data']) {
+                $element->setData($attributes['data']);
+            } else {
+                throw new LayoutArgumentException('Missing attribute!');
+            }
         }
 
         if ($element instanceof FileImageElement) {
-
+            if (isset($attributes['file']) && $attributes['file']) {
+                $element->setFile($attributes['file']);
+            } else {
+                throw new LayoutArgumentException('Missing attribute!');
+            }
         }
 
         if ($element instanceof EllipseElement) {
+            if (isset($attributes['strokewidth'])) {
+                if (!\is_numeric($attributes['strokewidth'])) {
+                    throw new LayoutArgumentException('Invalid attribute value!');
+                }
 
+                $element->setStrokeWidth((float)$attributes['strokewidth']);
+            } else {
+                $element->setStrokeWidth(null);
+            }
+
+            if (isset($attributes['stroke'])) {
+                $element->setStroke($this->toColor($attributes['stroke']));
+            } else {
+                $element->setStroke(null);
+            }
+
+
+            if (isset($attributes['fill'])) {
+                $element->setFill($this->toColor($attributes['fill']));
+            } else {
+                $element->setFill(null);
+            }
         }
 
         if ($element instanceof BookmarkElement) {
+            if (isset($attributes['level'])) {
+                if (!\is_numeric($attributes['level'])) {
+                    throw new LayoutArgumentException('Invalid attribute value!');
+                }
 
+                $element->setLevel((int)$attributes['level']);
+            } else {
+                $element->setLevel(0);
+            }
+
+            if (isset($attributes['name']) && $attributes['name']) {
+                $element->setName($attributes['name']);
+            } else {
+                throw new LayoutArgumentException('Missing attribute!');
+            }
+        }
+    }
+
+    /**
+     * Parses one of the standard color formats into a Color of the appropriate type.
+     *
+     * @param string $color
+     * @return Color
+     */
+    private function toColor(string $color): Color
+    {
+        $matches = [];
+
+        if (\preg_match('/^\s*#?\s*([0-9a-f]{3}|[0-9a-f]{6})$/i', $color, $matches)) {
+            return RgbColor::createFromHex($matches[1]);
+        } elseif (\preg_match('/^\s*rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+            return new RgbColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255);
+        } elseif (\preg_match('/^\s*rgba\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+            return new RgbColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255);
+        } elseif (\preg_match('/^\s*hsl\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+            return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255);
+        } elseif (\preg_match('/^\s*hsla\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+            return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[3] / 255);
+        } else {
+            throw new LayoutArgumentException('Invalid color value supplied!');
         }
     }
 }
