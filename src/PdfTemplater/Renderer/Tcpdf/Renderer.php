@@ -85,17 +85,17 @@ class Renderer implements RendererInterface
     protected function renderElement(\TCPDF $pdf, Element $element)
     {
         if ($element instanceof TextElement) {
-
+            $this->renderTextElement($pdf, $element);
         } elseif ($element instanceof ImageElement) {
-
+            $this->renderImageElement($pdf, $element);
         } elseif ($element instanceof RectangleElement) {
-
+            $this->renderRectangleElement($pdf, $element);
         } elseif ($element instanceof EllipseElement) {
-
+            $this->renderEllipseElement($pdf, $element);
         } elseif ($element instanceof LineElement) {
-
+            $this->renderLineElement($pdf, $element);
         } elseif ($element instanceof BookmarkElement) {
-
+            $this->renderBookmarkElement($pdf, $element);
         } else {
             throw new RenderProcessException('Renderer does not know how to draw this Element type!');
         }
@@ -196,5 +196,278 @@ class Renderer implements RendererInterface
         $pdf = $this->renderCommon($document);
 
         $pdf->Output($document->getFilename() ?? '', 'I');
+    }
+
+    /**
+     * Renders a rectangle.
+     *
+     * @param \TCPDF           $pdf
+     * @param RectangleElement $element
+     */
+    private function renderRectangleElement(\TCPDF $pdf, RectangleElement $element)
+    {
+        $mode = '';
+        $line = null;
+
+        if ($element->getFill()) {
+            $mode .= 'F';
+        }
+
+        if ($element->getStroke() && $element->getStrokeWidth()) {
+            $mode .= 'D';
+
+            $line = [
+                'all' => [
+                    'color' => $element->getStroke()->getCmyk(),
+                    'width' => $element->getStrokeWidth(),
+                ],
+            ];
+        }
+
+        if (!$mode) {
+            // Empty rectangle, no point in drawing it
+            return;
+        }
+
+        $pdf->Rect(
+            $element->getLeft(),
+            $element->getTop(),
+            $element->getWidth(),
+            $element->getHeight(),
+            $mode,
+            $line ?: [],
+            $element->getFill() ? $element->getFill()->getCmyk() : []
+        );
+    }
+
+    /**
+     * Renders an image.
+     *
+     * @param \TCPDF       $pdf
+     * @param ImageElement $element
+     */
+    private function renderImageElement(\TCPDF $pdf, ImageElement $element)
+    {
+        $line = 0;
+
+        if ($element->getStroke() && $element->getStrokeWidth()) {
+            $line = [
+                'LTRB' => [
+                    'color' => $element->getStroke()->getCmyk(),
+                    'width' => $element->getStrokeWidth(),
+                ],
+            ];
+        }
+
+        if ($element->getFill()) {
+            $pdf->Rect(
+                $element->getLeft(),
+                $element->getTop(),
+                $element->getWidth(),
+                $element->getHeight(),
+                'F',
+                [],
+                $element->getFill()->getCmyk()
+            );
+        }
+
+        $pdf->Image(
+            $element->getImageFile(),
+            $element->getLeft(),
+            $element->getTop(),
+            $element->getWidth(),
+            $element->getHeight(),
+            '',
+            '',
+            '',
+            true,
+            300,
+            '',
+            false,
+            false,
+            $line,
+            false,
+            false,
+            false,
+            false,
+            []
+        );
+    }
+
+    /**
+     * Renders text.
+     * TCPDF cannot control the word wrapping mode, so that parameter has no effect.
+     *
+     * @param \TCPDF      $pdf
+     * @param TextElement $element
+     */
+    private function renderTextElement(\TCPDF $pdf, TextElement $element)
+    {
+        if (!$element->getText()) {
+            return; // No text, no point in drawing anything
+        }
+
+        $line = 0;
+
+        if ($element->getStroke() && $element->getStrokeWidth()) {
+            $line = [
+                'LTRB' => [
+                    'color' => $element->getStroke()->getCmyk(),
+                    'width' => $element->getStrokeWidth(),
+                ],
+            ];
+        }
+
+        if ($element->getFill()) {
+            $pdf->SetFillColorArray($element->getFill()->getCmyk());
+        }
+
+        if ($element->getWrapMode() === TextElement::WRAP_NONE) {
+            $pdf->Text(
+                $element->getLeft(),
+                $element->getTop(),
+                $element->getText(),
+                false,
+                false,
+                true,
+                $line,
+                0,
+                [
+                    TextElement::ALIGN_LEFT    => 'L',
+                    TextElement::ALIGN_CENTER  => 'C',
+                    TextElement::ALIGN_RIGHT   => 'R',
+                    TextElement::ALIGN_JUSTIFY => 'J',
+                ][$element->getAlignMode()],
+                $element->getFill() ? true : false,
+                '',
+                0,
+                true,
+                'T',
+                [
+                    TextElement::VERTICAL_ALIGN_TOP    => 'T',
+                    TextElement::VERTICAL_ALIGN_MIDDLE => 'M',
+                    TextElement::VERTICAL_ALIGN_BOTTOM => 'B',
+                ][$element->getVerticalAlignMode()],
+                false
+            );
+        } else {
+            $pdf->MultiCell(
+                $element->getWidth(),
+                $element->getHeight(),
+                $element->getText(),
+                $line,
+                [
+                    TextElement::ALIGN_LEFT    => 'L',
+                    TextElement::ALIGN_CENTER  => 'C',
+                    TextElement::ALIGN_RIGHT   => 'R',
+                    TextElement::ALIGN_JUSTIFY => 'J',
+                ][$element->getAlignMode()],
+                $element->getFill() ? true : false,
+                0,
+                $element->getLeft(),
+                $element->getTop(),
+                false,
+                0,
+                false,
+                false,
+                $element->getHeight(),
+                [
+                    TextElement::VERTICAL_ALIGN_TOP    => 'T',
+                    TextElement::VERTICAL_ALIGN_MIDDLE => 'M',
+                    TextElement::VERTICAL_ALIGN_BOTTOM => 'B',
+                ][$element->getVerticalAlignMode()],
+                false
+            );
+        }
+    }
+
+    /**
+     * Renders an ellipse.
+     *
+     * @param \TCPDF         $pdf
+     * @param EllipseElement $element
+     */
+    private function renderEllipseElement(\TCPDF $pdf, EllipseElement $element)
+    {
+        $mode = '';
+        $line = null;
+
+        if ($element->getFill()) {
+            $mode .= 'F';
+        }
+
+        if ($element->getStroke() && $element->getStrokeWidth()) {
+            $mode .= 'D';
+
+            $line = [
+                'all' => [
+                    'color' => $element->getStroke()->getCmyk(),
+                    'width' => $element->getStrokeWidth(),
+                ],
+            ];
+        }
+
+        if (!$mode) {
+            // Empty ellipse, no point in drawing it
+            return;
+        }
+
+        $pdf->Ellipse(
+            $element->getLeft() + ($element->getWidth() / 2),
+            $element->getTop() + ($element->getHeight() / 2),
+            $element->getWidth() / 2,
+            $element->getHeight() / 2,
+            0,
+            0,
+            360,
+            $mode,
+            $line ?: [],
+            $element->getFill() ? $element->getFill()->getCmyk() : [],
+            2
+        );
+    }
+
+    /**
+     * Renders a line.
+     *
+     * @param \TCPDF      $pdf
+     * @param LineElement $element
+     */
+    private function renderLineElement(\TCPDF $pdf, LineElement $element)
+    {
+        $line = [
+            'all' => [
+                'color' => $element->getLineColor()->getCmyk(),
+                'width' => $element->getLineWidth(),
+            ],
+        ];
+
+        $pdf->Line(
+            $element->getLeft(),
+            $element->getTop(),
+            $element->getLeft() + $element->getWidth(),
+            $element->getTop() + $element->getHeight(),
+            $line
+        );
+    }
+
+    /**
+     * Renders a bookmark.
+     *
+     * @param \TCPDF          $pdf
+     * @param BookmarkElement $element
+     */
+    private function renderBookmarkElement(\TCPDF $pdf, BookmarkElement $element)
+    {
+        $pdf->Bookmark(
+            $element->getName(),
+            $element->getLevel(),
+            $element->getTop(),
+            '',
+            '',
+            [0.0, 0.0, 0.0, 1.0],
+            $element->getLeft(),
+            ''
+        );
     }
 }

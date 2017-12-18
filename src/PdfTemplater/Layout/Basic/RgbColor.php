@@ -286,4 +286,68 @@ class RgbColor implements Color
     {
         return [$this->getHue(), $this->getSaturation(), $this->getLightness()];
     }
+
+    /**
+     * Gets the cyan component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getCyan(float $min = 0, float $max = 1): float
+    {
+        $ob = 1 - $this->getBlack();
+
+        return ((($ob - $this->red) / $ob) * $max) + $min;
+    }
+
+    /**
+     * Gets the magenta component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getMagenta(float $min = 0, float $max = 1): float
+    {
+        $ob = 1 - $this->getBlack();
+
+        return ((($ob - $this->green) / $ob) * $max) + $min;
+    }
+
+    /**
+     * Gets the yellow component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getYellow(float $min = 0, float $max = 1): float
+    {
+        $ob = 1 - $this->getBlack();
+
+        return ((($ob - $this->blue) / $ob) * $max) + $min;
+    }
+
+    /**
+     * Gets the black component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getBlack(float $min = 0, float $max = 1): float
+    {
+        return (\min(1 - $this->red, 1 - $this->blue, 1 - $this->green) * $max) + $min;
+    }
+
+    /**
+     * Gets the CMYK color as a four-element array.
+     *
+     * @return array
+     */
+    public function getCmyk(): array
+    {
+        return [$this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack()];
+    }
 }

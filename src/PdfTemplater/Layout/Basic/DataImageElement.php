@@ -27,6 +27,11 @@ class DataImageElement extends RectangleElement implements ImageElement
     private $temp;
 
     /**
+     * @var null|string
+     */
+    private $altText;
+
+    /**
      * Sets the base64 data.
      *
      * @param string $data
@@ -89,5 +94,25 @@ class DataImageElement extends RectangleElement implements ImageElement
     public function isValid(): bool
     {
         return parent::isValid() && $this->data;
+    }
+
+    /**
+     * Sets the alt text.
+     *
+     * @param null|string $text
+     */
+    public function setAltText(?string $text): void
+    {
+        $this->altText = $text;
+    }
+
+    /**
+     * Gets the alt text.
+     *
+     * @return null|string
+     */
+    public function getAltText(): ?string
+    {
+        return $this->altText;
     }
 }

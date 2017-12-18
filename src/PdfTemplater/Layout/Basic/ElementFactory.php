@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PdfTemplater\Layout\Basic;
 
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\ImageElement;
 use PdfTemplater\Layout\LayoutArgumentException;
 
 /**
@@ -159,6 +160,12 @@ class ElementFactory
             }
         }
 
+        if ($element instanceof ImageElement) {
+            if (isset($attributes['alt']) && $attributes['alt']) {
+                $element->setAltText($attributes['alt']);
+            }
+        }
+
         if ($element instanceof DataImageElement) {
             if (isset($attributes['data']) && $attributes['data']) {
                 $element->setData($attributes['data']);
@@ -238,7 +245,11 @@ class ElementFactory
         } elseif (\preg_match('/^\s*hsl\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255);
         } elseif (\preg_match('/^\s*hsla\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
-            return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[3] / 255);
+            return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255);
+        } elseif (\preg_match('/^\s*cmyk\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+            return new CmykColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255);
+        } elseif (\preg_match('/^\s*cmyka\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+            return new CmykColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255, (float)$matches[5] / 255);
         } else {
 
             switch (\trim(\strtolower($color))) {

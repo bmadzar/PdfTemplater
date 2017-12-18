@@ -22,6 +22,11 @@ class FileImageElement extends RectangleElement implements ImageElement
     private $file;
 
     /**
+     * @var null|string
+     */
+    private $altText;
+
+    /**
      * Sets the filename.
      *
      * @param string $file
@@ -72,5 +77,25 @@ class FileImageElement extends RectangleElement implements ImageElement
     public function isValid(): bool
     {
         return parent::isValid() && $this->file;
+    }
+
+    /**
+     * Sets the alt text.
+     *
+     * @param null|string $text
+     */
+    public function setAltText(?string $text): void
+    {
+        $this->altText = $text;
+    }
+
+    /**
+     * Gets the alt text.
+     *
+     * @return null|string
+     */
+    public function getAltText(): ?string
+    {
+        return $this->altText;
     }
 }

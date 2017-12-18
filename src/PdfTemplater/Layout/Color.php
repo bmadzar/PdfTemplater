@@ -76,6 +76,42 @@ interface Color
     public function getLightness(float $min = 0, float $max = 1): float;
 
     /**
+     * Gets the cyan component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getCyan(float $min = 0, float $max = 1): float;
+
+    /**
+     * Gets the magenta component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getMagenta(float $min = 0, float $max = 1): float;
+
+    /**
+     * Gets the yellow component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getYellow(float $min = 0, float $max = 1): float;
+
+    /**
+     * Gets the black component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getBlack(float $min = 0, float $max = 1): float;
+
+    /**
      * Gets the color as a hex string.
      *
      * @return string
@@ -102,4 +138,11 @@ interface Color
      * @return array
      */
     public function getHsl(): array;
+
+    /**
+     * Gets the CMYK color as a four-element array.
+     *
+     * @return array
+     */
+    public function getCmyk(): array;
 }

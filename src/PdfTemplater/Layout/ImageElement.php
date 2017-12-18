@@ -26,4 +26,18 @@ interface ImageElement extends RectangleElement
      * @return string
      */
     public function getImageFile(): string;
+
+    /**
+     * Sets the alt text.
+     *
+     * @param null|string $text
+     */
+    public function setAltText(?string $text): void;
+
+    /**
+     * Gets the alt text.
+     *
+     * @return null|string
+     */
+    public function getAltText(): ?string;
 }

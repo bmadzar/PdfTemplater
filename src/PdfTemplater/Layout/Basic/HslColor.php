@@ -263,4 +263,68 @@ class HslColor implements Color
     {
         return [$this->hue, $this->saturation, $this->lightness];
     }
+
+    /**
+     * Gets the cyan component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getCyan(float $min = 0, float $max = 1): float
+    {
+        $ob = 1 - $this->getBlack();
+
+        return ((($ob - $this->getRed()) / $ob) * $max) + $min;
+    }
+
+    /**
+     * Gets the magenta component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getMagenta(float $min = 0, float $max = 1): float
+    {
+        $ob = 1 - $this->getBlack();
+
+        return ((($ob - $this->getGreen()) / $ob) * $max) + $min;
+    }
+
+    /**
+     * Gets the yellow component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getYellow(float $min = 0, float $max = 1): float
+    {
+        $ob = 1 - $this->getBlack();
+
+        return ((($ob - $this->getBlue()) / $ob) * $max) + $min;
+    }
+
+    /**
+     * Gets the black component of CMYKA.
+     *
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    public function getBlack(float $min = 0, float $max = 1): float
+    {
+        return (\min(1 - $this->getRed(), 1 - $this->getBlue(), 1 - $this->getGreen()) * $max) + $min;
+    }
+
+    /**
+     * Gets the CMYK color as a four-element array.
+     *
+     * @return array
+     */
+    public function getCmyk(): array
+    {
+        return [$this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack()];
+    }
 }
