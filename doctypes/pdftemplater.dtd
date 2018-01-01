@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- PDF Templater XML DTD v1.0 -->
+
+<!ELEMENT Document (Page+)>
+<!ATTLIST Document author CDATA #IMPLIED>
+<!ATTLIST Document title CDATA #REQUIRED>
+<!ATTLIST Document keywords CDATA #IMPLIED>
+<!ATTLIST Document filename CDATA #IMPLIED>
+<!ATTLIST Document description CDATA #IMPLIED>
+<!ATTLIST Document id ID #IMPLIED>
+
+<!ELEMENT Page (Bookmark | Ellipse | Image | Line | Rectangle | Text)*>
+<!ATTLIST Page height CDATA #REQUIRED>
+<!ATTLIST Page width CDATA #REQUIRED>
+<!ATTLIST Page number CDATA #REQUIRED>
+<!ATTLIST Page id ID #IMPLIED>
+
+<!ELEMENT Bookmark (EMPTY)>
+<!-- Standard Element attributes -->
+<!ATTLIST Bookmark height CDATA #IMPLIED>
+<!ATTLIST Bookmark width CDATA #IMPLIED>
+<!ATTLIST Bookmark top CDATA #IMPLIED>
+<!ATTLIST Bookmark right CDATA #IMPLIED>
+<!ATTLIST Bookmark bottom CDATA #IMPLIED>
+<!ATTLIST Bookmark left CDATA #IMPLIED>
+<!ATTLIST Bookmark height-rel IDREF #IMPLIED>
+<!ATTLIST Bookmark width-rel IDREF #IMPLIED>
+<!ATTLIST Bookmark top-rel IDREF #IMPLIED>
+<!ATTLIST Bookmark right-rel IDREF #IMPLIED>
+<!ATTLIST Bookmark bottom-rel IDREF #IMPLIED>
+<!ATTLIST Bookmark left-rel IDREF #IMPLIED>
+<!ATTLIST Bookmark layer CDATA #IMPLIED>
+<!ATTLIST Bookmark id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST Bookmark name CDATA #REQUIRED>
+<!ATTLIST Bookmark level CDATA #IMPLIED "0">
+
+<!ELEMENT Ellipse (EMPTY)>
+<!-- Standard Element attributes -->
+<!ATTLIST Ellipse height CDATA #IMPLIED>
+<!ATTLIST Ellipse width CDATA #IMPLIED>
+<!ATTLIST Ellipse top CDATA #IMPLIED>
+<!ATTLIST Ellipse right CDATA #IMPLIED>
+<!ATTLIST Ellipse bottom CDATA #IMPLIED>
+<!ATTLIST Ellipse left CDATA #IMPLIED>
+<!ATTLIST Ellipse height-rel IDREF #IMPLIED>
+<!ATTLIST Ellipse width-rel IDREF #IMPLIED>
+<!ATTLIST Ellipse top-rel IDREF #IMPLIED>
+<!ATTLIST Ellipse right-rel IDREF #IMPLIED>
+<!ATTLIST Ellipse bottom-rel IDREF #IMPLIED>
+<!ATTLIST Ellipse left-rel IDREF #IMPLIED>
+<!ATTLIST Ellipse layer CDATA #IMPLIED>
+<!ATTLIST Ellipse id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST Ellipse stroke CDATA #IMPLIED>
+<!ATTLIST Ellipse stroke-width CDATA #IMPLIED>
+<!ATTLIST Ellipse fill CDATA #IMPLIED>
+
+<!ELEMENT Image (EMPTY)>
+<!-- Standard Element attributes -->
+<!ATTLIST Image height CDATA #IMPLIED>
+<!ATTLIST Image width CDATA #IMPLIED>
+<!ATTLIST Image top CDATA #IMPLIED>
+<!ATTLIST Image right CDATA #IMPLIED>
+<!ATTLIST Image bottom CDATA #IMPLIED>
+<!ATTLIST Image left CDATA #IMPLIED>
+<!ATTLIST Image height-rel IDREF #IMPLIED>
+<!ATTLIST Image width-rel IDREF #IMPLIED>
+<!ATTLIST Image top-rel IDREF #IMPLIED>
+<!ATTLIST Image right-rel IDREF #IMPLIED>
+<!ATTLIST Image bottom-rel IDREF #IMPLIED>
+<!ATTLIST Image left-rel IDREF #IMPLIED>
+<!ATTLIST Image layer CDATA #IMPLIED>
+<!ATTLIST Image id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST Image stroke CDATA #IMPLIED>
+<!ATTLIST Image stroke-width CDATA #IMPLIED>
+<!ATTLIST Image fill CDATA #IMPLIED>
+<!ATTLIST Image data CDATA #REQUIRED>
+<!ATTLIST Image alt CDATA #IMPLIED>
+
+<!ELEMENT ImageFile (EMPTY)>
+<!-- Standard Element attributes -->
+<!ATTLIST ImageFile height CDATA #IMPLIED>
+<!ATTLIST ImageFile width CDATA #IMPLIED>
+<!ATTLIST ImageFile top CDATA #IMPLIED>
+<!ATTLIST ImageFile right CDATA #IMPLIED>
+<!ATTLIST ImageFile bottom CDATA #IMPLIED>
+<!ATTLIST ImageFile left CDATA #IMPLIED>
+<!ATTLIST ImageFile height-rel IDREF #IMPLIED>
+<!ATTLIST ImageFile width-rel IDREF #IMPLIED>
+<!ATTLIST ImageFile top-rel IDREF #IMPLIED>
+<!ATTLIST ImageFile right-rel IDREF #IMPLIED>
+<!ATTLIST ImageFile bottom-rel IDREF #IMPLIED>
+<!ATTLIST ImageFile left-rel IDREF #IMPLIED>
+<!ATTLIST ImageFile layer CDATA #IMPLIED>
+<!ATTLIST ImageFile id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST ImageFile stroke CDATA #IMPLIED>
+<!ATTLIST ImageFile stroke-width CDATA #IMPLIED>
+<!ATTLIST ImageFile fill CDATA #IMPLIED>
+<!ATTLIST ImageFile file CDATA #REQUIRED>
+<!ATTLIST ImageFile alt CDATA #IMPLIED>
+
+<!ELEMENT Line (EMPTY)>
+<!-- Standard Element attributes -->
+<!ATTLIST Line height CDATA #IMPLIED>
+<!ATTLIST Line width CDATA #IMPLIED>
+<!ATTLIST Line top CDATA #IMPLIED>
+<!ATTLIST Line right CDATA #IMPLIED>
+<!ATTLIST Line bottom CDATA #IMPLIED>
+<!ATTLIST Line left CDATA #IMPLIED>
+<!ATTLIST Line height-rel IDREF #IMPLIED>
+<!ATTLIST Line width-rel IDREF #IMPLIED>
+<!ATTLIST Line top-rel IDREF #IMPLIED>
+<!ATTLIST Line right-rel IDREF #IMPLIED>
+<!ATTLIST Line bottom-rel IDREF #IMPLIED>
+<!ATTLIST Line left-rel IDREF #IMPLIED>
+<!ATTLIST Line layer CDATA #IMPLIED>
+<!ATTLIST Line id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST Line line-width CDATA #REQUIRED>
+<!ATTLIST Line line-color CDATA #REQUIRED>
+
+<!ELEMENT Rectangle (EMPTY)>
+<!-- Standard Element attributes -->
+<!ATTLIST Rectangle height CDATA #IMPLIED>
+<!ATTLIST Rectangle width CDATA #IMPLIED>
+<!ATTLIST Rectangle top CDATA #IMPLIED>
+<!ATTLIST Rectangle right CDATA #IMPLIED>
+<!ATTLIST Rectangle bottom CDATA #IMPLIED>
+<!ATTLIST Rectangle left CDATA #IMPLIED>
+<!ATTLIST Rectangle height-rel IDREF #IMPLIED>
+<!ATTLIST Rectangle width-rel IDREF #IMPLIED>
+<!ATTLIST Rectangle top-rel IDREF #IMPLIED>
+<!ATTLIST Rectangle right-rel IDREF #IMPLIED>
+<!ATTLIST Rectangle bottom-rel IDREF #IMPLIED>
+<!ATTLIST Rectangle left-rel IDREF #IMPLIED>
+<!ATTLIST Rectangle layer CDATA #IMPLIED>
+<!ATTLIST Rectangle id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST Rectangle stroke CDATA #IMPLIED>
+<!ATTLIST Rectangle stroke-width CDATA #IMPLIED>
+<!ATTLIST Rectangle fill CDATA #IMPLIED>
+
+<!ELEMENT Text (#PCDATA)>
+<!-- Standard Element attributes -->
+<!ATTLIST Text height CDATA #IMPLIED>
+<!ATTLIST Text width CDATA #IMPLIED>
+<!ATTLIST Text top CDATA #IMPLIED>
+<!ATTLIST Text right CDATA #IMPLIED>
+<!ATTLIST Text bottom CDATA #IMPLIED>
+<!ATTLIST Text left CDATA #IMPLIED>
+<!ATTLIST Text height-rel IDREF #IMPLIED>
+<!ATTLIST Text width-rel IDREF #IMPLIED>
+<!ATTLIST Text top-rel IDREF #IMPLIED>
+<!ATTLIST Text right-rel IDREF #IMPLIED>
+<!ATTLIST Text bottom-rel IDREF #IMPLIED>
+<!ATTLIST Text left-rel IDREF #IMPLIED>
+<!ATTLIST Text layer CDATA #IMPLIED>
+<!ATTLIST Text id ID #IMPLIED>
+<!-- Other attributes -->
+<!ATTLIST Text stroke CDATA #IMPLIED>
+<!ATTLIST Text stroke-width CDATA #IMPLIED>
+<!ATTLIST Text fill CDATA #IMPLIED>
+<!ATTLIST Text font CDATA #REQUIRED>
+<!ATTLIST Text font-size CDATA #REQUIRED>
+<!ATTLIST Text line-size CDATA #IMPLIED>
+<!ATTLIST Text wrap CDATA #IMPLIED>
+<!ATTLIST Text align CDATA #IMPLIED>
+<!ATTLIST Text vertical-align CDATA #IMPLIED>
+<!ATTLIST Text color CDATA #REQUIRED>
