@@ -1,0 +1,197 @@
+<schema xmlns='http://www.w3.org/2000/10/XMLSchema' targetNamespace='http://www.w3.org/namespace/' xmlns:t='http://www.w3.org/namespace/'>
+
+    <element name='Document'>
+        <complexType>
+            <sequence>
+                <element ref='t:Page' maxOccurs='unbounded'/>
+            </sequence>
+            <attribute name='author' type='string' use='optional'/>
+            <attribute name='title' type='string' use='required'/>
+            <attribute name='keywords' type='string' use='optional'/>
+            <attribute name='filename' type='string' use='optional'/>
+            <attribute name='description' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+        </complexType>
+    </element>
+
+    <element name='Page'>
+        <complexType>
+            <choice minOccurs='0' maxOccurs='unbounded'>
+                <element ref='t:Bookmark'/>
+                <element ref='t:Ellipse'/>
+                <element ref='t:Image'/>
+                <element ref='t:Line'/>
+                <element ref='t:Rectangle'/>
+                <element ref='t:Text'/>
+            </choice>
+            <attribute name='height' type='string' use='required'/>
+            <attribute name='width' type='string' use='required'/>
+            <attribute name='number' type='string' use='required'/>
+            <attribute name='id' type='ID' use='optional'/>
+        </complexType>
+    </element>
+
+    <element name='Bookmark'>
+        <complexType>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='name' type='string' use='required'/>
+            <attribute name='level' type='string' use='optional'/>
+            <attribute name='0' type='string' use='default' value=''/>
+        </complexType>
+    </element>
+
+    <element name='Ellipse'>
+        <complexType>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='stroke' type='string' use='optional'/>
+            <attribute name='stroke-width' type='string' use='optional'/>
+            <attribute name='fill' type='string' use='optional'/>
+        </complexType>
+    </element>
+
+    <element name='Image'>
+        <complexType>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='stroke' type='string' use='optional'/>
+            <attribute name='stroke-width' type='string' use='optional'/>
+            <attribute name='fill' type='string' use='optional'/>
+            <attribute name='data' type='string' use='required'/>
+            <attribute name='alt' type='string' use='optional'/>
+        </complexType>
+    </element>
+
+    <element name='ImageFile'>
+        <complexType>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='stroke' type='string' use='optional'/>
+            <attribute name='stroke-width' type='string' use='optional'/>
+            <attribute name='fill' type='string' use='optional'/>
+            <attribute name='file' type='string' use='required'/>
+            <attribute name='alt' type='string' use='optional'/>
+        </complexType>
+    </element>
+
+    <element name='Line'>
+        <complexType>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='line-width' type='string' use='required'/>
+            <attribute name='line-color' type='string' use='required'/>
+        </complexType>
+    </element>
+
+    <element name='Rectangle'>
+        <complexType>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='stroke' type='string' use='optional'/>
+            <attribute name='stroke-width' type='string' use='optional'/>
+            <attribute name='fill' type='string' use='optional'/>
+        </complexType>
+    </element>
+
+    <element name='Text'>
+        <complexType mixed='true'>
+            <attribute name='height' type='string' use='optional'/>
+            <attribute name='width' type='string' use='optional'/>
+            <attribute name='top' type='string' use='optional'/>
+            <attribute name='right' type='string' use='optional'/>
+            <attribute name='bottom' type='string' use='optional'/>
+            <attribute name='left' type='string' use='optional'/>
+            <attribute name='height-rel' type='IDREF' use='optional'/>
+            <attribute name='width-rel' type='IDREF' use='optional'/>
+            <attribute name='top-rel' type='IDREF' use='optional'/>
+            <attribute name='right-rel' type='IDREF' use='optional'/>
+            <attribute name='bottom-rel' type='IDREF' use='optional'/>
+            <attribute name='left-rel' type='IDREF' use='optional'/>
+            <attribute name='layer' type='string' use='optional'/>
+            <attribute name='id' type='ID' use='optional'/>
+            <attribute name='stroke' type='string' use='optional'/>
+            <attribute name='stroke-width' type='string' use='optional'/>
+            <attribute name='fill' type='string' use='optional'/>
+            <attribute name='font' type='string' use='required'/>
+            <attribute name='font-size' type='string' use='required'/>
+            <attribute name='line-size' type='string' use='optional'/>
+            <attribute name='wrap' type='string' use='optional'/>
+            <attribute name='align' type='string' use='optional'/>
+            <attribute name='vertical-align' type='string' use='optional'/>
+            <attribute name='color' type='string' use='required'/>
+        </complexType>
+    </element>
+</schema>
