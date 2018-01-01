@@ -16,7 +16,7 @@
 <!ATTLIST Page number CDATA #REQUIRED>
 <!ATTLIST Page id ID #IMPLIED>
 
-<!ELEMENT Bookmark (EMPTY)>
+<!ELEMENT Bookmark EMPTY>
 <!-- Standard Element attributes -->
 <!ATTLIST Bookmark height CDATA #IMPLIED>
 <!ATTLIST Bookmark width CDATA #IMPLIED>
@@ -36,7 +36,7 @@
 <!ATTLIST Bookmark name CDATA #REQUIRED>
 <!ATTLIST Bookmark level CDATA #IMPLIED "0">
 
-<!ELEMENT Ellipse (EMPTY)>
+<!ELEMENT Ellipse EMPTY>
 <!-- Standard Element attributes -->
 <!ATTLIST Ellipse height CDATA #IMPLIED>
 <!ATTLIST Ellipse width CDATA #IMPLIED>
@@ -57,7 +57,7 @@
 <!ATTLIST Ellipse stroke-width CDATA #IMPLIED>
 <!ATTLIST Ellipse fill CDATA #IMPLIED>
 
-<!ELEMENT Image (EMPTY)>
+<!ELEMENT Image EMPTY>
 <!-- Standard Element attributes -->
 <!ATTLIST Image height CDATA #IMPLIED>
 <!ATTLIST Image width CDATA #IMPLIED>
@@ -80,7 +80,7 @@
 <!ATTLIST Image data CDATA #REQUIRED>
 <!ATTLIST Image alt CDATA #IMPLIED>
 
-<!ELEMENT ImageFile (EMPTY)>
+<!ELEMENT ImageFile EMPTY>
 <!-- Standard Element attributes -->
 <!ATTLIST ImageFile height CDATA #IMPLIED>
 <!ATTLIST ImageFile width CDATA #IMPLIED>
@@ -103,7 +103,7 @@
 <!ATTLIST ImageFile file CDATA #REQUIRED>
 <!ATTLIST ImageFile alt CDATA #IMPLIED>
 
-<!ELEMENT Line (EMPTY)>
+<!ELEMENT Line EMPTY>
 <!-- Standard Element attributes -->
 <!ATTLIST Line height CDATA #IMPLIED>
 <!ATTLIST Line width CDATA #IMPLIED>
@@ -123,7 +123,7 @@
 <!ATTLIST Line line-width CDATA #REQUIRED>
 <!ATTLIST Line line-color CDATA #REQUIRED>
 
-<!ELEMENT Rectangle (EMPTY)>
+<!ELEMENT Rectangle EMPTY>
 <!-- Standard Element attributes -->
 <!ATTLIST Rectangle height CDATA #IMPLIED>
 <!ATTLIST Rectangle width CDATA #IMPLIED>
