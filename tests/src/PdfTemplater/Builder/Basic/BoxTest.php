@@ -316,43 +316,40 @@ class BoxTest extends TestCase
         $box1->resolve($box1);
     }
 
-    public function testResolution()
+    private function testResolution(string $dataFile)
     {
-        if (!\is_readable(self::RESOLUTION_CSV_PATH) || !\is_dir(self::RESOLUTION_CSV_PATH)) {
-            throw new Exception('Cannot read CSV data directory.');
+        if(!is_readable($dataFile) || !is_file($dataFile)) {
+            $this->markTestSkipped();
         }
 
-        foreach (\glob(self::RESOLUTION_CSV_PATH . '/*.csv') as $dataFile) {
-            $boxData = $this->loadBoxData($dataFile);
+        $boxData = $this->loadBoxData($dataFile);
 
-            for ($i = 0, $s = \count($boxData); $i < $s; ++$i) {
-                for ($j = ($i + 1); $j < $s; ++$j) {
-                    /** @var Box $box1 */
-                    $box1 = $boxData[$i]['box'];
-                    /** @var Box $box2 */
-                    $box2 = $boxData[$j]['box'];
+        for ($i = 0, $s = \count($boxData); $i < $s; ++$i) {
+            for ($j = ($i + 1); $j < $s; ++$j) {
+                /** @var Box $box1 */
+                $box1 = $boxData[$i]['box'];
+                /** @var Box $box2 */
+                $box2 = $boxData[$j]['box'];
 
-                    $box1->resolve($box2);
-                }
-                unset($j, $box1, $box2);
+                $box1->resolve($box2);
             }
-            unset($i, $s);
-
-            foreach ($boxData as $boxDatum) {
-                /** @var Box $box */
-                $box = $boxDatum['box'];
-
-                $this->assertTrue($box->isResolved());
-                $this->assertTrue($box->isValid());
-
-                foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
-                    $this->assertSame($boxDatum['finals'][$dim], $box->{'get' . $dim});
-                }
-                unset($dim);
-            }
-            unset($boxDatum, $box);
+            unset($j, $box1, $box2);
         }
-        unset($dataFile);
+        unset($i, $s);
+
+        foreach ($boxData as $boxDatum) {
+            /** @var Box $box */
+            $box = $boxDatum['box'];
+
+            $this->assertTrue($box->isResolved());
+            $this->assertTrue($box->isValid());
+
+            foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
+                $this->assertSame($boxDatum['finals'][$dim], $box->{'get' . $dim});
+            }
+            unset($dim);
+        }
+        unset($boxDatum, $box);
     }
 
     private function loadBoxData($dataFile)

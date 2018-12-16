@@ -43,7 +43,7 @@ class Node implements NodeInterface
     /**
      * Node constructor.
      *
-     * @param string   $type
+     * @param string $type
      * @param string[] $attributes
      */
     public function __construct(string $type, array $attributes = [])
@@ -62,7 +62,11 @@ class Node implements NodeInterface
      */
     public function setChildren(array $nodes): void
     {
-        $this->children = $nodes;
+        $newNodes = \array_diff($nodes, $this->children);
+        $oldNodes = \array_diff($this->children, $nodes);
+
+        \array_walk($oldNodes, [$this, 'removeChild']);
+        \array_walk($newNodes, [$this, 'addChild']);
     }
 
     /**
@@ -94,6 +98,10 @@ class Node implements NodeInterface
     public function addChild(NodeInterface $childNode): void
     {
         $this->children[$childNode->getId()] = $childNode;
+
+        if ($childNode->getParent() !== $this) {
+            $childNode->setParent($this);
+        }
     }
 
     /**
@@ -104,7 +112,13 @@ class Node implements NodeInterface
      */
     public function removeChild(NodeInterface $childNode): void
     {
-        unset($this->children[$childNode->getId()]);
+        if (isset($this->children[$childNode->getId()])) {
+            unset($this->children[$childNode->getId()]);
+
+            if ($childNode->getParent() === $this) {
+                $childNode->setParent(null);
+            }
+        }
     }
 
     /**
@@ -126,7 +140,20 @@ class Node implements NodeInterface
      */
     public function setParent(?NodeInterface $parent): void
     {
+        if ($this->parent === $parent) {
+            return;
+        }
+
+        $oldparent = $this->parent;
         $this->parent = $parent;
+
+        if ($parent && !$parent->hasChild($this)) {
+            $parent->addChild($this);
+        }
+
+        if ($oldparent && $oldparent->hasChild($this)) {
+            $oldparent->removeChild($this);
+        }
     }
 
     /**
@@ -170,13 +197,17 @@ class Node implements NodeInterface
     }
 
     /**
-     * Finds a child Node by its unique identifier.
+     * Finds a child Node (or self) by its unique identifier.
      *
      * @param string $id The identifier to search for.
      * @return null|NodeInterface The Node, or NULL if nothing is found.
      */
     public function findById(string $id): ?NodeInterface
     {
+        if ($this->id === $id) {
+            return $this;
+        }
+
         if (isset($this->children[$id])) {
             return $this->children[$id];
         }
