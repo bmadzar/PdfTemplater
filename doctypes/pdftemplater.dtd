@@ -2,7 +2,7 @@
 
         <!-- PDF Templater XML DTD v1.0 -->
 
-        <!ELEMENT Document (Page+)>
+        <!ELEMENT Document (Page | Font)*>
         <!ATTLIST Document
                 author CDATA #IMPLIED
                 title CDATA #REQUIRED
@@ -18,6 +18,12 @@
                 width CDATA #REQUIRED
                 number CDATA #REQUIRED
                 id ID #IMPLIED
+                >
+
+        <!ELEMENT Font EMPTY>
+        <!ATTLIST Font
+                file CDATA #REQUIRED
+                alias CDATA #REQUIRED
                 >
 
         <!ELEMENT Bookmark EMPTY>

@@ -101,4 +101,45 @@ interface Document
      * @return null|string
      */
     public function getFilename(): ?string;
+
+    /**
+     * Adds a custom font to the Document. If there is an existing font with the supplied
+     * alias, it should be replaced.
+     *
+     * @param string $file
+     * @param string $alias
+     */
+    public function addFont(string $file, string $alias): void;
+
+    /**
+     * Removes the custom font specified by the alias from the Document. Nothing should
+     * happen if there is no such font.
+     *
+     * @param string $alias
+     */
+    public function removeFont(string $alias): void;
+
+    /**
+     * Returns TRUE if a font with the given alias exists, FALSE otherwise.
+     *
+     * @param string $alias
+     * @return bool
+     */
+    public function hasFont(string $alias): bool;
+
+    /**
+     * Gets the font filename for the given font alias, if it is set. Returns NULL if
+     * no font with the given alias is set.
+     *
+     * @param string $alias
+     * @return string|null
+     */
+    public function getFont(string $alias): ?string;
+
+    /**
+     * Returns the entire set of fonts set on the Document, indexed by alias.
+     *
+     * @return string[]
+     */
+    public function getFonts(): array;
 }

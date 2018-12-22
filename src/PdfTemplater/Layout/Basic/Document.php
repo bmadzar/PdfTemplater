@@ -34,12 +34,18 @@ class Document implements DocumentInterface
     private $filename;
 
     /**
+     * @var string[]
+     */
+    private $fonts;
+
+    /**
      * Document constructor.
      */
     public function __construct()
     {
         $this->metadata = [];
         $this->pages = [];
+        $this->fonts = [];
         $this->filename = Uuid::uuid4()->toString();
     }
 
@@ -181,5 +187,69 @@ class Document implements DocumentInterface
     public function getFilename(): ?string
     {
         return $this->filename;
+    }
+
+    /**
+     * Adds a custom font to the Document. If there is an existing font with the supplied
+     * alias, it should be replaced.
+     *
+     * @param string $file
+     * @param string $alias
+     */
+    public function addFont(string $file, string $alias): void
+    {
+        if (!$alias || !\trim($file)) {
+            throw new LayoutArgumentException('Both font name and alias must be non-empty!');
+        }
+
+        $this->fonts[$alias] = $file;
+    }
+
+    /**
+     * Removes the custom font specified by the alias from the Document. Nothing should
+     * happen if there is no such font.
+     *
+     * @param string $alias
+     */
+    public function removeFont(string $alias): void
+    {
+        unset($this->fonts[$alias]);
+    }
+
+    /**
+     * Returns TRUE if a font with the given alias exists, FALSE otherwise.
+     *
+     * @param string $alias
+     * @return bool
+     */
+    public function hasFont(string $alias): bool
+    {
+        return isset($this->fonts[$alias]);
+    }
+
+    /**
+     * Gets the font filename for the given font alias, if it is set. Returns NULL if
+     * no font with the given alias is set.
+     *
+     * @param string $alias
+     * @return string|null
+     */
+    public function getFont(string $alias): ?string
+    {
+        if (isset($this->fonts[$alias])) {
+            return $this->fonts[$alias];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the entire set of fonts set on the Document, indexed by alias.
+     *
+     * @return string[]
+     */
+    public function getFonts(): array
+    {
+        return $this->fonts;
     }
 }
