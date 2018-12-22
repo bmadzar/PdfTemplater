@@ -3,11 +3,10 @@
 namespace PdfTemplater\Builder\Basic;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Runner\Exception;
 
 class BoxTest extends TestCase
 {
-    private const RESOLUTION_CSV_PATH = __DIR__ . '/../../../../data/resolution_tests';
+    private const DATA_FILE_PATH = __DIR__ . '/../../../../data/resolution_tests';
 
     public function testConstruct()
     {
@@ -318,7 +317,7 @@ class BoxTest extends TestCase
 
     private function testResolution(string $dataFile)
     {
-        if(!is_readable($dataFile) || !is_file($dataFile)) {
+        if (!\is_readable($dataFile) || !\is_file($dataFile)) {
             $this->markTestSkipped();
         }
 
@@ -355,14 +354,19 @@ class BoxTest extends TestCase
     private function loadBoxData($dataFile)
     {
         $fh = \fopen($dataFile, 'r');
-        $header = \fgetcsv($fh);
+
+        if ($fh === false) {
+            $this->markTestSkipped(\sprintf('Cannot read data file: [%s]', $dataFile));
+        }
+
+        $header = \fgetcsv($fh) ?: [];
 
         if (\array_diff(['finalLeft', 'finalRight', 'finalTop', 'finalBottom', 'finalHeight', 'finalWidth'], $header)) {
             \fclose($fh);
-            throw new Exception(\sprintf('Skipping data file [%s]; missing final fields.', $dataFile));
+            $this->markTestSkipped(\sprintf('Skipping data file [%s]; missing final fields.', $dataFile));
         } elseif (!\in_array('id', $header, true)) {
             \fclose($fh);
-            throw new Exception(\sprintf('Skipping data file [%s]; missing ID field.', $dataFile));
+            $this->markTestSkipped(\sprintf('Skipping data file [%s]; missing ID field.', $dataFile));
         }
 
         $boxData = [];
