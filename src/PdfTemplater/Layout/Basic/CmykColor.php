@@ -336,4 +336,34 @@ class CmykColor implements Color
     {
         return [$this->cyan, $this->magenta, $this->yellow, $this->black];
     }
+
+    /**
+     * Combines the supplied background Color with this color
+     * taking into account the alpha value.
+     *
+     * @param Color $background The background color.
+     * @return CmykColor The mixed color.
+     */
+    public function getMixed(Color $background): Color
+    {
+        $bc = $background->getCyan();
+        $bm = $background->getMagenta();
+        $by = $background->getYellow();
+        $bk = $background->getBlack();
+        $ba = $background->getAlpha();
+
+        $fc = $this->getCyan();
+        $fm = $this->getMagenta();
+        $fy = $this->getYellow();
+        $fk = $this->getBlack();
+        $fa = $this->getAlpha();
+
+        $nc = ((1 - $fa) * $bc) + ($fa * $fc);
+        $nm = ((1 - $fa) * $bm) + ($fa * $fm);
+        $ny = ((1 - $fa) * $by) + ($fa * $fy);
+        $nk = ((1 - $fa) * $bk) + ($fa * $fk);
+        $na = $ba + ((1 - $ba) * $fa);
+
+        return new self($nc, $nm, $ny, $nk, $na);
+    }
 }

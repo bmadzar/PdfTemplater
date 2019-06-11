@@ -327,4 +327,16 @@ class HslColor implements Color
     {
         return [$this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack()];
     }
+
+    /**
+     * Combines the supplied background Color with this color
+     * taking into account the alpha value.
+     *
+     * @param Color $background The background color.
+     * @return HslColor The mixed color.
+     */
+    public function getMixed(Color $background): Color
+    {
+        // TODO: Implement getMixed() method.
+    }
 }

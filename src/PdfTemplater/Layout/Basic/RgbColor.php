@@ -350,4 +350,31 @@ class RgbColor implements Color
     {
         return [$this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack()];
     }
+
+    /**
+     * Combines the supplied background Color with this color
+     * taking into account the alpha value.
+     *
+     * @param Color $background The background color.
+     * @return RgbColor The mixed color.
+     */
+    public function getMixed(Color $background): Color
+    {
+        $br = $background->getRed();
+        $bg = $background->getGreen();
+        $bb = $background->getBlue();
+        $ba = $background->getAlpha();
+
+        $fr = $this->getRed();
+        $fg = $this->getGreen();
+        $fb = $this->getBlue();
+        $fa = $this->getAlpha();
+
+        $nr = ((1 - $fa) * $br) + ($fa * $fr);
+        $ng = ((1 - $fa) * $bg) + ($fa * $fg);
+        $nb = ((1 - $fa) * $bb) + ($fa * $fb);
+        $na = $ba + ((1 - $ba) * $fa);
+
+        return new self($nr, $ng, $nb, $na);
+    }
 }
