@@ -29,7 +29,9 @@ class RgbColorTest extends TestCase
 
     public function testGetCmyk()
     {
+        $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
+        $this->assertSame([0.6667, 0.3333, 0.0, 0.70], $test->getCmyk());
     }
 
     public function testRgb()
@@ -67,7 +69,14 @@ class RgbColorTest extends TestCase
 
     public function testGetCyan()
     {
+        $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
+        $this->assertSame(0.6667, $test->getCyan());
+        $this->assertSame(170.0, $test->getCyan(0, 255));
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getCyan(255, 0);
     }
 
     public function testGetGreen()
@@ -163,12 +172,26 @@ class RgbColorTest extends TestCase
 
     public function testGetYellow()
     {
+        $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
+        $this->assertSame(0.0, $test->getYellow());
+        $this->assertSame(0.0, $test->getYellow(0, 255));
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getYellow(255, 0);
     }
 
     public function testGetBlack()
     {
+        $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
+        $this->assertSame(0.70, $test->getBlack());
+        $this->assertSame(178.5, $test->getBlack(0, 255));
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlack(255, 0);
     }
 
     public function testGetRed()
@@ -185,7 +208,14 @@ class RgbColorTest extends TestCase
 
     public function testGetMagenta()
     {
+        $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
+        $this->assertSame(0.3333, $test->getMagenta());
+        $this->assertSame(25.5, $test->getMagenta(0, 255));
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getAlpha(255, 0);
     }
 
     public function testGetAlpha()
