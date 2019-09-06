@@ -1,5 +1,5 @@
 {
-  "name": "bmadzar/PdfTemplater",
+  "name": "bmadzar/pdf-templater",
   "description": "A library for creating PDF documents from textual templates.",
   "minimum-stability": "stable",
   "license": "MIT",
@@ -11,10 +11,10 @@
   ],
   "require-dev": {
     "tecnickcom/tcpdf": "^6.2.13",
-    "phpunit/phpunit": "^7.2.6"
+    "phpunit/phpunit": "^8.3.4"
   },
   "require": {
-    "ramsey/uuid": "3.7.1",
+    "ramsey/uuid": "^3.8",
     "ext-json": "*",
     "ext-dom": "*",
     "ext-libxml": "*"
