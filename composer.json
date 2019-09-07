@@ -18,5 +18,10 @@
     "ext-json": "*",
     "ext-dom": "*",
     "ext-libxml": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "PdfTemplater\\": "src/PdfTemplater"
+    }
   }
 }
