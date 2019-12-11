@@ -139,7 +139,7 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getHexAsInt(), '5C503D');
+        $this->assertSame($test->getHexAsInt(), 0x5C503D);
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
@@ -166,12 +166,12 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame(0.0, $test->getAlpha());
+        $this->assertSame(1.0, $test->getAlpha());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
         $this->assertSame(0.4, $test->getAlpha());
-        $this->assertSame(40, $test->getAlpha(0, 100));
+        $this->assertSame(40.0, $test->getAlpha(0, 100));
     }
 
     public function testGetAlphaInvalid1()
@@ -223,12 +223,12 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame(0x3D / 0xFF, $test->getRed());
+        $this->assertSame(0x3D / 0xFF, $test->getBlue());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0x3D / 0xFF, $test->getRed());
-        $this->assertSame((0x3D * 100) / 0xFF, $test->getRed(0, 100));
+        $this->assertSame(0x3D / 0xFF, $test->getBlue());
+        $this->assertSame((0x3D * 100) / 0xFF, $test->getBlue(0, 100));
     }
 
     public function testGetHue()
@@ -302,12 +302,12 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame(0x50 / 0xFF, $test->getRed());
+        $this->assertSame(0x50 / 0xFF, $test->getGreen());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0x50 / 0xFF, $test->getRed());
-        $this->assertSame((0x50 * 100) / 0xFF, $test->getRed(0, 100));
+        $this->assertSame(0x50 / 0xFF, $test->getGreen());
+        $this->assertSame((0x50 * 100) / 0xFF, $test->getGreen(0, 100));
     }
 
     public function testSetSaturation()

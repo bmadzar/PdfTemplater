@@ -122,7 +122,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.1, $test->getMagenta());
+        $this->assertSame(0.2, $test->getMagenta());
 
         $test->setMagenta(0.75);
 
@@ -163,7 +163,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.1, $test->getBlack());
+        $this->assertSame(0.4, $test->getBlack());
 
         $test->setBlack(0.75);
 
@@ -312,7 +312,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.1, $test->getYellow());
+        $this->assertSame(0.3, $test->getYellow());
 
         $test->setYellow(0.75);
 
@@ -369,7 +369,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.1, $test->getAlpha());
+        $this->assertSame(1.0, $test->getAlpha());
 
         $test->setAlpha(0.75);
 
