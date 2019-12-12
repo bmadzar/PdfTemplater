@@ -71,7 +71,7 @@ class RgbColorTest extends TestCase
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0.6667, $test->getCyan());
+        $this->assertEqualsWithDelta(0.6667, $test->getCyan(), 0.00005);
         $this->assertSame(170.0, $test->getCyan(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
@@ -84,7 +84,7 @@ class RgbColorTest extends TestCase
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
         $this->assertSame(0.2, $test->getGreen());
-        $this->assertSame(51, $test->getGreen(0, 255));
+        $this->assertSame(51.0, $test->getGreen(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -210,7 +210,7 @@ class RgbColorTest extends TestCase
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0.3333, $test->getMagenta());
+        $this->assertEqualsWithDelta(0.3333, $test->getMagenta(), 0.00005);
         $this->assertSame(25.5, $test->getMagenta(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
@@ -223,7 +223,7 @@ class RgbColorTest extends TestCase
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
         $this->assertSame(0.4, $test->getAlpha());
-        $this->assertSame(102, $test->getAlpha(0, 255));
+        $this->assertSame(102.0, $test->getAlpha(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 
