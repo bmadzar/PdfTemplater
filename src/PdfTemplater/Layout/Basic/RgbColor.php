@@ -62,7 +62,7 @@ class RgbColor implements Color
     {
         $hex = \ltrim('#', \trim($hex));
 
-        if ((\strlen($hex) !== 3 && \strlen($hex) !== 6) || !\preg_match('/^[0-9a-f]+$/i', $hex)) {
+        if ((\strlen($hex) !== 3 && \strlen($hex) !== 6) || !\preg_match('/^[0-9A-Fa-f]+$/', $hex)) {
             throw new LayoutArgumentException('Invalid hex value supplied!');
         }
 

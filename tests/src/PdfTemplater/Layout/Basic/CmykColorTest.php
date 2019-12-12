@@ -276,7 +276,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.125, $test->getSaturation());
+        $this->assertEqualsWithDelta(0.125, $test->getSaturation(), 0.000005);
         $this->assertSame(31.875, $test->getSaturation(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
