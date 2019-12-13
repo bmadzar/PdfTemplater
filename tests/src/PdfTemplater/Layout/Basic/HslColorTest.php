@@ -139,11 +139,11 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getHexAsInt(), 0x5C503D);
+        $this->assertSame($test->getHex(), '5C503D');
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame($test->getHexAsInt(), '5C503D');
+        $this->assertSame($test->getHex(), '5C503D');
     }
 
     public function testGetHsl()
