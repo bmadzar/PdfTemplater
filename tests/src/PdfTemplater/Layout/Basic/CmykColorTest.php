@@ -140,6 +140,8 @@ class CmykColorTest extends TestCase
 
         $test->setMagenta(1.0);
         $test->setMagenta(0.0);
+
+        $this->assertTrue(true);
     }
 
     public function testSetMagentaNegative()
@@ -181,6 +183,8 @@ class CmykColorTest extends TestCase
 
         $test->setBlack(1.0);
         $test->setBlack(0.0);
+
+        $this->assertTrue(true);
     }
 
     public function testSetBlackNegative()
@@ -229,8 +233,8 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.41961, $test->getBlue());
-        $this->assertSame(107, $test->getBlue(0, 255));
+        $this->assertSame(0.42, $test->getBlue());
+        $this->assertSame(107.1, $test->getBlue(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -241,8 +245,8 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.54118, $test->getRed());
-        $this->assertSame(138, $test->getRed(0, 255));
+        $this->assertSame(0.54, $test->getRed());
+        $this->assertSame(137.7, $test->getRed(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -271,7 +275,7 @@ class CmykColorTest extends TestCase
 
         $hsl = $test->getHsl();
 
-        $this->assertSame([0.30, 0.125, 0.48], $test->getRgb());
+        $this->assertSame([0.30, 0.125, 0.48], $hsl);
     }
 
     public function testGetSaturation()
@@ -306,7 +310,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame([0.54118, 0.47843, 0.41961], $test->getRgb());
+        $this->assertSame([0.54, 0.48, 0.42], $test->getRgb());
     }
 
 
@@ -330,6 +334,8 @@ class CmykColorTest extends TestCase
 
         $test->setYellow(1.0);
         $test->setYellow(0.0);
+
+        $this->assertTrue(true);
     }
 
     public function testSetYellowNegative()
@@ -376,9 +382,6 @@ class CmykColorTest extends TestCase
         $test->setAlpha(0.75);
 
         $this->assertSame(0.75, $test->getAlpha());
-
-        $test->setAlpha(1.0);
-        $test->setAlpha(0.0);
     }
 
     public function testSetAlphaLimits()
@@ -387,6 +390,8 @@ class CmykColorTest extends TestCase
 
         $test->setAlpha(1.0);
         $test->setAlpha(0.0);
+
+        $this->assertTrue(true);
     }
 
     public function testSetAlphaNegative()
