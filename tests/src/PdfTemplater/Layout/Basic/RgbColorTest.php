@@ -48,7 +48,7 @@ class RgbColorTest extends TestCase
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0x1A344E, $test->getHexAsInt());
+        $this->assertSame(0x1A334D, $test->getHexAsInt());
     }
 
     public function testSetGreen()
@@ -93,7 +93,7 @@ class RgbColorTest extends TestCase
 
     public function testCreateFromHex()
     {
-        $test = RgbColor::createFromHex('1A344E');
+        $test = RgbColor::createFromHex('1A334D');
 
         $this->assertInstanceOf(RgbColor::class, $test);
         $this->assertSame([0.1, 0.2, 0.3], $test->getRgb());
@@ -118,7 +118,7 @@ class RgbColorTest extends TestCase
     {
         $this->expectException(LayoutArgumentException::class);
 
-        RgbColor::createFromHex('1A344EE');
+        RgbColor::createFromHex('1A334DE');
     }
 
     public function testGetBlue()
@@ -158,7 +158,7 @@ class RgbColorTest extends TestCase
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame('1A344E', $test->getHex());
+        $this->assertSame('1A334D', $test->getHex());
     }
 
     public function testSetAlpha()

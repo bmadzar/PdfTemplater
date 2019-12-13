@@ -22,11 +22,11 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getHexAsInt(), 0x5C503D);
+        $this->assertSame(0x5C503D, $test->getHexAsInt());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame($test->getHexAsInt(), 0x5C503D);
+        $this->assertSame(0x5C503D, $test->getHexAsInt());
     }
 
     public function testGetLightness()
@@ -139,11 +139,11 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getHex(), '5C503D');
+        $this->assertSame('5C503D', $test->getHex());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame($test->getHex(), '5C503D');
+        $this->assertSame('5C503D', $test->getHex());
     }
 
     public function testGetHsl()

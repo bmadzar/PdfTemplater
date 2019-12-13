@@ -131,7 +131,7 @@ class CmykColor implements Color
      */
     public function getRed(float $min = 0, float $max = 1): float
     {
-        return (($this->cyan - 1) * (1 - $this->black) * $max) + $min;
+        return ((1 - $this->cyan) * (1 - $this->black) * $max) + $min;
     }
 
     /**
@@ -143,7 +143,7 @@ class CmykColor implements Color
      */
     public function getGreen(float $min = 0, float $max = 1): float
     {
-        return (($this->magenta - 1) * (1 - $this->black) * $max) + $min;
+        return ((1 - $this->magenta) * (1 - $this->black) * $max) + $min;
     }
 
     /**
@@ -155,7 +155,7 @@ class CmykColor implements Color
      */
     public function getBlue(float $min = 0, float $max = 1): float
     {
-        return (($this->yellow - 1) * (1 - $this->black) * $max) + $min;
+        return ((1 - $this->yellow) * (1 - $this->black) * $max) + $min;
     }
 
     /**

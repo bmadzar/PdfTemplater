@@ -39,7 +39,7 @@ class CmykColorTest extends TestCase
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
         $this->assertEqualsWithDelta(0.48, $test->getLightness(), 0.000005);
-        $this->assertSame(122, $test->getLightness(0, 255));
+        $this->assertEqualsWithDelta(122.4, $test->getLightness(0, 255), 0.000005);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -51,7 +51,7 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertEqualsWithDelta(0.47843, $test->getGreen(), 0.000005);
+        $this->assertEqualsWithDelta(0.48, $test->getGreen(), 0.000005);
         $this->assertSame(122.4, $test->getGreen(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
@@ -98,6 +98,8 @@ class CmykColorTest extends TestCase
 
         $test->setCyan(1.0);
         $test->setCyan(0.0);
+
+        $this->assertTrue(true);
     }
 
     public function testSetCyanNegative()
