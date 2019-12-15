@@ -159,7 +159,14 @@ class HslColorTest extends TestCase
 
     public function testGetCyan()
     {
+        $test = new HslColor(0.1, 0.2, 0.3);
 
+        $this->assertSame(0.0, $test->getCyan());
+
+        $test = new HslColor(0.1, 0.2, 0.3, 0.4);
+
+        $this->assertSame(0.0, $test->getCyan());
+        $this->assertSame(0.0, $test->getCyan(0, 100));
     }
 
     public function testGetAlpha()
@@ -205,18 +212,25 @@ class HslColorTest extends TestCase
 
     public function testGetBlack()
     {
+        $test = new HslColor(0.1, 0.2, 0.3);
 
+        $this->assertSame(0.64, $test->getBlack());
+
+        $test = new HslColor(0.1, 0.2, 0.3, 0.4);
+
+        $this->assertSame(0.64, $test->getBlack());
+        $this->assertSame(64.0, $test->getBlack(0, 100));
     }
 
     public function testGetCmyk()
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getCmyk(), [0.0, 0.02, 0.34, 0.64]);
+        $this->assertSame($test->getCmyk(), [0.0, 0.13333, 0.33333, 0.64]);
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame($test->getCmyk(), [0.0, 0.02, 0.34, 0.64]);
+        $this->assertSame($test->getCmyk(), [0.0, 0.13333, 0.33333, 0.64]);
     }
 
     public function testGetBlue()
@@ -264,7 +278,14 @@ class HslColorTest extends TestCase
 
     public function testGetYellow()
     {
+        $test = new HslColor(0.1, 0.2, 0.3);
 
+        $this->assertEqualsWithDelta(0.3333, $test->getYellow(), 0.0001);
+
+        $test = new HslColor(0.1, 0.2, 0.3, 0.4);
+
+        $this->assertEqualsWithDelta(0.3333, $test->getYellow(), 0.0001);
+        $this->assertEqualsWithDelta(33.3333, $test->getYellow(0, 100), 0.0001);
     }
 
     public function testGetSaturation()
@@ -394,6 +415,13 @@ class HslColorTest extends TestCase
 
     public function testGetMagenta()
     {
+        $test = new HslColor(0.1, 0.2, 0.3);
 
+        $this->assertEqualsWithDelta(0.1333, $test->getMagenta(), 0.0001);
+
+        $test = new HslColor(0.1, 0.2, 0.3, 0.4);
+
+        $this->assertEqualsWithDelta(0.1333, $test->getMagenta(), 0.0001);
+        $this->assertEqualsWithDelta(13.3333, $test->getMagenta(0, 100), 0.0001);
     }
 }
