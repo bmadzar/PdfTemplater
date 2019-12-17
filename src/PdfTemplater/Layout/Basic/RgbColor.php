@@ -57,19 +57,24 @@ class RgbColor implements Color
      *
      * @param string $hex
      * @return RgbColor
+     * @throws LayoutArgumentException If $hex is not a valid hex string
      */
     public static function createFromHex(string $hex): self
     {
-        $hex = \ltrim('#', \trim($hex));
+        $hex = \ltrim(\trim($hex), '#');
 
         if ((\strlen($hex) !== 3 && \strlen($hex) !== 6) || !\preg_match('/^[0-9A-Fa-f]+$/', $hex)) {
             throw new LayoutArgumentException('Invalid hex value supplied!');
         }
 
+        if (\strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
         return new self(
-            (float)\base_convert(\substr($hex, 0, 2), 16, 10),
-            (float)\base_convert(\substr($hex, 2, 2), 16, 10),
-            (float)\base_convert(\substr($hex, 4, 2), 16, 10),
+            (float)\base_convert(\substr($hex, 0, 2), 16, 10) / 0xFF,
+            (float)\base_convert(\substr($hex, 2, 2), 16, 10) / 0xFF,
+            (float)\base_convert(\substr($hex, 4, 2), 16, 10) / 0xFF,
             1.0
         );
     }
@@ -78,6 +83,7 @@ class RgbColor implements Color
      * Sets the red value -- between 0 and 1.
      *
      * @param float $red
+     * @throws LayoutArgumentException If $red is out of range
      */
     public function setRed(float $red): void
     {
@@ -92,6 +98,7 @@ class RgbColor implements Color
      * Sets the green value -- between 0 and 1.
      *
      * @param float $green
+     * @throws LayoutArgumentException If $green is out of range
      */
     public function setGreen(float $green): void
     {
@@ -106,6 +113,7 @@ class RgbColor implements Color
      * Sets the blue value -- between 0 and 1.
      *
      * @param float $blue
+     * @throws LayoutArgumentException If $blue is out of range
      */
     public function setBlue(float $blue): void
     {
@@ -120,6 +128,7 @@ class RgbColor implements Color
      * Sets the alpha value -- between 0 and 1.
      *
      * @param float $alpha
+     * @throws LayoutArgumentException If $alpha is out of range
      */
     public function setAlpha(float $alpha): void
     {
@@ -136,9 +145,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getRed(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->red * $max) + $min;
     }
 
@@ -148,9 +162,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getGreen(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->green * $max) + $min;
     }
 
@@ -160,9 +179,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getBlue(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->blue * $max) + $min;
     }
 
@@ -172,9 +196,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getAlpha(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->alpha * $max) + $min;
     }
 
@@ -184,9 +213,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getHue(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $cmax = \max($this->red, $this->green, $this->blue);
         $cmin = \min($this->red, $this->green, $this->blue);
         $delta = $cmax - $cmin;
@@ -210,9 +244,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getSaturation(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $cmax = \max($this->red, $this->green, $this->blue);
         $cmin = \min($this->red, $this->green, $this->blue);
         $delta = $cmax - $cmin;
@@ -230,9 +269,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getLightness(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $cmax = \max($this->red, $this->green, $this->blue);
         $cmin = \min($this->red, $this->green, $this->blue);
 
@@ -293,9 +337,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getCyan(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $ob = 1 - $this->getBlack();
 
         return ((($ob - $this->red) / $ob) * $max) + $min;
@@ -307,9 +356,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getMagenta(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $ob = 1 - $this->getBlack();
 
         return ((($ob - $this->green) / $ob) * $max) + $min;
@@ -321,9 +375,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getYellow(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $ob = 1 - $this->getBlack();
 
         return ((($ob - $this->blue) / $ob) * $max) + $min;
@@ -335,9 +394,14 @@ class RgbColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getBlack(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return (\min(1 - $this->red, 1 - $this->blue, 1 - $this->green) * $max) + $min;
     }
 

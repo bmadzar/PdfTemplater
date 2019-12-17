@@ -56,6 +56,7 @@ class HslColor implements Color
      * Sets the lightness value -- between 0 and 1.
      *
      * @param float $lightness
+     * @throws LayoutArgumentException If $lightness is out of range
      */
     public function setLightness(float $lightness): void
     {
@@ -70,6 +71,7 @@ class HslColor implements Color
      * Sets the saturation value -- between 0 and 1.
      *
      * @param float $saturation
+     * @throws LayoutArgumentException If $saturation is out of range
      */
     public function setSaturation(float $saturation): void
     {
@@ -84,6 +86,7 @@ class HslColor implements Color
      * Sets the hue value -- between 0 and 1.
      *
      * @param float $hue
+     * @throws LayoutArgumentException If $hue is out of range
      */
     public function setHue(float $hue): void
     {
@@ -98,6 +101,7 @@ class HslColor implements Color
      * Sets the alpha value -- between 0 and 1.
      *
      * @param float $alpha
+     * @throws LayoutArgumentException If $alpha is out of range
      */
     public function setAlpha(float $alpha): void
     {
@@ -114,9 +118,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getRed(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $c = (1 - \abs((2 * $this->lightness) - 1)) * $this->saturation;
 
         if ($this->hue < (1 / 6) || $this->hue >= (5 / 6)) {
@@ -134,9 +143,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getGreen(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $c = (1 - \abs((2 * $this->lightness) - 1)) * $this->saturation;
 
         if ($this->hue >= (1 / 6) && $this->hue < (1 / 2)) {
@@ -154,9 +168,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getBlue(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $c = (1 - \abs((2 * $this->lightness) - 1)) * $this->saturation;
 
         if ($this->hue < (1 / 6) || $this->hue >= (5 / 6)) {
@@ -174,9 +193,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getAlpha(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->alpha * $max) + $min;
     }
 
@@ -186,9 +210,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getHue(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->hue * $max) + $min;
     }
 
@@ -198,9 +227,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getSaturation(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->saturation * $max) + $min;
     }
 
@@ -210,9 +244,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getLightness(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return ($this->lightness * $max) + $min;
     }
 
@@ -270,9 +309,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getCyan(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $ob = 1 - $this->getBlack();
 
         return ((($ob - $this->getRed()) / $ob) * $max) + $min;
@@ -284,9 +328,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getMagenta(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $ob = 1 - $this->getBlack();
 
         return ((($ob - $this->getGreen()) / $ob) * $max) + $min;
@@ -298,9 +347,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getYellow(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         $ob = 1 - $this->getBlack();
 
         return ((($ob - $this->getBlue()) / $ob) * $max) + $min;
@@ -312,9 +366,14 @@ class HslColor implements Color
      * @param float $min
      * @param float $max
      * @return float
+     * @throws LayoutArgumentException If $min >= $max
      */
     public function getBlack(float $min = 0, float $max = 1): float
     {
+        if ($min >= $max) {
+            throw new LayoutArgumentException('Min must be less than max.');
+        }
+
         return (\min(1 - $this->getRed(), 1 - $this->getBlue(), 1 - $this->getGreen()) * $max) + $min;
     }
 

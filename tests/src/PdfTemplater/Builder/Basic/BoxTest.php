@@ -308,11 +308,15 @@ class BoxTest extends TestCase
 
     public function testResolutionCycleCheckSingle()
     {
-        $box1 = new Box('test');
+        $box1 = new Box('test1');
+        $box2 = new Box('test2');
+
+        $box1->setWidthRelative('test2');
+        $box2->setWidthRelative('test1');
 
         $this->expectException(ConstraintException::class);
 
-        $box1->resolve($box1);
+        $box1->resolve($box2);
     }
 
     private function testResolution(string $dataFile)

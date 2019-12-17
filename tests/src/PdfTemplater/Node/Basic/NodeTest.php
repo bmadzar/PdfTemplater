@@ -206,7 +206,7 @@ class NodeTest extends TestCase
         $this->assertSame('value1', $node1->getAttribute('attribute1'));
         $this->assertSame('value2', $node1->getAttribute('attribute2'));
 
-        $node1->setAttributes(['attribute1', 'value3']);
+        $node1->setAttributes(['attribute1' => 'value3']);
 
         $this->assertSame('value3', $node1->getAttribute('attribute1'));
         $this->assertSame('value2', $node1->getAttribute('attribute2'));

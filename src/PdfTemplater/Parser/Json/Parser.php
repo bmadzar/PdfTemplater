@@ -57,7 +57,7 @@ class Parser implements ParserInterface
 
         foreach ($subtree['pages'] ?? [] as $id => $page) {
             $child = $this->buildPage($page);
-            $child->setId($id);
+            $child->setId((string)$id);
 
             $node->addChild($child);
         }
@@ -85,7 +85,7 @@ class Parser implements ParserInterface
 
         foreach ($subtree['elements'] ?? [] as $id => $element) {
             $child = $this->buildElement($element);
-            $child->setId($id);
+            $child->setId((string)$id);
 
             $node->addChild($child);
         }
