@@ -96,7 +96,9 @@ class RgbColorTest extends TestCase
         $test = RgbColor::createFromHex('1A334D');
 
         $this->assertInstanceOf(RgbColor::class, $test);
-        $this->assertSame([0.1, 0.2, 0.3], $test->getRgb());
+        $this->assertEqualsWithDelta(0.1, $test->getRed(), 0.01);
+        $this->assertEqualsWithDelta(0.2, $test->getGreen(), 0.01);
+        $this->assertEqualsWithDelta(0.3, $test->getBlue(), 0.01);
 
     }
 
@@ -211,7 +213,7 @@ class RgbColorTest extends TestCase
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
         $this->assertEqualsWithDelta(0.3333, $test->getMagenta(), 0.00005);
-        $this->assertSame(25.5, $test->getMagenta(0, 255));
+        $this->assertSame(85.0, $test->getMagenta(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -243,8 +245,8 @@ class RgbColorTest extends TestCase
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0.5806, $test->getHue());
-        $this->assertSame(147.6222, $test->getHue(0, 255));
+        $this->assertEqualsWithDelta(0.583333, $test->getHue(), 0.000001);
+        $this->assertSame(148.75, $test->getHue(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 

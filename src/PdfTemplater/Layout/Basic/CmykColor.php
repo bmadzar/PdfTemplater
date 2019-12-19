@@ -211,7 +211,7 @@ class CmykColor implements Color
         if ($delta < 0.001) {
             return 0.0;
         } elseif ($cmax === $this->getRed()) {
-            return ((((($this->getGreen() - $this->getBlue()) / $delta) % 6) / 6) * $max) + $min;
+            return ((fmod((($this->getGreen() - $this->getBlue()) / $delta), 6) / 6) * $max) + $min;
         } elseif ($cmax === $this->getGreen()) {
             return ((((($this->getBlue() - $this->getRed()) / $delta) + 2) / 6) * $max) + $min;
         } elseif ($cmax === $this->getBlue()) {

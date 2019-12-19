@@ -43,8 +43,9 @@ class Node implements NodeInterface
     /**
      * Node constructor.
      *
-     * @param string $type
+     * @param string   $type
      * @param string[] $attributes
+     * @throws \Exception
      */
     public function __construct(string $type, array $attributes = [])
     {

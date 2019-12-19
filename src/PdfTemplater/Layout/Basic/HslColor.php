@@ -131,7 +131,7 @@ class HslColor implements Color
         if ($this->hue < (1 / 6) || $this->hue >= (5 / 6)) {
             return ($c * $max) + $min;
         } elseif ($this->hue < (1 / 3) || $this->hue >= (2 / 3)) {
-            return (($c * (1 - \abs((($this->hue / 6) % 2) - 1))) * $max) + $min;
+            return (($c * (1 - \abs(fmod(($this->hue / 6), 2) - 1))) * $max) + $min;
         } else {
             return 0.0;
         }
@@ -156,7 +156,7 @@ class HslColor implements Color
         if ($this->hue >= (1 / 6) && $this->hue < (1 / 2)) {
             return ($c * $max) + $min;
         } elseif ($this->hue < (1 / 6) || $this->hue < (2 / 3)) {
-            return (($c * (1 - \abs((($this->hue / 6) % 2) - 1))) * $max) + $min;
+            return (($c * (1 - \abs(fmod(($this->hue / 6), 2) - 1))) * $max) + $min;
         } else {
             return 0.0;
         }
@@ -181,7 +181,7 @@ class HslColor implements Color
         if ($this->hue < (1 / 6) || $this->hue >= (5 / 6)) {
             return ($c * $max) + $min;
         } elseif ($this->hue < (1 / 3) || $this->hue >= (2 / 3)) {
-            return (($c * (1 - \abs((($this->hue / 6) % 2) - 1))) * $max) + $min;
+            return (($c * (1 - \abs(fmod(($this->hue / 6), 2) - 1))) * $max) + $min;
         } else {
             return 0.0;
         }
