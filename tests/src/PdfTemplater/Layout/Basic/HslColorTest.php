@@ -203,11 +203,11 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getRgb(), [0x5C / 0xFF, 0x50 / 0xFF, 0x3D / 0xFF]);
+        $this->assertSame($test->getRgb(), [0.36, 0.312, 0.24]);
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame($test->getRgb(), [0x5C / 0xFF, 0x50 / 0xFF, 0x3D / 0xFF]);
+        $this->assertSame($test->getRgb(), [0.36, 0.312, 0.24]);
     }
 
     public function testGetBlack()
@@ -226,23 +226,33 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame($test->getCmyk(), [0.0, 0.13333, 0.33333, 0.64]);
+        $cmyk = $test->getCmyk();
+
+        $this->assertEqualsWithDelta(0.0, $cmyk[0], 0.00001);
+        $this->assertEqualsWithDelta(0.13333, $cmyk[1], 0.00001);
+        $this->assertEqualsWithDelta(0.33333, $cmyk[2], 0.00001);
+        $this->assertEqualsWithDelta(0.64, $cmyk[3], 0.00001);
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame($test->getCmyk(), [0.0, 0.13333, 0.33333, 0.64]);
+        $cmyk = $test->getCmyk();
+
+        $this->assertEqualsWithDelta(0.0, $cmyk[0], 0.00001);
+        $this->assertEqualsWithDelta(0.13333, $cmyk[1], 0.00001);
+        $this->assertEqualsWithDelta(0.33333, $cmyk[2], 0.00001);
+        $this->assertEqualsWithDelta(0.64, $cmyk[3], 0.00001);
     }
 
     public function testGetBlue()
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame(0x3D / 0xFF, $test->getBlue());
+        $this->assertSame(0.24, $test->getBlue());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0x3D / 0xFF, $test->getBlue());
-        $this->assertSame((0x3D * 100) / 0xFF, $test->getBlue(0, 100));
+        $this->assertSame(0.24, $test->getBlue());
+        $this->assertSame(24.0, $test->getBlue(0, 100));
     }
 
     public function testGetHue()
@@ -323,12 +333,12 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame(0x50 / 0xFF, $test->getGreen());
+        $this->assertSame(0.312, $test->getGreen());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0x50 / 0xFF, $test->getGreen());
-        $this->assertSame((0x50 * 100) / 0xFF, $test->getGreen(0, 100));
+        $this->assertSame(0.312, $test->getGreen());
+        $this->assertSame(31.2, $test->getGreen(0, 100));
     }
 
     public function testSetSaturation()
@@ -405,12 +415,12 @@ class HslColorTest extends TestCase
     {
         $test = new HslColor(0.1, 0.2, 0.3);
 
-        $this->assertSame(0x5C / 0xFF, $test->getRed());
+        $this->assertSame(0.36, $test->getRed());
 
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame(0x5C / 0xFF, $test->getRed());
-        $this->assertSame((0x5C * 100) / 0xFF, $test->getRed(0, 100));
+        $this->assertSame(0.36, $test->getRed());
+        $this->assertSame(36.0, $test->getRed(0, 100));
     }
 
     public function testGetMagenta()
