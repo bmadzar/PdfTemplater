@@ -44,7 +44,7 @@ class ParserTest extends TestCase
 
         $this->assertInstanceOf(Node::class, $nodeTree);
         $this->assertSame([], $nodeTree->getChildren());
-        $this->assertSame([], $nodeTree->getAttributes());
+        $this->assertSame(['title' => 'test', 'description' => 'test'], $nodeTree->getAttributes());
     }
 
     public function testMalformedData()

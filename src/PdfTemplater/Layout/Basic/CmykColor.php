@@ -204,21 +204,33 @@ class CmykColor implements Color
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $cmax = \max($this->getRed(), $this->getGreen(), $this->getBlue());
-        $cmin = \min($this->getRed(), $this->getGreen(), $this->getBlue());
+        $r = $this->getRed();
+        $g = $this->getGreen();
+        $b = $this->getBlue();
+
+        $cmax = \max($r, $g, $b);
+        $cmin = \min($r, $g, $b);
         $delta = $cmax - $cmin;
 
         if ($delta < 0.001) {
             return 0.0;
-        } elseif ($cmax === $this->getRed()) {
-            return ((fmod((($this->getGreen() - $this->getBlue()) / $delta), 6) / 6) * $max) + $min;
-        } elseif ($cmax === $this->getGreen()) {
-            return ((((($this->getBlue() - $this->getRed()) / $delta) + 2) / 6) * $max) + $min;
-        } elseif ($cmax === $this->getBlue()) {
-            return ((((($this->getRed() - $this->getGreen()) / $delta) + 4) / 6) * $max) + $min;
+        } elseif ($cmax === $r) {
+            $h = ($g - $b) / $delta;
+        } elseif ($cmax === $g) {
+            $h = (($b - $r) / $delta) + 2.0;
+        } elseif ($cmax === $b) {
+            $h = (($r - $g) / $delta) + 4.0;
         } else {
-            throw new LayoutArgumentException('RGB to HSL conversion failed -- floating point issue?');
+            throw new LayoutArgumentException('CMYK/RGB to HSL conversion failed -- floating point issue?');
         }
+
+        if ($h < 0.0) {
+            $h += 6.0;
+        } elseif ($h > 6.0) {
+            $h = \fmod($h, 6.0);
+        }
+
+        return (($h / 6.0) * $max) + $min;
     }
 
     /**

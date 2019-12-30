@@ -116,7 +116,7 @@ class Parser implements ParserInterface
         $node = new Node($subtree['type']);
 
         foreach ($subtree as $key => $value) {
-            if (\is_scalar($value)) {
+            if (\is_scalar($value) && $key !== 'type') {
                 $node->setAttribute($key, (string)$value);
             }
         }

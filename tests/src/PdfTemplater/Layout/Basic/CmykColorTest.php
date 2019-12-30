@@ -70,8 +70,8 @@ class CmykColorTest extends TestCase
     {
         $test = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
 
-        $this->assertSame(0.30, $test->getHue());
-        $this->assertSame(76.5, $test->getHue(0, 255));
+        $this->assertEqualsWithDelta(0.083333, $test->getHue(), 0.00001);
+        $this->assertSame(21.25, $test->getHue(0, 255));
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -275,7 +275,9 @@ class CmykColorTest extends TestCase
 
         $hsl = $test->getHsl();
 
-        $this->assertSame([0.30, 0.125, 0.48], $hsl);
+        $this->assertEqualsWithDelta(0.083333, $hsl[0], 0.00001);
+        $this->assertEqualsWithDelta(0.125, $hsl[1], 0.00001);
+        $this->assertEqualsWithDelta(0.480, $hsl[2], 0.00001);
     }
 
     public function testGetSaturation()
@@ -426,7 +428,7 @@ class CmykColorTest extends TestCase
 
         $mixed = $testFg->getMixed($testBg);
 
-        //TODO: calculate this
-        $this->assertSame([], $mixed->getCmyk());
+        $this->assertSame([0.0, 0.09630, 0.17778, 0.47059], $mixed->getCmyk());
+        $this->assertSame(0.553, $mixed->getAlpha());
     }
 }

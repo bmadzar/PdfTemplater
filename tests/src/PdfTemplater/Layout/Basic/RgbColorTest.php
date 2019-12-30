@@ -24,14 +24,23 @@ class RgbColorTest extends TestCase
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame([0.5806, 0.5, 0.2], $test->getHsl());
+        $hsl = $test->getHsl();
+
+        $this->assertEqualsWithDelta(0.58333, $hsl[0], 0.00001);
+        $this->assertEqualsWithDelta(0.5, $hsl[1], 0.00001);
+        $this->assertEqualsWithDelta(0.2, $hsl[2], 0.00001);
     }
 
     public function testGetCmyk()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
 
-        $this->assertSame([0.6667, 0.3333, 0.0, 0.70], $test->getCmyk());
+        $cmyk = $test->getCmyk();
+
+        $this->assertEqualsWithDelta(0.66667, $cmyk[0], 0.00001);
+        $this->assertEqualsWithDelta(0.33333, $cmyk[1], 0.00001);
+        $this->assertEqualsWithDelta(0.0, $cmyk[2], 0.00001);
+        $this->assertEqualsWithDelta(0.7, $cmyk[3], 0.00001);
     }
 
     public function testRgb()

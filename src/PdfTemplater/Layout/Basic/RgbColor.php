@@ -228,14 +228,22 @@ class RgbColor implements Color
         if ($delta < 0.001) {
             return 0.0;
         } elseif ($cmax === $this->red) {
-            return ((((($this->green - $this->blue) / $delta) % 6) / 6) * $max) + $min;
+            $h = ($this->green - $this->blue) / $delta;
         } elseif ($cmax === $this->green) {
-            return ((((($this->blue - $this->red) / $delta) + 2) / 6) * $max) + $min;
+            $h = (($this->blue - $this->red) / $delta) + 2.0;
         } elseif ($cmax === $this->blue) {
-            return ((((($this->red - $this->green) / $delta) + 4) / 6) * $max) + $min;
+            $h = (($this->red - $this->green) / $delta) + 4.0;
         } else {
-            throw new LayoutArgumentException('RGB to HSL conversion failed - floating point issue?');
+            throw new LayoutArgumentException('RGB to HSL conversion failed -- floating point issue?');
         }
+
+        if ($h < 0.0) {
+            $h += 6.0;
+        } elseif ($h > 6.0) {
+            $h = \fmod($h, 6.0);
+        }
+
+        return (($h / 6.0) * $max) + $min;
     }
 
     /**
