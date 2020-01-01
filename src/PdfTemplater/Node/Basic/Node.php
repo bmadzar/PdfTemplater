@@ -43,7 +43,7 @@ class Node implements NodeInterface
     /**
      * Node constructor.
      *
-     * @param string   $type
+     * @param string $type
      * @param string[] $attributes
      * @throws \Exception
      */
@@ -63,8 +63,13 @@ class Node implements NodeInterface
      */
     public function setChildren(array $nodes): void
     {
-        $newNodes = \array_diff($nodes, $this->children);
-        $oldNodes = \array_diff($this->children, $nodes);
+        $newNodes = \array_filter($nodes, function (Node $node) {
+            return !\in_array($node, $this->children, true);
+        });
+
+        $oldNodes = \array_filter($this->children, function (Node $node) use ($nodes) {
+            return !\in_array($node, $nodes, true);
+        });
 
         \array_walk($oldNodes, [$this, 'removeChild']);
         \array_walk($newNodes, [$this, 'addChild']);
@@ -258,9 +263,21 @@ class Node implements NodeInterface
      *
      * @param string[] $attributes
      */
-    public function setAttributes(array $attributes)
+    public function setAttributes(array $attributes): void
     {
-        $this->attributes = $attributes;
+        $this->attributes = $attributes + $this->attributes;
+    }
+
+    /**
+     * Clears and optionally sets the attribute set.
+     *
+     * @param array $attributes
+     */
+    public function resetAttributes(array $attributes = []): void
+    {
+        $this->attributes = [];
+
+        $this->setAttributes($attributes);
     }
 
     /**

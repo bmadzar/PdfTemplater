@@ -212,6 +212,25 @@ class NodeTest extends TestCase
         $this->assertSame('value2', $node1->getAttribute('attribute2'));
     }
 
+    public function testResetAttributes()
+    {
+        $node1 = new Node('test');
+
+        $node1->setAttributes(['attribute1' => 'value1', 'attribute2' => 'value2']);
+
+        $this->assertSame('value1', $node1->getAttribute('attribute1'));
+        $this->assertSame('value2', $node1->getAttribute('attribute2'));
+
+        $node1->resetAttributes();
+
+        $this->assertSame([], $node1->getAttributes());
+
+        $node1->resetAttributes(['attribute1' => 'value1', 'attribute2' => 'value2']);
+
+        $this->assertSame('value1', $node1->getAttribute('attribute1'));
+        $this->assertSame('value2', $node1->getAttribute('attribute2'));
+    }
+
     public function testGetChildren()
     {
         $node = new Node('test');

@@ -429,7 +429,7 @@ class CmykColor implements Color
         $nm = ((1 - $fa) * $bm) + ($fa * $fm);
         $ny = ((1 - $fa) * $by) + ($fa * $fy);
         $nk = ((1 - $fa) * $bk) + ($fa * $fk);
-        $na = $ba + ((1 - $ba) * $fa);
+        $na = 1 - ((1 - $fa) * (1 - $ba));
 
         return new self($nc, $nm, $ny, $nk, $na);
     }

@@ -9,6 +9,7 @@ use PdfTemplater\Node\Node as NodeInterface;
 use PdfTemplater\Node\Validator\IdValidator;
 use PdfTemplater\Parser\ParseLogicException;
 use PdfTemplater\Parser\Parser as ParserInterface;
+use PdfTemplater\Parser\ParseSyntaxException;
 
 /**
  * Class Parser
@@ -28,8 +29,18 @@ class Parser implements ParserInterface
      */
     public function parse(string $data): NodeInterface
     {
+        \libxml_use_internal_errors(true);
+
         $xmlTree = new \DOMDocument();
         $xmlTree->loadXML($data, \LIBXML_COMPACT | \LIBXML_NONET);
+
+        if ($err = \libxml_get_last_error()) {
+            \libxml_use_internal_errors(false);
+
+            throw new ParseSyntaxException($err->message, $err->code);
+        }
+
+        \libxml_use_internal_errors(false);
 
         $nodeTree = $this->buildDocument($xmlTree->documentElement);
 

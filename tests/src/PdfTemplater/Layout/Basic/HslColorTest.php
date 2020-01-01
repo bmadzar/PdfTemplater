@@ -97,7 +97,18 @@ class HslColorTest extends TestCase
 
     public function testGetMixed()
     {
+        $fgColor = new HslColor(0.1, 0.2, 0.3, 0.4);
+        $bgColor = new HslColor(0.4, 0.3, 0.2, 0.1);
 
+        $mixed = $fgColor->getMixed($bgColor);
+
+        $hsl = $mixed->getHsl();
+
+        $this->assertEqualsWithDelta(0.10722, $hsl[0], 0.00001);
+        $this->assertEqualsWithDelta(0.192, $hsl[1], 0.00001);
+        $this->assertEqualsWithDelta(0.286, $hsl[2], 0.00001);
+
+        $this->assertSame(0.46, $mixed->getAlpha());
     }
 
     public function testSetHue()

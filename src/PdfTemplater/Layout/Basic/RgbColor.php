@@ -16,6 +16,8 @@ use PdfTemplater\Layout\LayoutArgumentException;
  */
 class RgbColor implements Color
 {
+    private const GAMMA = 2.2;
+
     /**
      * @var float
      */
@@ -423,6 +425,32 @@ class RgbColor implements Color
         return [$this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack()];
     }
 
+    private function applyGamma(float $val): float
+    {
+        if ($val < 0.0 || $val > 1.0) {
+            throw new LayoutArgumentException('RGB value must be between 0.0 and 1.0.');
+        }
+
+        if ($val <= 0.0031308) {
+            return 12.92 * $val;
+        } else {
+            return (1.055 * ($val ** (5 / 12))) - 0.055;
+        }
+    }
+
+    private function removeGamma(float $val): float
+    {
+        if ($val < 0.0 || $val > 1.0) {
+            throw new LayoutArgumentException('RGB value must be between 0.0 and 1.0.');
+        }
+
+        if ($val <= 0.04045) {
+            return $val / 12.92;
+        } else {
+            return (($val + 0.055) / 1.055) ** 2.4;
+        }
+    }
+
     /**
      * Combines the supplied background Color with this color
      * taking into account the alpha value.
@@ -442,11 +470,20 @@ class RgbColor implements Color
         $fb = $this->getBlue();
         $fa = $this->getAlpha();
 
-        $nr = ((1 - $fa) * $br) + ($fa * $fr);
-        $ng = ((1 - $fa) * $bg) + ($fa * $fg);
-        $nb = ((1 - $fa) * $bb) + ($fa * $fb);
-        $na = $ba + ((1 - $ba) * $fa);
+        $na = $fa + ($ba * (1 - $fa));
 
-        return new self($nr, $ng, $nb, $na);
+        if ($na > \PHP_FLOAT_EPSILON) {
+            $nr = (((1 - $fa) * $ba * $this->removeGamma($br)) + ($fa * $this->removeGamma($fr))) / $na;
+            $ng = (((1 - $fa) * $ba * $this->removeGamma($bg)) + ($fa * $this->removeGamma($fg))) / $na;
+            $nb = (((1 - $fa) * $ba * $this->removeGamma($bb)) + ($fa * $this->removeGamma($fb))) / $na;
+
+            $nr = $this->applyGamma($nr);
+            $ng = $this->applyGamma($ng);
+            $nb = $this->applyGamma($nb);
+
+            return new self($nr, $ng, $nb, $na);
+        } else {
+            return new self(0.0, 0.0, 0.0, 0.0);
+        }
     }
 }

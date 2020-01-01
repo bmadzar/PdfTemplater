@@ -67,7 +67,7 @@ class ParserTest extends TestCase
         $nodeTree = $parser->parse($data);
 
         $this->assertInstanceOf(Node::class, $nodeTree);
-        $this->assertSame([], $nodeTree->getAttributes());
+        $this->assertSame(['title' => 'test', 'description' => 'test'], $nodeTree->getAttributes());
 
         $this->assertCount(1, $nodeTree->getChildren());
         $this->assertNotEmpty($nodeTree->findById('page1'));

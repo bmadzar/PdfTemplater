@@ -20,7 +20,7 @@ interface Node
     /**
      * Node constructor.
      *
-     * @param string   $type
+     * @param string $type
      * @param string[] $attributes
      */
     public function __construct(string $type, array $attributes = []);
@@ -136,11 +136,18 @@ interface Node
     public function getAttributes(): array;
 
     /**
-     * Sets the entire attribute set.
+     * Sets multiple attributes, expressed as an associative array of strings.
      *
      * @param string[] $attributes
      */
-    public function setAttributes(array $attributes);
+    public function setAttributes(array $attributes): void;
+
+    /**
+     * Clears and optionally sets the attribute set.
+     *
+     * @param string[] $attributes
+     */
+    public function resetAttributes(array $attributes = []): void;
 
     /**
      * Gets the value of the attribute identified by $key.

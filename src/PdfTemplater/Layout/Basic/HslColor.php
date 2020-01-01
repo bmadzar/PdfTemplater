@@ -399,6 +399,10 @@ class HslColor implements Color
      */
     public function getMixed(Color $background): Color
     {
-        // TODO: Implement getMixed() method.
+        $fgRgb = new RgbColor($this->getRed(), $this->getGreen(), $this->getBlue(), $this->getAlpha());
+
+        $mixed = $fgRgb->getMixed($background);
+
+        return new self($mixed->getHue(), $mixed->getSaturation(), $mixed->getLightness(), $mixed->getAlpha());
     }
 }

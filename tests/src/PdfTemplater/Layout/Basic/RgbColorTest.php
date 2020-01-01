@@ -269,7 +269,12 @@ class RgbColorTest extends TestCase
 
         $mixed = $testFg->getMixed($testBg);
 
-        $this->assertSame([0.1058, 0.2158, 0.2980], $mixed->getRgb());
+        $rgb = $mixed->getRgb();
+
+        $this->assertEqualsWithDelta(0.176, $rgb[0], 0.001);
+        $this->assertEqualsWithDelta(0.216, $rgb[1], 0.001);
+        $this->assertEqualsWithDelta(0.290, $rgb[2], 0.001);
+
         $this->assertSame(0.46, $mixed->getAlpha());
     }
 }
