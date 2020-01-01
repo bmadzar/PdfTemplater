@@ -104,9 +104,9 @@ class HslColorTest extends TestCase
 
         $hsl = $mixed->getHsl();
 
-        $this->assertEqualsWithDelta(0.10722, $hsl[0], 0.00001);
-        $this->assertEqualsWithDelta(0.192, $hsl[1], 0.00001);
-        $this->assertEqualsWithDelta(0.286, $hsl[2], 0.00001);
+        $this->assertEqualsWithDelta(0.12, $hsl[0], 0.01);
+        $this->assertEqualsWithDelta(0.18, $hsl[1], 0.01);
+        $this->assertEqualsWithDelta(0.28, $hsl[2], 0.01);
 
         $this->assertSame(0.46, $mixed->getAlpha());
     }

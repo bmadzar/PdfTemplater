@@ -428,7 +428,13 @@ class CmykColorTest extends TestCase
 
         $mixed = $testFg->getMixed($testBg);
 
-        $this->assertSame([0.0, 0.09630, 0.17778, 0.47059], $mixed->getCmyk());
-        $this->assertSame(0.553, $mixed->getAlpha());
+        $cmyk = $mixed->getCmyk();
+
+        $this->assertEqualsWithDelta(0.14, $cmyk[0], 0.005);
+        $this->assertEqualsWithDelta(0.22, $cmyk[1], 0.005);
+        $this->assertEqualsWithDelta(0.30, $cmyk[2], 0.005);
+        $this->assertEqualsWithDelta(0.38, $cmyk[3], 0.005);
+
+        $this->assertSame(0.55, $mixed->getAlpha());
     }
 }

@@ -425,11 +425,12 @@ class CmykColor implements Color
         $fk = $this->getBlack();
         $fa = $this->getAlpha();
 
-        $nc = ((1 - $fa) * $bc) + ($fa * $fc);
-        $nm = ((1 - $fa) * $bm) + ($fa * $fm);
-        $ny = ((1 - $fa) * $by) + ($fa * $fy);
-        $nk = ((1 - $fa) * $bk) + ($fa * $fk);
-        $na = 1 - ((1 - $fa) * (1 - $ba));
+        $na = $fa + ($ba * (1 - $fa));
+
+        $nc = (((1 - $fa) * $ba * $bc) + ($fa * $fc)) / $na;
+        $nm = (((1 - $fa) * $ba * $bm) + ($fa * $fm)) / $na;
+        $ny = (((1 - $fa) * $ba * $by) + ($fa * $fy)) / $na;
+        $nk = (((1 - $fa) * $ba * $bk) + ($fa * $fk)) / $na;
 
         return new self($nc, $nm, $ny, $nk, $na);
     }
