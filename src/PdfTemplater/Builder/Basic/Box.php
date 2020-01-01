@@ -468,14 +468,16 @@ class Box
         if ($this->isResolved()) {
             return [];
         } else {
-            return \array_unique([
-                $this->widthRelative,
-                $this->heightRelative,
-                $this->leftRelative,
-                $this->rightRelative,
-                $this->topRelative,
-                $this->bottomRelative,
-            ]);
+            return \array_filter(
+                \array_unique([
+                    $this->widthRelative,
+                    $this->heightRelative,
+                    $this->leftRelative,
+                    $this->rightRelative,
+                    $this->topRelative,
+                    $this->bottomRelative,
+                ])
+            );
         }
     }
 

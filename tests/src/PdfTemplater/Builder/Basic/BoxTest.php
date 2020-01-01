@@ -247,15 +247,16 @@ class BoxTest extends TestCase
         $box = new Box('test');
 
         foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
-            $box = new Box('test');
-
             $box->{'set' . $dim}(1.0);
             $box->{'set' . $dim . 'Relative'}($dim);
         }
         unset($dim);
 
-        $this->assertArraySubset(['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'], $box->getDependencies());
-        $this->assertArraySubset($box->getDependencies(), ['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height']);
+        $deps = $box->getDependencies();
+
+        \sort($deps, SORT_ASC);
+
+        $this->assertSame(['Bottom', 'Height', 'Left', 'Right', 'Top', 'Width'], $deps);
     }
 
     public function testAbsoluteIsAlwaysResolved()
@@ -319,7 +320,7 @@ class BoxTest extends TestCase
         $box1->resolve($box2);
     }
 
-    private function testResolution(string $dataFile)
+    private function doResolutionTest(string $dataFile)
     {
         if (!\is_readable($dataFile) || !\is_file($dataFile)) {
             $this->markTestSkipped();
