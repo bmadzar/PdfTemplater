@@ -43,7 +43,7 @@
                 layer CDATA #IMPLIED
                 id ID #IMPLIED
                 name CDATA #REQUIRED
-                level CDATA #IMPLIED "0"
+                level CDATA #IMPLIED
                 >
 
         <!ELEMENT Ellipse EMPTY>
