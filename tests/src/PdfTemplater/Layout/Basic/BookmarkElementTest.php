@@ -15,7 +15,10 @@ class BookmarkElementTest extends TestCase
 
     public function testBasic()
     {
+        $test = new BookmarkElement('test');
 
+        $this->assertSame('test', $test->getId());
+        $this->assertSame(0, $test->getLevel());
     }
 
     public function testGetLevel()
