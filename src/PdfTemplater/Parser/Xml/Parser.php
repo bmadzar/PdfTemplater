@@ -32,12 +32,18 @@ class Parser implements ParserInterface
         \libxml_use_internal_errors(true);
 
         $xmlTree = new \DOMDocument();
-        $xmlTree->loadXML($data, \LIBXML_COMPACT | \LIBXML_NONET);
+        $xmlTree->loadXML($data, \LIBXML_COMPACT | \LIBXML_NONET | \LIBXML_DTDATTR | \LIBXML_DTDLOAD);
 
         if ($err = \libxml_get_last_error()) {
             \libxml_use_internal_errors(false);
 
             throw new ParseSyntaxException($err->message, $err->code);
+        }
+
+        if (!$xmlTree->validate()) {
+            \libxml_use_internal_errors(false);
+
+            throw new ParseLogicException('Failed DTD validation!');
         }
 
         \libxml_use_internal_errors(false);

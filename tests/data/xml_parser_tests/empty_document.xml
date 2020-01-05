@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE Document SYSTEM "pdftemplater.dtd">
+<!DOCTYPE Document SYSTEM "doctypes/pdftemplater.dtd">
 <Document title="test" description="test">
 </Document>
