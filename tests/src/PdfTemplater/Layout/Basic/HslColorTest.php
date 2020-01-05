@@ -111,6 +111,32 @@ class HslColorTest extends TestCase
         $this->assertSame(0.46, $mixed->getAlpha());
     }
 
+    public function testGetMixedTransparent()
+    {
+        $fgColor = new HslColor(0.1, 0.2, 0.3, 0.0);
+        $bgColor = new HslColor(0.4, 0.3, 0.2, 0.0);
+
+        $mixed = $fgColor->getMixed($bgColor);
+
+        $this->assertSame(0.0, $mixed->getAlpha());
+    }
+
+    public function testGetMixedOpaque()
+    {
+        $fgColor = new HslColor(0.1, 0.2, 0.3, 1.0);
+        $bgColor = new HslColor(0.4, 0.3, 0.2, 0.1);
+
+        $mixed = $fgColor->getMixed($bgColor);
+
+        $hsl = $mixed->getHsl();
+
+        $this->assertSame(0.1, $hsl[0]);
+        $this->assertSame(0.2, $hsl[1]);
+        $this->assertSame(0.3, $hsl[2]);
+
+        $this->assertSame(1.0, $mixed->getAlpha());
+    }
+
     public function testSetHue()
     {
         $test = new HslColor(0.1, 0.2, 0.3, 0.4);

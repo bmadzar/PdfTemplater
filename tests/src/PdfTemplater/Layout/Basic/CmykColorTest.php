@@ -437,4 +437,31 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.55, $mixed->getAlpha());
     }
+
+    public function testGetMixedTransparent()
+    {
+        $testFg = new CmykColor(0.1, 0.2, 0.3, 0.4, 0.0);
+        $testBg = new CmykColor(0.5, 0.4, 0.3, 0.2, 0.0);
+
+        $mixed = $testFg->getMixed($testBg);
+
+        $this->assertSame(0.0, $mixed->getAlpha());
+    }
+
+    public function testGetMixedOpaque()
+    {
+        $testFg = new CmykColor(0.1, 0.2, 0.3, 0.4, 1.0);
+        $testBg = new CmykColor(0.5, 0.4, 0.3, 0.2, 0.1);
+
+        $mixed = $testFg->getMixed($testBg);
+
+        $cmyk = $mixed->getCmyk();
+
+        $this->assertSame(0.1, $cmyk[0]);
+        $this->assertSame(0.2, $cmyk[1]);
+        $this->assertSame(0.3, $cmyk[2]);
+        $this->assertSame(0.4, $cmyk[3]);
+
+        $this->assertSame(1.0, $mixed->getAlpha());
+    }
 }

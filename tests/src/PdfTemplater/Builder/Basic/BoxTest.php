@@ -402,7 +402,7 @@ class BoxTest extends TestCase
                 $box->setHeightPercentage((float)$line['heightPercentage']);
             }
 
-            $boxData[] = \compact('box', 'finals');
+            $boxData[] = ['box' => $box, 'finals' => $finals];
         }
         unset($line, $box, $finals, $header);
 

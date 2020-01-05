@@ -21,9 +21,10 @@ interface Node
      * Node constructor.
      *
      * @param string $type
+     * @param string|null $id
      * @param string[] $attributes
      */
-    public function __construct(string $type, array $attributes = []);
+    public function __construct(string $type, ?string $id = null, array $attributes = []);
 
     /**
      * Sets or replaces the set of child Nodes.

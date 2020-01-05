@@ -419,7 +419,7 @@ class Box
             if (!\abs($this->top + $this->height - $this->bottom) < 0.001) {
                 return false;
             }
-        } elseif (\count(\array_filter([$this->top, $this->height, $this->bottom], '\\is_null')) !== 2) {
+        } elseif (\count(\array_filter([$this->top, $this->height, $this->bottom], '\\is_null')) >= 2) {
             return false;
         } elseif ($this->top !== null && $this->bottom !== null && $this->top <= $this->bottom) {
             return false;
@@ -432,7 +432,7 @@ class Box
             if (!\abs($this->left + $this->width - $this->right) < 0.001) {
                 return false;
             }
-        } elseif (\count(\array_filter([$this->left, $this->width, $this->right], '\\is_null')) !== 2) {
+        } elseif (\count(\array_filter([$this->left, $this->width, $this->right], '\\is_null')) >= 2) {
             return false;
         } elseif ($this->left !== null && $this->right !== null && $this->right <= $this->left) {
             return false;

@@ -277,4 +277,30 @@ class RgbColorTest extends TestCase
 
         $this->assertSame(0.46, $mixed->getAlpha());
     }
+
+    public function testGetMixedTransparent()
+    {
+        $testFg = new RgbColor(0.1, 0.2, 0.3, 0.0);
+        $testBg = new RgbColor(0.4, 0.3, 0.2, 0.0);
+
+        $mixed = $testFg->getMixed($testBg);
+
+        $this->assertSame(0.0, $mixed->getAlpha());
+    }
+
+    public function testGetMixedOpaque()
+    {
+        $testFg = new RgbColor(0.1, 0.2, 0.3, 1.0);
+        $testBg = new RgbColor(0.4, 0.3, 0.2, 0.1);
+
+        $mixed = $testFg->getMixed($testBg);
+
+        $rgb = $mixed->getRgb();
+
+        $this->assertSame(0.1, $rgb[0]);
+        $this->assertSame(0.2, $rgb[1]);
+        $this->assertSame(0.3, $rgb[2]);
+
+        $this->assertSame(1.0, $mixed->getAlpha());
+    }
 }

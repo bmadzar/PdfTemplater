@@ -413,6 +413,10 @@ class CmykColor implements Color
      */
     public function getMixed(Color $background): Color
     {
+        if ($this->getAlpha() + \PHP_FLOAT_EPSILON > 1.0) {
+            return clone $this;
+        }
+
         $bc = $background->getCyan();
         $bm = $background->getMagenta();
         $by = $background->getYellow();
@@ -427,11 +431,15 @@ class CmykColor implements Color
 
         $na = $fa + ($ba * (1 - $fa));
 
-        $nc = (((1 - $fa) * $ba * $bc) + ($fa * $fc)) / $na;
-        $nm = (((1 - $fa) * $ba * $bm) + ($fa * $fm)) / $na;
-        $ny = (((1 - $fa) * $ba * $by) + ($fa * $fy)) / $na;
-        $nk = (((1 - $fa) * $ba * $bk) + ($fa * $fk)) / $na;
+        if ($na > \PHP_FLOAT_EPSILON) {
+            $nc = (((1 - $fa) * $ba * $bc) + ($fa * $fc)) / $na;
+            $nm = (((1 - $fa) * $ba * $bm) + ($fa * $fm)) / $na;
+            $ny = (((1 - $fa) * $ba * $by) + ($fa * $fy)) / $na;
+            $nk = (((1 - $fa) * $ba * $bk) + ($fa * $fk)) / $na;
 
-        return new self($nc, $nm, $ny, $nk, $na);
+            return new self($nc, $nm, $ny, $nk, $na);
+        } else {
+            return new self(0.0, 0.0, 0.0, 0.0, 0.0);
+        }
     }
 }

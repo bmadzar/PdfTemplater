@@ -460,6 +460,10 @@ class RgbColor implements Color
      */
     public function getMixed(Color $background): Color
     {
+        if ($this->getAlpha() + \PHP_FLOAT_EPSILON > 1.0) {
+            return clone $this;
+        }
+
         $br = $background->getRed();
         $bg = $background->getGreen();
         $bb = $background->getBlue();

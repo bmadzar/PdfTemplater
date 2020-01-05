@@ -112,7 +112,7 @@ class ElementFactory
             if (isset($attributes['color'])) {
                 $element->setColor($this->toColor($attributes['color']));
             } else {
-                $element->setColor(null);
+                throw new LayoutArgumentException('Missing attribute!');
             }
 
         }
@@ -148,15 +148,15 @@ class ElementFactory
                     throw new LayoutArgumentException('Invalid attribute value!');
                 }
 
-                $element->setStrokeWidth((float)$attributes['linewidth']);
+                $element->setLineWidth((float)$attributes['linewidth']);
             } else {
-                $element->setStrokeWidth(null);
+                throw new LayoutArgumentException('Missing attribute!');
             }
 
             if (isset($attributes['linecolor'])) {
-                $element->setFill($this->toColor($attributes['linecolor']));
+                $element->setLineColor($this->toColor($attributes['linecolor']));
             } else {
-                $element->setFill(null);
+                throw new LayoutArgumentException('Missing attribute!');
             }
         }
 

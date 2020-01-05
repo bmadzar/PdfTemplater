@@ -399,6 +399,10 @@ class HslColor implements Color
      */
     public function getMixed(Color $background): Color
     {
+        if ($this->getAlpha() + \PHP_FLOAT_EPSILON > 1.0) {
+            return clone $this;
+        }
+        
         $fgRgb = new RgbColor($this->getRed(), $this->getGreen(), $this->getBlue(), $this->getAlpha());
 
         $mixed = $fgRgb->getMixed($background);

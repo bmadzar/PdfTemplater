@@ -44,16 +44,30 @@ class Node implements NodeInterface
      * Node constructor.
      *
      * @param string $type
+     * @param string|null $id
      * @param string[] $attributes
      * @throws \Exception
      */
-    public function __construct(string $type, array $attributes = [])
+    public function __construct(string $type, ?string $id = null, array $attributes = [])
     {
         $this->children = [];
-        $this->id = Uuid::uuid4()->toString();
-
-        $this->attributes = $attributes;
         $this->type = $type;
+
+        if ($id !== null) {
+            $this->id = $id;
+        } else {
+            $this->generateId();
+        }
+
+        $this->resetAttributes($attributes);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function generateId(): void
+    {
+        $this->id = Uuid::uuid4()->toString();
     }
 
     /**
@@ -265,7 +279,14 @@ class Node implements NodeInterface
      */
     public function setAttributes(array $attributes): void
     {
-        $this->attributes = $attributes + $this->attributes;
+        foreach ($attributes as $key => $value) {
+            if (!\is_scalar($value)) {
+                throw new \TypeError('Attribute value must be scalar.');
+            }
+
+            $this->attributes[$key] = (string)$value;
+        }
+        unset($key, $value);
     }
 
     /**

@@ -255,7 +255,7 @@ class NodeTest extends TestCase
         $this->assertInstanceOf(Node::class, $node1);
         $this->assertSame('type', $node1->getType());
 
-        $node2 = new Node('type', ['attribute1' => 'value1']);
+        $node2 = new Node('type', null, ['attribute1' => 'value1']);
 
         $this->assertInstanceOf(Node::class, $node2);
         $this->assertSame('type', $node2->getType());
@@ -336,7 +336,7 @@ class NodeTest extends TestCase
 
         $this->assertSame('value1', $node1->getAttribute('attribute1'));
 
-        $node2 = new Node('test', ['attribute1' => 'value1']);
+        $node2 = new Node('test', null, ['attribute1' => 'value1']);
 
         $this->assertSame('value1', $node2->getAttribute('attribute1'));
 

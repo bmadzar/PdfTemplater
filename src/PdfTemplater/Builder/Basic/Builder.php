@@ -51,9 +51,13 @@ class Builder implements BuilderInterface
         $document = new Document();
 
         foreach (['author', 'title', 'keywords'] as $item) {
-            $document->setMetadataValue($item, $rootNode->getAttribute($item));
+            $val = $rootNode->getAttribute($item);
+
+            if ($val !== null) {
+                $document->setMetadataValue($item, $val);
+            }
         }
-        unset($item);
+        unset($item, $val);
 
         $document->setMetadataValue('id', $rootNode->getId());
 
@@ -124,7 +128,7 @@ class Builder implements BuilderInterface
     private function checkRelativeDimension(?string $attribute): bool
     {
         return $attribute !== null &&
-            \preg_match('^\s*[0-9]+(?:\.[0-9]+)?\s*%$', $attribute);
+            \preg_match('/^\s*[0-9]+(?:\.[0-9]+)?\s*%$/', $attribute);
     }
 
     /**
@@ -197,6 +201,8 @@ class Builder implements BuilderInterface
             $layer = $this->buildLayer($num, $layerElements);
 
             $this->applyLayout($layer, $boxes);
+
+            $page->addLayer($layer);
         }
         unset($layer, $layerElements);
     }
@@ -301,7 +307,7 @@ class Builder implements BuilderInterface
                 $box->{'set' . \ucfirst($dimension) . 'Relative'} = self::PAGE_BOX_ID;
             }
         } elseif ($this->checkDimension($val)) {
-            $box->{'set' . \ucfirst($dimension)}($val);
+            $box->{'set' . \ucfirst($dimension)}((float)$val);
         } elseif ($val !== null) {
             throw new BuildException('Invalid ' . $dimension . ' supplied for Element.');
         }
@@ -319,7 +325,7 @@ class Builder implements BuilderInterface
         $val = $elementNode->getAttribute($offset);
 
         if ($this->checkOffset($val)) {
-            $box->{'set' . \ucfirst($offset)}($val);
+            $box->{'set' . \ucfirst($offset)}((float)$val);
         } elseif ($val !== null) {
             throw new BuildException('Invalid ' . $offset . ' supplied for Element.');
         }

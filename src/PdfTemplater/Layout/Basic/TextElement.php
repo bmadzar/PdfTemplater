@@ -272,13 +272,13 @@ class TextElement extends RectangleElement implements TextElementInterface
     public function isValid(): bool
     {
         return parent::isValid() &&
-            $this->text &&
+            ($this->text || $this->text === '') &&
             $this->fontSize &&
             $this->font &&
             $this->lineSize &&
             $this->color &&
-            $this->wrapMode &&
-            $this->alignMode &&
-            $this->verticalAlignMode;
+            $this->wrapMode !== null &&
+            $this->alignMode !== null &&
+            $this->verticalAlignMode !== null;
     }
 }
