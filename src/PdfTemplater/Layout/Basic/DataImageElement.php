@@ -38,7 +38,23 @@ class DataImageElement extends RectangleElement implements ImageElement
      */
     public function setData(string $data): void
     {
-        $this->data = $data;
+        $data = \strtr($data, ['-' => '+', '_' => '/']);
+
+        if (!\preg_match('/^[a-zA-Z0-9+\/]+={0,3}$/', $data)) {
+            throw new LayoutArgumentException('Invalid base64 data supplied.');
+        }
+
+        $this->data = $data . \str_repeat('=', (4 - (\strlen($data) % 4) % 4));
+    }
+
+    /**
+     * Sets the data in raw binary form.
+     *
+     * @param string $data
+     */
+    public function setBinaryData(string $data): void
+    {
+        $this->data = \base64_encode($data);
     }
 
     /**

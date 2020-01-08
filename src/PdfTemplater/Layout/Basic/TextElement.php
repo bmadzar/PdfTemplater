@@ -106,7 +106,7 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function setFontSize(float $size): void
     {
-        if ($size < 0.1) {
+        if ($size < \PHP_FLOAT_EPSILON) {
             throw new LayoutArgumentException('Font size must be greater than 0.');
         }
 
@@ -134,7 +134,7 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function setLineSize(float $size): void
     {
-        if ($size < 0.1) {
+        if ($size < \PHP_FLOAT_EPSILON) {
             throw new LayoutArgumentException('Line size must be greater than 0.');
         }
 
