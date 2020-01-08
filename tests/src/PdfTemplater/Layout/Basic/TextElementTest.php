@@ -268,4 +268,9 @@ class TextElementTest extends TestCase
 
         $test->getFont();
     }
+
+    public function testIsValid()
+    {
+        $test = new TextElement('test');
+    }
 }

@@ -103,4 +103,11 @@ class RectangleElementTest extends TestCase
 
         $test->setStrokeWidth(-10.0);
     }
+
+    public function testIsValid()
+    {
+        $test = new RectangleElement('test');
+
+        $this->assertTrue($test->isValid());
+    }
 }

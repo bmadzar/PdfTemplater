@@ -79,4 +79,19 @@ class LineElementTest extends TestCase
         $this->assertInstanceOf(Color::class, $clr);
         $this->assertSame([0.5, 0.5, 0.5], $clr->getRgb());
     }
+
+    public function testIsValid()
+    {
+        $test = new LineElement('test');
+
+        $this->assertFalse($test->isValid());
+
+        $test->setLineColor(new RgbColor(0.5, 0.5, 0.5));
+
+        $this->assertFalse($test->isValid());
+
+        $test->setLineWidth(10.0);
+
+        $this->assertTrue($test->isValid());
+    }
 }
