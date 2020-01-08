@@ -5,6 +5,7 @@ namespace PdfTemplater\Layout\Basic;
 
 
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\LayoutArgumentException;
 use PdfTemplater\Layout\RectangleElement as RectangleElementInterface;
 
 /**
@@ -58,6 +59,10 @@ class RectangleElement extends Element implements RectangleElementInterface
      */
     public function setStrokeWidth(?float $width): void
     {
+        if ($width < 0.00) {
+            throw new LayoutArgumentException('Stroke width cannot be less than 0.');
+        }
+
         $this->strokeWidth = $width;
     }
 
