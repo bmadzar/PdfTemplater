@@ -59,6 +59,13 @@ interface Document
     public function setPages(array $pages): void;
 
     /**
+     * Clears and optionally sets the full set of Pages. Pages should be indexed numerically.
+     *
+     * @param Page[] $pages
+     */
+    public function resetPages(array $pages = []): void;
+
+    /**
      * Gets the current set of Pages. Can be empty.
      *
      * @return Page[]

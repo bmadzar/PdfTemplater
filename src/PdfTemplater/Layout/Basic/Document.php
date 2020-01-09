@@ -7,7 +7,6 @@ namespace PdfTemplater\Layout\Basic;
 use PdfTemplater\Layout\Document as DocumentInterface;
 use PdfTemplater\Layout\LayoutArgumentException;
 use PdfTemplater\Layout\Page;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Class Document
@@ -46,7 +45,6 @@ class Document implements DocumentInterface
         $this->metadata = [];
         $this->pages = [];
         $this->fonts = [];
-        $this->filename = Uuid::uuid4()->toString();
     }
 
     /**
@@ -125,6 +123,18 @@ class Document implements DocumentInterface
             }
         }
         unset($number, $page);
+    }
+
+    /**
+     * Clears and optionally sets the full set of Pages. Pages should be indexed numerically.
+     *
+     * @param Page[] $pages
+     */
+    public function resetPages(array $pages = []): void
+    {
+        $this->pages = [];
+
+        $this->setPages($pages);
     }
 
     /**
