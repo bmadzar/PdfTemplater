@@ -93,7 +93,7 @@ interface Page
      *
      * @param int $number
      */
-    public function removeLayerById(int $number): void;
+    public function removeLayerByNumber(int $number): void;
 
     /**
      * Gets the page number.

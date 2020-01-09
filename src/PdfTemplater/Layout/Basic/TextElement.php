@@ -111,6 +111,10 @@ class TextElement extends RectangleElement implements TextElementInterface
         }
 
         $this->fontSize = $size;
+
+        if ($this->lineSize === null) {
+            $this->setLineSize($size);
+        }
     }
 
     /**

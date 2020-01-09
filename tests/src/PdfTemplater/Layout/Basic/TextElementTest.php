@@ -14,11 +14,18 @@ class TextElementTest extends TestCase
     {
         $test = new TextElement('test');
 
-        $this->assertSame(TextElement::VERTICAL_ALIGN_TOP, $test->getVerticalAlignMode());
-
         $test->setVerticalAlignMode(TextElement::VERTICAL_ALIGN_BOTTOM);
 
         $this->assertSame(TextElement::VERTICAL_ALIGN_BOTTOM, $test->getVerticalAlignMode());
+    }
+
+    public function testGetVerticalAlignModeInvalid()
+    {
+        $test = new TextElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getVerticalAlignMode();
     }
 
     public function testGetLineSize()
@@ -54,22 +61,36 @@ class TextElementTest extends TestCase
     {
         $test = new TextElement('test');
 
-        $this->assertSame('', $test->getText());
-
         $test->setText('test2');
 
         $this->assertSame('test2', $test->getText());
+    }
+
+    public function testGetTextInvalid()
+    {
+        $test = new TextElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getText();
     }
 
     public function testGetWrapMode()
     {
         $test = new TextElement('test');
 
-        $this->assertSame(TextElement::WRAP_NONE, $test->getWrapMode());
-
         $test->setWrapMode(TextElement::WRAP_HARD);
 
         $this->assertSame(TextElement::WRAP_HARD, $test->getWrapMode());
+    }
+
+    public function testGetWrapModeInvalid()
+    {
+        $test = new TextElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getWrapMode();
     }
 
     public function testSetAlignMode()
@@ -166,11 +187,18 @@ class TextElementTest extends TestCase
     {
         $test = new TextElement('test');
 
-        $this->assertSame(TextElement::ALIGN_LEFT, $test->getAlignMode());
-
         $test->setAlignMode(TextElement::ALIGN_RIGHT);
 
         $this->assertSame(TextElement::ALIGN_RIGHT, $test->getAlignMode());
+    }
+
+    public function testGetAlignModeInvalid()
+    {
+        $test = new TextElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getAlignMode();
     }
 
     public function testSetText()
@@ -272,5 +300,35 @@ class TextElementTest extends TestCase
     public function testIsValid()
     {
         $test = new TextElement('test');
+
+        $this->assertFalse($test->isValid());
+
+        $test->setFont('Arial');
+
+        $this->assertFalse($test->isValid());
+
+        $test->setFontSize(12.0);
+
+        $this->assertFalse($test->isValid());
+
+        $test->setText('test2');
+
+        $this->assertFalse($test->isValid());
+
+        $test->setVerticalAlignMode(TextElement::VERTICAL_ALIGN_TOP);
+
+        $this->assertFalse($test->isValid());
+
+        $test->setAlignMode(TextElement::ALIGN_LEFT);
+
+        $this->assertFalse($test->isValid());
+
+        $test->setWrapMode(TextElement::WRAP_NONE);
+
+        $this->assertFalse($test->isValid());
+
+        $test->setColor(new RgbColor(0.5, 0.5, 0.5));
+
+        $this->assertTrue($test->isValid());
     }
 }

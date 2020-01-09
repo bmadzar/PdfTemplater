@@ -30,6 +30,14 @@ interface Layer
     public function setElements(array $elements): void;
 
     /**
+     * Clears the current set of Elements, and optionally sets new ones.
+     * Elements need not be indexed in any particular way.
+     *
+     * @param Element[] $elements
+     */
+    public function resetElements(array $elements = []): void;
+
+    /**
      * Gets the full set of Elements.
      *
      * @return Element[]

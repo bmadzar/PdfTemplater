@@ -49,8 +49,6 @@ class Page implements PageInterface
         $this->number = $number;
 
         $this->layers = [];
-        $this->width = 0.00;
-        $this->height = 0.00;
     }
 
     /**
@@ -60,8 +58,8 @@ class Page implements PageInterface
      */
     public function setWidth(float $width): void
     {
-        if ($width < 0.00) {
-            throw new LayoutArgumentException('Page width must be >= 0.00');
+        if ($width < \PHP_FLOAT_EPSILON) {
+            throw new LayoutArgumentException('Page width must be > 0.00');
         }
 
         $this->width = $width;
@@ -74,6 +72,10 @@ class Page implements PageInterface
      */
     public function getWidth(): float
     {
+        if ($this->width === null) {
+            throw new LayoutArgumentException('Page not configured completely!');
+        }
+
         return $this->width;
     }
 
@@ -84,8 +86,8 @@ class Page implements PageInterface
      */
     public function setHeight(float $height): void
     {
-        if ($height < 0.00) {
-            throw new LayoutArgumentException('Page height must be >= 0.00');
+        if ($height < \PHP_FLOAT_EPSILON) {
+            throw new LayoutArgumentException('Page height must be > 0.00');
         }
 
         $this->height = $height;
@@ -98,6 +100,10 @@ class Page implements PageInterface
      */
     public function getHeight(): float
     {
+        if ($this->height === null) {
+            throw new LayoutArgumentException('Page not configured completely!');
+        }
+
         return $this->height;
     }
 
@@ -156,7 +162,7 @@ class Page implements PageInterface
      */
     public function removeLayer(Layer $layer): void
     {
-        $this->removeLayerById($layer->getNumber());
+        $this->removeLayerByNumber($layer->getNumber());
     }
 
     /**
@@ -165,7 +171,7 @@ class Page implements PageInterface
      *
      * @param int $number
      */
-    public function removeLayerById(int $number): void
+    public function removeLayerByNumber(int $number): void
     {
         unset($this->layers[$number]);
     }

@@ -60,6 +60,18 @@ class Layer implements LayerInterface
     }
 
     /**
+     * Clears the current set of Elements, and optionally sets new ones.
+     *
+     * @param Element[] $elements
+     */
+    public function resetElements(array $elements = []): void
+    {
+        $this->elements = [];
+
+        $this->setElements($elements);
+    }
+
+    /**
      * Gets the full set of Elements.
      *
      * @return Element[]
