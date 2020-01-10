@@ -14,7 +14,7 @@ class DataImageElementTest extends TestCase
     {
         $test = new DataImageElement('test');
 
-        $fd = \file_get_contents(__DIR__ . '/../../../../data/builder_tests/test_image.png');
+        $fd = \file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png');
 
         $test->setData($fd);
 
@@ -43,7 +43,7 @@ class DataImageElementTest extends TestCase
     {
         $test = new DataImageElement('test');
 
-        $if = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/builder_tests/test_image.png'));
+        $if = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
 
         $test->setData($if);
 
@@ -63,7 +63,7 @@ class DataImageElementTest extends TestCase
     {
         $test = new DataImageElement('test');
 
-        $if = \file_get_contents(__DIR__ . '/../../../../data/builder_tests/test_image.png');
+        $if = \file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png');
 
         $test->setBinaryData($if);
 
@@ -107,12 +107,12 @@ class DataImageElementTest extends TestCase
     {
         $test = new DataImageElement('test');
 
-        $test->setData(\file_get_contents(__DIR__ . '/../../../../data/builder_tests/test_image.png'));
+        $test->setData(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
 
         $if = $test->getImageFile();
 
         $this->assertNotNull($if);
         $this->assertFileIsReadable($if);
-        $this->assertFileEquals(__DIR__ . '/../../../../data/builder_tests/test_image.png', $if);
+        $this->assertFileEquals(__DIR__ . '/../../../../data/test_data/test_image.png', $if);
     }
 }

@@ -2,7 +2,11 @@
 
 namespace Layout\Basic;
 
+use PdfTemplater\Layout\Basic\BookmarkElement as BookmarkElementImpl;
+use PdfTemplater\Layout\Basic\DataImageElement;
 use PdfTemplater\Layout\Basic\ElementFactory;
+use PdfTemplater\Layout\Basic\EllipseElement as EllipseElementImpl;
+use PdfTemplater\Layout\Basic\RgbColor;
 use PdfTemplater\Layout\BookmarkElement;
 use PdfTemplater\Layout\EllipseElement;
 use PdfTemplater\Layout\ImageElement;
@@ -34,11 +38,294 @@ class ElementFactoryTest extends TestCase
 
         $this->expectException(LayoutArgumentException::class);
 
-        $this->assertInstanceOf(BookmarkElement::class, $test->createElement('invalid', 'test'));
+        $test->createElement('invalid', 'test');
     }
 
-    public function testSetExtendedAttributes()
+    public function testSetExtendedAttributesBookmark()
     {
+        $test = new ElementFactory();
 
+        $el = new BookmarkElementImpl('test');
+
+        $test->setExtendedAttributes($el, [
+            'level'  => 1,
+            'name'   => 'test',
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+
+        $this->assertSame(1, $el->getLevel());
+        $this->assertSame('test', $el->getName());
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesBookmarkInvalid1()
+    {
+        $test = new ElementFactory();
+
+        $el = new BookmarkElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'level'  => -1,
+            'name'   => 'test',
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesBookmarkInvalid2()
+    {
+        $test = new ElementFactory();
+
+        $el = new BookmarkElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'level'  => 1,
+            'name'   => 'test',
+            'width'  => -10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesBookmarkInvalid3()
+    {
+        $test = new ElementFactory();
+
+        $el = new BookmarkElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'level'  => 1,
+            'name'   => 'test',
+            'width'  => 10.0,
+            'height' => -11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesBookmarkInvalid4()
+    {
+        $test = new ElementFactory();
+
+        $el = new BookmarkElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'level'  => 1,
+            'name'   => null,
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesBookmarkInvalid5()
+    {
+        $test = new ElementFactory();
+
+        $el = new BookmarkElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'level'  => 1,
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesDataImage()
+    {
+        $test = new ElementFactory();
+
+        $el = new DataImageElement('test');
+
+        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../test_data/test_image.png'));
+
+        $test->setExtendedAttributes($el, [
+            'data'   => $data,
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+
+        $this->assertSame($data, $el->getImageData());
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesDataImageInvalid1()
+    {
+        $test = new ElementFactory();
+
+        $el = new DataImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'data'   => null,
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesDataImageInvalid2()
+    {
+        $test = new ElementFactory();
+
+        $el = new DataImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesDataImageInvalid3()
+    {
+        $test = new ElementFactory();
+
+        $el = new DataImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../test_data/test_image.png'));
+
+        $test->setExtendedAttributes($el, [
+            'data'   => $data,
+            'width'  => -10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+
+    public function testSetExtendedAttributesDataImageInvalid4()
+    {
+        $test = new ElementFactory();
+
+        $el = new DataImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../test_data/test_image.png'));
+
+        $test->setExtendedAttributes($el, [
+            'data'   => $data,
+            'width'  => 10.0,
+            'height' => -11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesEllipse1()
+    {
+        $test = new ElementFactory();
+
+        $el = new EllipseElementImpl('test');
+
+        $test->setExtendedAttributes($el, [
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+
+        $this->assertNull($el->getStroke());
+        $this->assertNull($el->getFill());
+        $this->assertNull($el->getStrokeWidth());
+
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesEllipse2()
+    {
+        $test = new ElementFactory();
+
+        $el = new EllipseElementImpl('test');
+
+        $test->setExtendedAttributes($el, [
+            'stroke'      => '#FFF',
+            'fill'        => '#ABC',
+            'strokeWidth' => 9.0,
+            'width'       => 10.0,
+            'height'      => 11.0,
+            'top'         => 12.0,
+            'left'        => 13.0,
+        ]);
+
+        $this->assertEquals(new RgbColor(1.0, 1.0, 1.0), $el->getStroke());
+        $this->assertEquals(new RgbColor(0xAA / 0xFF, 0xBB / 0xFF, 0xCC / 0xFF), $el->getFill());
+        $this->assertSame(9.0, $el->getStrokeWidth());
+
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesEllipseInvalid1()
+    {
+        $test = new ElementFactory();
+
+        $el = new EllipseElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'width'  => -10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesEllipseInvalid2()
+    {
+        $test = new ElementFactory();
+
+        $el = new EllipseElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'width'  => 10.0,
+            'height' => -11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
     }
 }

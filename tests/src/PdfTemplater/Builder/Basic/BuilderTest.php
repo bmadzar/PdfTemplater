@@ -222,8 +222,8 @@ class BuilderTest extends TestCase
         $boxNode3 = new Node('line', 'line', $attrs + ['linewidth' => 1.0, 'linecolor' => '#000000']);
         $boxNode4 = new Node('rectangle', 'rectangle', $attrs + []);
         $boxNode5 = new Node('text', 'text', $attrs + ['font' => 'Times', 'fontsize' => 12.0, 'color' => '#000000']);
-        $boxNode6 = new Node('image', 'image', $attrs + ['data' => \file_get_contents(__DIR__ . '/../../../../data/builder_tests/test_image.png')]);
-        $boxNode7 = new Node('imagefile', 'imagefile', $attrs + ['file' => __DIR__ . '/../../../../data/builder_tests/test_image.png']);
+        $boxNode6 = new Node('image', 'image', $attrs + ['data' => \file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png')]);
+        $boxNode7 = new Node('imagefile', 'imagefile', $attrs + ['file' => __DIR__ . '/../../../../data/test_data/test_image.png']);
 
         $pageNode1->addChild($boxNode1);
         $pageNode1->addChild($boxNode2);

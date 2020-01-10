@@ -39,7 +39,18 @@ class DocumentTest extends TestCase
 
     public function testGetFonts()
     {
+        $test = new Document();
 
+        $this->assertSame([], $test->getFonts());
+
+        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'test1');
+        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'test2');
+
+        $fonts = $test->getFonts();
+
+        $this->assertCount(2, $fonts);
+        $this->assertArrayHasKey('test1', $fonts);
+        $this->assertArrayHasKey('test2', $fonts);
     }
 
     public function testSetMetadataValue()
@@ -162,17 +173,35 @@ class DocumentTest extends TestCase
 
     public function testRemoveFont()
     {
+        $test = new Document();
 
+        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+
+        $this->assertTrue($test->hasFont('TestFont'));
+
+        $test->removeFont('TestFont');
+
+        $this->assertFalse($test->hasFont('TestFont'));
     }
 
     public function testAddFont()
     {
+        $test = new Document();
 
+        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+
+        $this->assertSame(__DIR__ . '/../../../../test_data/test_font.ttf', $test->getFont('TestFont'));
     }
 
     public function testGetFont()
     {
+        $test = new Document();
 
+        $this->assertNull($test->getFont('TestFont'));
+
+        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+
+        $this->assertSame(__DIR__ . '/../../../../test_data/test_font.ttf', $test->getFont('TestFont'));
     }
 
     public function testGetPages()
@@ -221,6 +250,12 @@ class DocumentTest extends TestCase
 
     public function testHasFont()
     {
+        $test = new Document();
 
+        $this->assertFalse($test->hasFont('TestFont'));
+
+        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+
+        $this->assertTrue($test->hasFont('TestFont'));
     }
 }
