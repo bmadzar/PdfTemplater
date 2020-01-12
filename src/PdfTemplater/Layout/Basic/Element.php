@@ -19,27 +19,27 @@ class Element implements ElementInterface
     /**
      * @var string The element identifier.
      */
-    private $id;
+    private string $id;
 
     /**
      * @var float The offset from the left edge of the page.
      */
-    private $left;
+    private float $left;
 
     /**
      * @var float The offset from the top edge of the page.
      */
-    private $top;
+    private float $top;
 
     /**
      * @var float The width of the element box.
      */
-    private $width;
+    private float $width;
 
     /**
      * @var float The height of the element box.
      */
-    private $height;
+    private float $height;
 
     /**
      * Element constructor.
@@ -47,15 +47,18 @@ class Element implements ElementInterface
      * Elements require a unique identifier.
      *
      * @param string $id
+     * @param float  $left
+     * @param float  $top
+     * @param float  $width
+     * @param float  $height
      */
-    public function __construct(string $id)
+    public function __construct(string $id, float $left, float $top, float $width, float $height)
     {
-        $this->id = $id;
-
-        $this->left = 0.00;
-        $this->top = 0.00;
-        $this->width = 0.00;
-        $this->height = 0.00;
+        $this->setId($id);
+        $this->setLeft($left);
+        $this->setTop($top);
+        $this->setWidth($width);
+        $this->setHeight($height);
     }
 
     /**
@@ -153,6 +156,10 @@ class Element implements ElementInterface
      */
     public function setId(string $id): void
     {
+        if ($id === '') {
+            throw new LayoutArgumentException('ID cannot be an empty string!');
+        }
+
         $this->id = $id;
     }
 
@@ -164,16 +171,5 @@ class Element implements ElementInterface
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * Elements can be partially constructed. This method should return true if and only if
-     * all mandatory values have been set.
-     *
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return true; // The constructor initializes everything
     }
 }

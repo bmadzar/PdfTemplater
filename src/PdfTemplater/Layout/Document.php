@@ -13,11 +13,28 @@ namespace PdfTemplater\Layout;
 interface Document
 {
     /**
+     * Document constructor.
+     *
+     * @param Page[]      $pages
+     * @param Font[]      $fonts
+     * @param array       $metadata
+     * @param string|null $filename
+     */
+    public function __construct(array $pages, array $fonts, array $metadata, ?string $filename);
+
+    /**
      * Sets the full set of metadata. The metadata collection is an associative array.
      *
      * @param string[] $metadata
      */
     public function setMetadata(array $metadata): void;
+
+    /**
+     * Clears and sets the full set of metadata.
+     *
+     * @param string[] $metadata
+     */
+    public function resetMetadata(array $metadata = []): void;
 
     /**
      * Gets the full set of metadata. Can be empty.
@@ -111,42 +128,55 @@ interface Document
 
     /**
      * Adds a custom font to the Document. If there is an existing font with the supplied
-     * alias, it should be replaced.
+     * name, it should be replaced.
      *
-     * @param string $file
-     * @param string $alias
+     * @param Font $font
      */
-    public function addFont(string $file, string $alias): void;
+    public function addFont(Font $font): void;
 
     /**
-     * Removes the custom font specified by the alias from the Document. Nothing should
+     * Removes the custom font specified by the name from the Document. Nothing should
      * happen if there is no such font.
      *
-     * @param string $alias
+     * @param string $name
      */
-    public function removeFont(string $alias): void;
+    public function removeFont(string $name): void;
 
     /**
-     * Returns TRUE if a font with the given alias exists, FALSE otherwise.
+     * Returns TRUE if a font with the given name exists, FALSE otherwise.
      *
-     * @param string $alias
+     * @param string $name
      * @return bool
      */
-    public function hasFont(string $alias): bool;
+    public function hasFont(string $name): bool;
 
     /**
-     * Gets the font filename for the given font alias, if it is set. Returns NULL if
-     * no font with the given alias is set.
+     * Gets the font filename for the given font name, if it is set. Returns NULL if
+     * no font with the given name is set.
      *
-     * @param string $alias
-     * @return string|null
+     * @param string $name
+     * @return Font|null
      */
-    public function getFont(string $alias): ?string;
+    public function getFont(string $name): ?Font;
 
     /**
-     * Returns the entire set of fonts set on the Document, indexed by alias.
+     * Returns the entire set of fonts set on the Document, indexed by name.
      *
-     * @return string[]
+     * @return Font[]
      */
     public function getFonts(): array;
+
+    /**
+     * Sets the entire collection of fonts.
+     *
+     * @param Font[] $fonts
+     */
+    public function setFonts(array $fonts): void;
+
+    /**
+     * Clears and sets the entire collection of fonts.
+     *
+     * @param Font[] $fonts
+     */
+    public function resetFonts(array $fonts = []): void;
 }

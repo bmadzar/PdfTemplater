@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PdfTemplater\Layout\Basic;
 
 
+use PdfTemplater\Layout\Color;
 use PdfTemplater\Layout\ImageElement;
 use PdfTemplater\Layout\LayoutArgumentException;
 
@@ -19,17 +20,39 @@ class DataImageElement extends RectangleElement implements ImageElement
     /**
      * @var string
      */
-    private $data;
+    private string $data;
 
     /**
      * @var null|string
      */
-    private $temp;
+    private ?string $temp;
 
     /**
      * @var null|string
      */
-    private $altText;
+    private ?string $altText;
+
+    /**
+     * DataImageElement constructor.
+     *
+     * @param string      $id
+     * @param float       $left
+     * @param float       $top
+     * @param float       $width
+     * @param float       $height
+     * @param Color|null  $stroke
+     * @param float|null  $strokeWidth
+     * @param Color|null  $fill
+     * @param string      $data
+     * @param string|null $altText
+     */
+    public function __construct(string $id, float $left, float $top, float $width, float $height, ?Color $stroke, ?float $strokeWidth, ?Color $fill, string $data, ?string $altText)
+    {
+        parent::__construct($id, $left, $top, $width, $height, $stroke, $strokeWidth, $fill);
+
+        $this->setData($data);
+        $this->setAltText($altText);
+    }
 
     /**
      * Sets the base64 data.
@@ -64,10 +87,6 @@ class DataImageElement extends RectangleElement implements ImageElement
      */
     public function getImageData(): string
     {
-        if ($this->data === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->data;
     }
 
@@ -78,10 +97,6 @@ class DataImageElement extends RectangleElement implements ImageElement
      */
     public function getImageFile(): string
     {
-        if ($this->data === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         if (!$this->temp) {
             $this->temp = \tempnam(\sys_get_temp_dir(), 'pdftemplater');
         }
@@ -99,17 +114,6 @@ class DataImageElement extends RectangleElement implements ImageElement
         if ($this->temp) {
             \unlink($this->temp);
         }
-    }
-
-    /**
-     * Elements can be partially constructed. This method should return true if and only if
-     * all mandatory values have been set.
-     *
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return parent::isValid() && $this->data;
     }
 
     /**

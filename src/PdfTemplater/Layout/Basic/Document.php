@@ -5,7 +5,7 @@ namespace PdfTemplater\Layout\Basic;
 
 
 use PdfTemplater\Layout\Document as DocumentInterface;
-use PdfTemplater\Layout\LayoutArgumentException;
+use PdfTemplater\Layout\Font;
 use PdfTemplater\Layout\Page;
 
 /**
@@ -20,31 +20,37 @@ class Document implements DocumentInterface
     /**
      * @var string[]
      */
-    private $metadata;
+    private array $metadata;
 
     /**
      * @var Page[]
      */
-    private $pages;
+    private array $pages;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $filename;
+    private ?string $filename;
 
     /**
-     * @var string[]
+     * @var Font[]
      */
-    private $fonts;
+    private array $fonts;
 
     /**
      * Document constructor.
+     *
+     * @param Page[]      $pages
+     * @param Font[]      $fonts
+     * @param array       $metadata
+     * @param string|null $filename
      */
-    public function __construct()
+    public function __construct(array $pages, array $fonts, array $metadata, ?string $filename)
     {
-        $this->metadata = [];
-        $this->pages = [];
-        $this->fonts = [];
+        $this->resetPages($pages);
+        $this->resetFonts($fonts);
+        $this->resetMetadata($metadata);
+        $this->setFilename($filename);
     }
 
     /**
@@ -58,10 +64,22 @@ class Document implements DocumentInterface
             if (\is_scalar($value)) {
                 $this->setMetadataValue((string)$key, (string)$value);
             } else {
-                throw new LayoutArgumentException('Non-scalar metadata value encountered!');
+                throw new \TypeError('Non-scalar metadata value encountered!');
             }
         }
         unset($key, $value);
+    }
+
+    /**
+     * Clears and sets the full set of metadata.
+     *
+     * @param string[] $metadata
+     */
+    public function resetMetadata(array $metadata = []): void
+    {
+        $this->metadata = [];
+
+        $this->setMetadata($metadata);
     }
 
     /**
@@ -119,7 +137,7 @@ class Document implements DocumentInterface
             if ($page instanceof Page && \is_numeric($number)) {
                 $this->addPage($page);
             } else {
-                throw new LayoutArgumentException('Invalid Page supplied!');
+                throw new \TypeError('Invalid Page supplied!');
             }
         }
         unset($number, $page);
@@ -201,65 +219,89 @@ class Document implements DocumentInterface
 
     /**
      * Adds a custom font to the Document. If there is an existing font with the supplied
-     * alias, it should be replaced.
+     * name, it should be replaced.
      *
-     * @param string $file
-     * @param string $alias
+     * @param Font $font
      */
-    public function addFont(string $file, string $alias): void
+    public function addFont(Font $font): void
     {
-        if (!$alias || !\trim($file)) {
-            throw new LayoutArgumentException('Both font name and alias must be non-empty!');
-        }
-
-        $this->fonts[$alias] = $file;
+        $this->fonts[$font->getName()] = $font;
     }
 
     /**
-     * Removes the custom font specified by the alias from the Document. Nothing should
+     * Removes the custom font specified by the name from the Document. Nothing should
      * happen if there is no such font.
      *
-     * @param string $alias
+     * @param string $name
      */
-    public function removeFont(string $alias): void
+    public function removeFont(string $name): void
     {
-        unset($this->fonts[$alias]);
+        unset($this->fonts[$name]);
     }
 
     /**
-     * Returns TRUE if a font with the given alias exists, FALSE otherwise.
+     * Returns TRUE if a font with the given name exists, FALSE otherwise.
      *
-     * @param string $alias
+     * @param string $name
      * @return bool
      */
-    public function hasFont(string $alias): bool
+    public function hasFont(string $name): bool
     {
-        return isset($this->fonts[$alias]);
+        return isset($this->fonts[$name]);
     }
 
     /**
-     * Gets the font filename for the given font alias, if it is set. Returns NULL if
-     * no font with the given alias is set.
+     * Gets the font filename for the given font name, if it is set. Returns NULL if
+     * no font with the given name is set.
      *
-     * @param string $alias
-     * @return string|null
+     * @param string $name
+     * @return Font|null
      */
-    public function getFont(string $alias): ?string
+    public function getFont(string $name): ?Font
     {
-        if (isset($this->fonts[$alias])) {
-            return $this->fonts[$alias];
+        if (isset($this->fonts[$name])) {
+            return clone $this->fonts[$name];
         }
 
         return null;
     }
 
     /**
-     * Returns the entire set of fonts set on the Document, indexed by alias.
+     * Returns the entire set of fonts set on the Document, indexed by name.
      *
-     * @return string[]
+     * @return Font[]
      */
     public function getFonts(): array
     {
-        return $this->fonts;
+        return \array_map(fn(Font $font) => clone $font, $this->fonts);
+    }
+
+    /**
+     * Sets the entire collection of fonts.
+     *
+     * @param Font[] $fonts
+     */
+    public function setFonts(array $fonts): void
+    {
+        foreach ($fonts as $font) {
+            if ($font instanceof Font) {
+                $this->addFont($font);
+            } else {
+                throw new \TypeError('Invalid Font supplied!');
+            }
+        }
+        unset($font);
+    }
+
+    /**
+     * Clears and sets the entire collection of fonts.
+     *
+     * @param Font[] $fonts
+     */
+    public function resetFonts(array $fonts = []): void
+    {
+        $this->fonts = [];
+
+        $this->setFonts($fonts);
     }
 }

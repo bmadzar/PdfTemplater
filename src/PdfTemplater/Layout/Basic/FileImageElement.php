@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PdfTemplater\Layout\Basic;
 
 
+use PdfTemplater\Layout\Color;
 use PdfTemplater\Layout\ImageElement;
 use PdfTemplater\Layout\LayoutArgumentException;
 
@@ -19,12 +20,20 @@ class FileImageElement extends RectangleElement implements ImageElement
     /**
      * @var string
      */
-    private $file;
+    private string $file;
 
     /**
      * @var null|string
      */
-    private $altText;
+    private ?string $altText;
+
+    public function __construct(string $id, float $left, float $top, float $width, float $height, ?Color $stroke, ?float $strokeWidth, ?Color $fill, string $file, ?string $altText)
+    {
+        parent::__construct($id, $left, $top, $width, $height, $stroke, $strokeWidth, $fill);
+
+        $this->setFile($file);
+        $this->setAltText($altText);
+    }
 
     /**
      * Sets the filename.
@@ -47,10 +56,6 @@ class FileImageElement extends RectangleElement implements ImageElement
      */
     public function getImageData(): string
     {
-        if ($this->file === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return \hash_file('base64', $this->file, false);
     }
 
@@ -61,22 +66,7 @@ class FileImageElement extends RectangleElement implements ImageElement
      */
     public function getImageFile(): string
     {
-        if ($this->file === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->file;
-    }
-
-    /**
-     * Elements can be partially constructed. This method should return true if and only if
-     * all mandatory values have been set.
-     *
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return parent::isValid() && $this->file;
     }
 
     /**

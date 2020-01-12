@@ -19,17 +19,38 @@ class EllipseElement extends Element implements EllipseElementInterface
     /**
      * @var null|Color
      */
-    private $stroke;
+    private ?Color $stroke;
 
     /**
      * @var null|float
      */
-    private $strokeWidth;
+    private ?float $strokeWidth;
 
     /**
      * @var null|Color
      */
-    private $fill;
+    private ?Color $fill;
+
+    /**
+     * EllipseElement constructor.
+     *
+     * @param string     $id
+     * @param float      $left
+     * @param float      $top
+     * @param float      $width
+     * @param float      $height
+     * @param Color|null $stroke
+     * @param float|null $strokeWidth
+     * @param Color|null $fill
+     */
+    public function __construct(string $id, float $left, float $top, float $width, float $height, ?Color $stroke, ?float $strokeWidth, ?Color $fill)
+    {
+        parent::__construct($id, $left, $top, $width, $height);
+
+        $this->setStroke($stroke);
+        $this->setStrokeWidth($strokeWidth);
+        $this->setFill($fill);
+    }
 
     /**
      * Sets the stroke color.
@@ -48,7 +69,7 @@ class EllipseElement extends Element implements EllipseElementInterface
      */
     public function getStroke(): ?Color
     {
-        return $this->stroke;
+        return ($this->stroke === null ? null : clone $this->stroke);
     }
 
     /**
@@ -88,6 +109,6 @@ class EllipseElement extends Element implements EllipseElementInterface
      */
     public function getFill(): ?Color
     {
-        return $this->fill;
+        return ($this->fill === null ? null : clone $this->fill);
     }
 }

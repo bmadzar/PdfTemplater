@@ -21,25 +21,23 @@ class Layer implements LayerInterface
     /**
      * @var int The Layer number (z-index).
      */
-    private $number;
+    private int $number;
 
     /**
      * @var Element[] The element collection for this layer.
      */
-    private $elements;
+    private array $elements;
 
     /**
      * Layer constructor.
      *
-     * Sets the Layer number, i.e. the z-index.
-     *
-     * @param int $number
+     * @param int       $number
+     * @param Element[] $elements
      */
-    public function __construct(int $number)
+    public function __construct(int $number, array $elements = [])
     {
-        $this->number = $number;
-
-        $this->elements = [];
+        $this->setNumber($number);
+        $this->resetElements($elements);
     }
 
     /**

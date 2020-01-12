@@ -13,15 +13,6 @@ namespace PdfTemplater\Layout;
 interface Element
 {
     /**
-     * Element constructor.
-     *
-     * Elements require a unique identifier.
-     *
-     * @param string $id
-     */
-    public function __construct(string $id);
-
-    /**
      * Sets the left offset.
      *
      * @param float $left
@@ -90,12 +81,4 @@ interface Element
      * @return string
      */
     public function getId(): string;
-
-    /**
-     * Elements can be partially constructed. This method should return true if and only if
-     * all mandatory values have been set.
-     *
-     * @return bool
-     */
-    public function isValid(): bool;
 }

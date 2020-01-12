@@ -16,27 +16,25 @@ use PdfTemplater\Layout\LayoutArgumentException;
  */
 class RgbColor implements Color
 {
-    private const GAMMA = 2.2;
+    /**
+     * @var float
+     */
+    private float $red;
 
     /**
      * @var float
      */
-    private $red;
+    private float $green;
 
     /**
      * @var float
      */
-    private $green;
+    private float $blue;
 
     /**
      * @var float
      */
-    private $blue;
-
-    /**
-     * @var float
-     */
-    private $alpha;
+    private float $alpha;
 
     /**
      * RgbColor constructor.

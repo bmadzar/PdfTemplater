@@ -18,9 +18,12 @@ interface Page
      *
      * Sets the page number.
      *
-     * @param int $number
+     * @param int     $number
+     * @param float   $width
+     * @param float   $height
+     * @param Layer[] $layers
      */
-    public function __construct(int $number);
+    public function __construct(int $number, float $width, float $height, array $layers = []);
 
     /**
      * Sets the width.
@@ -56,6 +59,13 @@ interface Page
      * @param Layer[] $layers
      */
     public function setLayers(array $layers): void;
+
+    /**
+     * Clears and sets the entire set of Layers.
+     *
+     * @param Layer[] $layers
+     */
+    public function resetLayers(array $layers = []): void;
 
     /**
      * Gets the set of Layers.

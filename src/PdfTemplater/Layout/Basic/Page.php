@@ -20,35 +20,37 @@ class Page implements PageInterface
     /**
      * @var int
      */
-    private $number;
+    private int $number;
 
     /**
      * @var float
      */
-    private $width;
+    private float $width;
 
     /**
      * @var float
      */
-    private $height;
+    private float $height;
 
     /**
      * @var Layer[]
      */
-    private $layers;
+    private array $layers;
 
     /**
      * Page constructor.
      *
-     * Sets the page number.
-     *
-     * @param int $number
+     * @param int     $number
+     * @param float   $width
+     * @param float   $height
+     * @param Layer[] $layers
      */
-    public function __construct(int $number)
+    public function __construct(int $number, float $width, float $height, array $layers = [])
     {
-        $this->number = $number;
-
-        $this->layers = [];
+        $this->setNumber($number);
+        $this->setWidth($width);
+        $this->setHeight($height);
+        $this->resetLayers($layers);
     }
 
     /**
@@ -72,10 +74,6 @@ class Page implements PageInterface
      */
     public function getWidth(): float
     {
-        if ($this->width === null) {
-            throw new LayoutArgumentException('Page not configured completely!');
-        }
-
         return $this->width;
     }
 
@@ -86,10 +84,6 @@ class Page implements PageInterface
      */
     public function setHeight(float $height): void
     {
-        if ($height < \PHP_FLOAT_EPSILON) {
-            throw new LayoutArgumentException('Page height must be > 0.00');
-        }
-
         $this->height = $height;
     }
 
@@ -100,10 +94,6 @@ class Page implements PageInterface
      */
     public function getHeight(): float
     {
-        if ($this->height === null) {
-            throw new LayoutArgumentException('Page not configured completely!');
-        }
-
         return $this->height;
     }
 
@@ -121,6 +111,18 @@ class Page implements PageInterface
                 throw new LayoutArgumentException('Invalid Layer supplied!');
             }
         }
+    }
+
+    /**
+     * Clears and sets the entire set of layers.
+     *
+     * @param Layer[] $layers
+     */
+    public function resetLayers(array $layers = []): void
+    {
+        $this->layers = [];
+
+        $this->setLayers($layers);
     }
 
     /**

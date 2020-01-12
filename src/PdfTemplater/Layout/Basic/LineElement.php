@@ -21,12 +21,31 @@ class LineElement extends Element implements LineElementInterface
     /**
      * @var float
      */
-    private $lineWidth;
+    private float $lineWidth;
 
     /**
      * @var Color
      */
-    private $lineColor;
+    private Color $lineColor;
+
+    /**
+     * LineElement constructor.
+     *
+     * @param string $id
+     * @param float  $left
+     * @param float  $top
+     * @param float  $width
+     * @param float  $height
+     * @param float  $lineWidth
+     * @param Color  $lineColor
+     */
+    public function __construct(string $id, float $left, float $top, float $width, float $height, float $lineWidth, Color $lineColor)
+    {
+        parent::__construct($id, $left, $top, $width, $height);
+
+        $this->setLineWidth($lineWidth);
+        $this->setLineColor($lineColor);
+    }
 
     /**
      * Sets the thickness of the line.
@@ -49,10 +68,6 @@ class LineElement extends Element implements LineElementInterface
      */
     public function getLineWidth(): float
     {
-        if ($this->lineWidth === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->lineWidth;
     }
 
@@ -73,20 +88,6 @@ class LineElement extends Element implements LineElementInterface
      */
     public function getLineColor(): Color
     {
-        if ($this->lineColor === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
-        return $this->lineColor;
-    }
-
-    /**
-     * Verifies the line has a thickness and color.
-     *
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return parent::isValid() && $this->lineColor && $this->lineWidth !== null;
+        return clone $this->lineColor;
     }
 }

@@ -19,22 +19,22 @@ class HslColor implements Color
     /**
      * @var float
      */
-    private $hue;
+    private float $hue;
 
     /**
      * @var float
      */
-    private $saturation;
+    private float $saturation;
 
     /**
      * @var float
      */
-    private $lightness;
+    private float $lightness;
 
     /**
      * @var float
      */
-    private $alpha;
+    private float $alpha;
 
     /**
      * HslColor constructor.

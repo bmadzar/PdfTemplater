@@ -39,6 +39,8 @@ class Font implements FontInterface
     }
 
     /**
+     * Sets the font name. Name cannot be empty.
+     *
      * @param string $name
      */
     public function setName(string $name): void
@@ -51,6 +53,8 @@ class Font implements FontInterface
     }
 
     /**
+     * Gets the font name.
+     *
      * @return string
      */
     public function getName(): string
@@ -59,6 +63,8 @@ class Font implements FontInterface
     }
 
     /**
+     * Sets the font style, as one of the STYLE_* constants.
+     *
      * @param int $style
      */
     public function setStyle(int $style): void
@@ -71,7 +77,9 @@ class Font implements FontInterface
     }
 
     /**
-     * @inheritDoc
+     * Gets the font style, as one of the STYLE_* constants.
+     *
+     * @return int
      */
     public function getStyle(): int
     {
@@ -79,7 +87,9 @@ class Font implements FontInterface
     }
 
     /**
-     * @inheritDoc
+     * Sets the path to the font file, or null if the font is one of the standard PDF fonts.
+     *
+     * @param string|null $file
      */
     public function setFile(?string $file): void
     {
@@ -103,6 +113,8 @@ class Font implements FontInterface
     }
 
     /**
+     * Gets the path to the font file, or null if the font is one of the standard PDf fonts.
+     *
      * @return string|null
      */
     public function getFile(): ?string

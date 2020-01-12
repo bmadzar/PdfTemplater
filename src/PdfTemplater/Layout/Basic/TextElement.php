@@ -14,42 +14,71 @@ class TextElement extends RectangleElement implements TextElementInterface
     /**
      * @var string
      */
-    private $text;
+    private string $text;
 
     /**
      * @var string
      */
-    private $font;
+    private string $font;
 
     /**
      * @var float
      */
-    private $fontSize;
+    private float $fontSize;
 
     /**
      * @var float
      */
-    private $lineSize;
+    private float $lineSize;
 
     /**
      * @var int
      */
-    private $wrapMode;
+    private int $wrapMode;
 
     /**
      * @var int
      */
-    private $alignMode;
+    private int $alignMode;
 
     /**
      * @var int
      */
-    private $verticalAlignMode;
+    private int $verticalAlignMode;
 
     /**
      * @var Color
      */
-    private $color;
+    private Color $color;
+
+    public function __construct(
+        string $id,
+        float $left,
+        float $top,
+        float $width,
+        float $height,
+        ?Color $stroke,
+        ?float $strokeWidth,
+        ?Color $fill,
+        string $text,
+        string $font,
+        float $fontSize,
+        float $lineSize,
+        int $wrapMode,
+        int $alignMode,
+        int $verticalAlignMode
+    )
+    {
+        parent::__construct($id, $left, $top, $width, $height, $stroke, $strokeWidth, $fill);
+
+        $this->setText($text);
+        $this->setFont($font);
+        $this->setFontSize($fontSize);
+        $this->setLineSize($lineSize);
+        $this->setWrapMode($wrapMode);
+        $this->setAlignMode($alignMode);
+        $this->setVerticalAlignMode($verticalAlignMode);
+    }
 
     /**
      * Sets the text.
@@ -68,10 +97,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getText(): string
     {
-        if ($this->text === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->text;
     }
 
@@ -92,10 +117,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getFont(): string
     {
-        if ($this->font === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->font;
     }
 
@@ -111,10 +132,6 @@ class TextElement extends RectangleElement implements TextElementInterface
         }
 
         $this->fontSize = $size;
-
-        if ($this->lineSize === null) {
-            $this->setLineSize($size);
-        }
     }
 
     /**
@@ -124,10 +141,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getFontSize(): float
     {
-        if ($this->fontSize === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->fontSize;
     }
 
@@ -152,10 +165,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getLineSize(): float
     {
-        if ($this->lineSize === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->lineSize;
     }
 
@@ -180,10 +189,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getWrapMode(): int
     {
-        if ($this->wrapMode === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->wrapMode;
     }
 
@@ -208,10 +213,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getAlignMode(): int
     {
-        if ($this->alignMode === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->alignMode;
     }
 
@@ -236,10 +237,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getVerticalAlignMode(): int
     {
-        if ($this->verticalAlignMode === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
         return $this->verticalAlignMode;
     }
 
@@ -260,29 +257,6 @@ class TextElement extends RectangleElement implements TextElementInterface
      */
     public function getColor(): Color
     {
-        if ($this->color === null) {
-            throw new LayoutArgumentException('Element not configured completely!');
-        }
-
-        return $this->color;
-    }
-
-    /**
-     * Elements can be partially constructed. This method should return true if and only if
-     * all mandatory values have been set.
-     *
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return parent::isValid() &&
-            ($this->text || $this->text === '') &&
-            $this->fontSize &&
-            $this->font &&
-            $this->lineSize &&
-            $this->color &&
-            $this->wrapMode !== null &&
-            $this->alignMode !== null &&
-            $this->verticalAlignMode !== null;
+        return clone $this->color;
     }
 }

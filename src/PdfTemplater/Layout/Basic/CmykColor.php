@@ -12,27 +12,27 @@ class CmykColor implements Color
     /**
      * @var float
      */
-    private $cyan;
+    private float $cyan;
 
     /**
      * @var float
      */
-    private $magenta;
+    private float $magenta;
 
     /**
      * @var float
      */
-    private $yellow;
+    private float $yellow;
 
     /**
      * @var float
      */
-    private $black;
+    private float $black;
 
     /**
      * @var float
      */
-    private $alpha;
+    private float $alpha;
 
     /**
      * CmykColor constructor.

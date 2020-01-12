@@ -6,6 +6,9 @@ use PdfTemplater\Layout\Basic\BookmarkElement as BookmarkElementImpl;
 use PdfTemplater\Layout\Basic\DataImageElement;
 use PdfTemplater\Layout\Basic\ElementFactory;
 use PdfTemplater\Layout\Basic\EllipseElement as EllipseElementImpl;
+use PdfTemplater\Layout\Basic\FileImageElement;
+use PdfTemplater\Layout\Basic\LineElement as LineElementImpl;
+use PdfTemplater\Layout\Basic\RectangleElement as RectangleElementImpl;
 use PdfTemplater\Layout\Basic\RgbColor;
 use PdfTemplater\Layout\BookmarkElement;
 use PdfTemplater\Layout\EllipseElement;
@@ -280,7 +283,7 @@ class ElementFactoryTest extends TestCase
         $test->setExtendedAttributes($el, [
             'stroke'      => '#FFF',
             'fill'        => '#ABC',
-            'strokeWidth' => 9.0,
+            'strokewidth' => 9.0,
             'width'       => 10.0,
             'height'      => 11.0,
             'top'         => 12.0,
@@ -328,4 +331,311 @@ class ElementFactoryTest extends TestCase
             'left'   => 13.0,
         ]);
     }
+
+    public function testSetExtendedAttributesFileImage()
+    {
+        $test = new ElementFactory();
+
+        $el = new FileImageElement('test');
+
+        $data = __DIR__ . '/../../../../test_data/test_image.png';
+
+        $test->setExtendedAttributes($el, [
+            'file'   => $data,
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+
+        $this->assertSame($data, $el->getImageFile());
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesFileImageInvalid1()
+    {
+        $test = new ElementFactory();
+
+        $el = new FileImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'file'   => null,
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesFileImageInvalid2()
+    {
+        $test = new ElementFactory();
+
+        $el = new FileImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesFileImageInvalid3()
+    {
+        $test = new ElementFactory();
+
+        $el = new FileImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $data = __DIR__ . '/../../../../test_data/test_image.png';
+
+        $test->setExtendedAttributes($el, [
+            'file'   => $data,
+            'width'  => -10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+
+    public function testSetExtendedAttributesFileImageInvalid4()
+    {
+        $test = new ElementFactory();
+
+        $el = new FileImageElement('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $data = __DIR__ . '/../../../../test_data/test_image.png';
+
+        $test->setExtendedAttributes($el, [
+            'file'   => $data,
+            'width'  => 10.0,
+            'height' => -11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesLine()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $test->setExtendedAttributes($el, [
+            'lineWidth' => 5.0,
+            'lineColor' => '#ABC',
+            'width'     => 10.0,
+            'height'    => 11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+
+        $this->assertSame(5.0, $el->getLineWidth());
+        $this->assertEquals(new RgbColor(0xAA / 0xFF, 0xBB / 0xFF, 0xCC / 0xFF), $el->getLineColor());
+
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesLineInvalid1()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'lineWidth' => -5.0,
+            'lineColor' => '#ABC',
+            'width'     => 10.0,
+            'height'    => 11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesLineInvalid2()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'lineWidth' => 5.0,
+            'lineColor' => '####',
+            'width'     => 10.0,
+            'height'    => 11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesLineInvalid3()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'lineColor' => '#ABC',
+            'width'     => 10.0,
+            'height'    => 11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesLineInvalid4()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'lineWidth' => 5.0,
+            'width'     => 10.0,
+            'height'    => 11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesLineInvalid5()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'lineWidth' => 5.0,
+            'lineColor' => '#ABC',
+            'width'     => -10.0,
+            'height'    => 11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesLineInvalid6()
+    {
+        $test = new ElementFactory();
+
+        $el = new LineElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'lineWidth' => 5.0,
+            'lineColor' => '#ABC',
+            'width'     => 10.0,
+            'height'    => -11.0,
+            'top'       => 12.0,
+            'left'      => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesRectangle1()
+    {
+        $test = new ElementFactory();
+
+        $el = new RectangleElementImpl('test');
+
+        $test->setExtendedAttributes($el, [
+            'width'  => 10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+
+        $this->assertNull($el->getStroke());
+        $this->assertNull($el->getFill());
+        $this->assertNull($el->getStrokeWidth());
+
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesRectangle2()
+    {
+        $test = new ElementFactory();
+
+        $el = new RectangleElementImpl('test');
+
+        $test->setExtendedAttributes($el, [
+            'stroke'      => '#FFF',
+            'fill'        => '#ABC',
+            'strokewidth' => 9.0,
+            'width'       => 10.0,
+            'height'      => 11.0,
+            'top'         => 12.0,
+            'left'        => 13.0,
+        ]);
+
+        $this->assertEquals(new RgbColor(1.0, 1.0, 1.0), $el->getStroke());
+        $this->assertEquals(new RgbColor(0xAA / 0xFF, 0xBB / 0xFF, 0xCC / 0xFF), $el->getFill());
+        $this->assertSame(9.0, $el->getStrokeWidth());
+
+        $this->assertSame(10.0, $el->getWidth());
+        $this->assertSame(11.0, $el->getHeight());
+        $this->assertSame(12.0, $el->getTop());
+        $this->assertSame(13.0, $el->getLeft());
+    }
+
+    public function testSetExtendedAttributesRectangleInvalid1()
+    {
+        $test = new ElementFactory();
+
+        $el = new RectangleElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'width'  => -10.0,
+            'height' => 11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
+    public function testSetExtendedAttributesRectangleInvalid2()
+    {
+        $test = new ElementFactory();
+
+        $el = new RectangleElementImpl('test');
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setExtendedAttributes($el, [
+            'width'  => 10.0,
+            'height' => -11.0,
+            'top'    => 12.0,
+            'left'   => 13.0,
+        ]);
+    }
+
 }
