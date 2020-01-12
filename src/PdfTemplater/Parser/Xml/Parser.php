@@ -84,6 +84,11 @@ class Parser implements ParserInterface
         }
         unset($pageElement);
 
+        foreach ($element->getElementsByTagName('Font') as $fontElement) {
+            $node->addChild($this->buildFont($fontElement));
+        }
+        unset($fontElement);
+
         return $node;
     }
 
@@ -144,6 +149,33 @@ class Parser implements ParserInterface
         unset($attribute);
 
         $node->setAttribute('content', $element->textContent);
+
+        return $node;
+    }
+
+    /**
+     * Builds a Node for a font. Fonts should not have children.
+     *
+     * @param \DOMElement $element
+     * @return NodeInterface
+     */
+    private function buildFont(\DOMElement $element): NodeInterface
+    {
+        if ($element->tagName !== 'Font') {
+            throw new ParseLogicException('Font element has incorrect tag name!');
+        }
+
+        $node = new Node(\strtolower($element->tagName));
+
+        /** @var \DOMAttr $attribute */
+        foreach ($element->attributes as $attribute) {
+            if (\strtolower($attribute->name) === 'id') {
+                $node->setId($attribute->value);
+            } else {
+                $node->setAttribute(\strtolower($attribute->name), $attribute->value);
+            }
+        }
+        unset($attribute);
 
         return $node;
     }

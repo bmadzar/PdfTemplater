@@ -63,8 +63,16 @@ class Parser implements ParserInterface
         }
         unset($id, $page, $child);
 
+        foreach ($subtree['fonts'] ?? [] as $id => $font) {
+            $child = $this->buildFont($font);
+            $child->setId((string)$id);
+
+            $node->addChild($child);
+        }
+        unset($id, $page, $child);
+
         foreach ($subtree as $key => $value) {
-            if ($key !== 'pages' && \is_scalar($value)) {
+            if ($key !== 'pages' && $key !== 'fonts' && \is_scalar($value)) {
                 $node->setAttribute($key, (string)$value);
             }
         }
@@ -117,6 +125,26 @@ class Parser implements ParserInterface
 
         foreach ($subtree as $key => $value) {
             if (\is_scalar($value) && $key !== 'type') {
+                $node->setAttribute($key, (string)$value);
+            }
+        }
+        unset($key, $value);
+
+        return $node;
+    }
+
+    /**
+     * Builds a Node for an font. Fonts should not have children.
+     *
+     * @param array $subtree
+     * @return NodeInterface
+     */
+    private function buildFont(array $subtree): NodeInterface
+    {
+        $node = new Node('font');
+
+        foreach ($subtree as $key => $value) {
+            if (\is_scalar($value)) {
                 $node->setAttribute($key, (string)$value);
             }
         }

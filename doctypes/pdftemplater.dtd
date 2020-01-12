@@ -2,7 +2,7 @@
 
         <!-- PDF Templater XML DTD v1.0 -->
 
-        <!ELEMENT Document (Page | Font)*>
+        <!ELEMENT Document (Defaults?, (Page | Font)*)>
         <!ATTLIST Document
                 author CDATA #IMPLIED
                 title CDATA #REQUIRED
@@ -12,10 +12,12 @@
                 id ID #IMPLIED
                 >
 
-        <!ELEMENT Page (Bookmark | Ellipse | Image | Line | Rectangle | Text)*>
+        <!ELEMENT Defaults (Page | Ellipse | Image | Line | Rectangle | Text)*>
+
+        <!ELEMENT Page (Defaults?, (Bookmark | Ellipse | Image | Line | Rectangle | Text)*)>
         <!ATTLIST Page
-                height CDATA #REQUIRED
-                width CDATA #REQUIRED
+                height CDATA #IMPLIED
+                width CDATA #IMPLIED
                 number CDATA #REQUIRED
                 id ID #IMPLIED
                 >
@@ -24,6 +26,7 @@
         <!ATTLIST Font
                 file CDATA #REQUIRED
                 alias CDATA #REQUIRED
+                style CDATA #REQUIRED
                 >
 
         <!ELEMENT Bookmark EMPTY>
@@ -129,8 +132,8 @@
                 left-rel IDREF #IMPLIED
                 layer CDATA #IMPLIED
                 id ID #IMPLIED
-                line-width CDATA #REQUIRED
-                line-color CDATA #REQUIRED
+                line-width CDATA #IMPLIED
+                line-color CDATA #IMPLIED
                 >
 
         <!ELEMENT Rectangle EMPTY>
@@ -173,11 +176,11 @@
                 stroke CDATA #IMPLIED
                 stroke-width CDATA #IMPLIED
                 fill CDATA #IMPLIED
-                font CDATA #REQUIRED
-                font-size CDATA #REQUIRED
+                font CDATA #IMPLIED
+                font-size CDATA #IMPLIED
                 line-size CDATA #IMPLIED
                 wrap CDATA #IMPLIED
                 align CDATA #IMPLIED
                 vertical-align CDATA #IMPLIED
-                color CDATA #REQUIRED
+                color CDATA #IMPLIED
                 >
