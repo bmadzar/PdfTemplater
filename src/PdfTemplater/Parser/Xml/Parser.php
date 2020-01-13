@@ -79,15 +79,23 @@ class Parser implements ParserInterface
         }
         unset($attribute);
 
-        foreach ($element->getElementsByTagName('Page') as $pageElement) {
-            $node->addChild($this->buildPage($pageElement));
-        }
-        unset($pageElement);
+        /**
+         * @var \DOMNode $childNode
+         */
+        foreach ($element->childNodes as $childNode) {
+            if ($childNode->nodeType === \XML_ELEMENT_NODE) {
+                /** @var \DOMElement $childNode */
 
-        foreach ($element->getElementsByTagName('Font') as $fontElement) {
-            $node->addChild($this->buildFont($fontElement));
+                if ($childNode->tagName === 'Page') {
+                    $node->addChild($this->buildPage($childNode));
+                } elseif ($childNode->tagName === 'Font') {
+                    $node->addChild($this->buildFont($childNode));
+                } elseif ($childNode->tagName === 'Defaults') {
+                    $node->addChild($this->buildDefaults($childNode));
+                }
+            }
         }
-        unset($fontElement);
+        unset($childNode);
 
         return $node;
     }
@@ -116,14 +124,19 @@ class Parser implements ParserInterface
         }
         unset($attribute);
 
-        /** @var \DOMNode $elementElement */
-        foreach ($element->childNodes as $elementElement) {
-            if ($elementElement->nodeType === \XML_ELEMENT_NODE) {
-                /** @var \DOMElement $elementElement */
-                $node->addChild($this->buildElement($elementElement));
+        /** @var \DOMNode $childNode */
+        foreach ($element->childNodes as $childNode) {
+            if ($childNode->nodeType === \XML_ELEMENT_NODE) {
+                /** @var \DOMElement $childNode */
+
+                if ($childNode->tagName === 'Defaults') {
+                    $node->addChild($this->buildDefaults($childNode));
+                } else {
+                    $node->addChild($this->buildElement($childNode));
+                }
             }
         }
-        unset($elementElement);
+        unset($childNode);
 
         return $node;
     }
@@ -176,6 +189,32 @@ class Parser implements ParserInterface
             }
         }
         unset($attribute);
+
+        return $node;
+    }
+
+    /**
+     * Builds a Node for the defaults set, for a page or for the document.
+     *
+     * @param \DOMElement $element
+     * @return NodeInterface
+     */
+    private function buildDefaults(\DOMElement $element): NodeInterface
+    {
+        if ($element->tagName !== 'Defaults') {
+            throw new ParseLogicException('Defaults element has incorrect tag name!');
+        }
+
+        $node = new Node(\strtolower($element->tagName));
+
+        /** @var \DOMNode $childNode */
+        foreach ($element->childNodes as $childNode) {
+            if ($childNode->nodeType === \XML_ELEMENT_NODE) {
+                /** @var \DOMElement $childNode */
+                $node->addChild($this->buildElement($childNode));
+            }
+        }
+        unset($childNode);
 
         return $node;
     }

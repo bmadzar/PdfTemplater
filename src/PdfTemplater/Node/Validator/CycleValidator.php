@@ -18,7 +18,7 @@ class CycleValidator implements Validator
     /**
      * @var string[]
      */
-    private $objectHashes;
+    private array $objectHashes = [];
 
     /**
      * Checks that the given Node tree is free from cycles.

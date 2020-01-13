@@ -18,27 +18,27 @@ class Node implements NodeInterface
     /**
      * @var NodeInterface[]
      */
-    private $children;
+    private array $children;
 
     /**
      * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * @var NodeInterface
      */
-    private $parent;
+    private ?NodeInterface $parent;
 
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var string[]
      */
-    private $attributes;
+    private array $attributes;
 
     /**
      * Node constructor.
@@ -46,12 +46,12 @@ class Node implements NodeInterface
      * @param string $type
      * @param string|null $id
      * @param string[] $attributes
-     * @throws \Exception
      */
     public function __construct(string $type, ?string $id = null, array $attributes = [])
     {
         $this->children = [];
         $this->type = $type;
+        $this->parent = null;
 
         if ($id !== null) {
             $this->id = $id;
@@ -63,11 +63,15 @@ class Node implements NodeInterface
     }
 
     /**
-     * @throws \Exception
+     * Generates the id
      */
     protected function generateId(): void
     {
-        $this->id = Uuid::uuid4()->toString();
+        try {
+            $this->id = Uuid::uuid4()->toString();
+        } catch (\Exception $ex) {
+            $this->id = \uniqid(\spl_object_id($this), true);
+        }
     }
 
     /**

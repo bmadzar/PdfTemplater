@@ -167,7 +167,24 @@ class Parser implements ParserInterface
         return $node;
     }
 
-    private function buildDefaults(array $subtree): NodeInterface {
+    /**
+     * Builds a Node for the set of default values, for a document or page.
+     *
+     * @param array $subtree
+     * @return NodeInterface
+     */
+    private function buildDefaults(array $subtree): NodeInterface
+    {
 
+        $node = new Node('defaults');
+
+        foreach ($subtree as $key => $value) {
+            $value['type'] = $key;
+
+            $node->addChild($this->buildElement($value));
+        }
+        unset($key, $value);
+
+        return $node;
     }
 }
