@@ -24,8 +24,8 @@
 
         <!ELEMENT Font EMPTY>
         <!ATTLIST Font
-                file CDATA #REQUIRED
-                alias CDATA #REQUIRED
+                file CDATA #IMPLIED
+                name CDATA #REQUIRED
                 style CDATA #REQUIRED
                 >
 

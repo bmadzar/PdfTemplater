@@ -31,8 +31,9 @@
 
     <element name="Font">
         <complexType>
-            <attribute name="alias" type="string" use="required"/>
-            <attribute name="file" type="string" use="required"/>
+            <attribute name="name" type="string" use="required"/>
+            <attribute name="file" type="string" use="optional"/>
+            <attribute name="style" type="string" use="required"/>
         </complexType>
     </element>
 

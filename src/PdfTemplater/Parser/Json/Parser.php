@@ -71,8 +71,15 @@ class Parser implements ParserInterface
         }
         unset($id, $page, $child);
 
+        if (!empty($subtree['defaults']) && \is_array($subtree['defaults'])) {
+            $child = $this->buildDefaults($subtree['defaults']);
+
+            $node->addChild($child);
+        }
+        unset($child);
+
         foreach ($subtree as $key => $value) {
-            if ($key !== 'pages' && $key !== 'fonts' && \is_scalar($value)) {
+            if (!\in_array($key, ['pages', 'fonts', 'defaults'], true) && \is_scalar($value)) {
                 $node->setAttribute($key, (string)$value);
             }
         }
@@ -99,8 +106,15 @@ class Parser implements ParserInterface
         }
         unset($id, $element, $child);
 
+        if (!empty($subtree['defaults']) && \is_array($subtree['defaults'])) {
+            $child = $this->buildDefaults($subtree['defaults']);
+
+            $node->addChild($child);
+        }
+        unset($child);
+
         foreach ($subtree as $key => $value) {
-            if ($key !== 'elements' && \is_scalar($value)) {
+            if (!\in_array($key, ['elements', 'defaults'], true) && \is_scalar($value)) {
                 $node->setAttribute($key, (string)$value);
             }
         }
@@ -151,5 +165,9 @@ class Parser implements ParserInterface
         unset($key, $value);
 
         return $node;
+    }
+
+    private function buildDefaults(array $subtree): NodeInterface {
+
     }
 }

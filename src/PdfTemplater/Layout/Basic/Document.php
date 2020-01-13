@@ -45,7 +45,7 @@ class Document implements DocumentInterface
      * @param array       $metadata
      * @param string|null $filename
      */
-    public function __construct(array $pages, array $fonts, array $metadata, ?string $filename)
+    public function __construct(array $pages = [], array $fonts = [], array $metadata = [], ?string $filename = null)
     {
         $this->resetPages($pages);
         $this->resetFonts($fonts);

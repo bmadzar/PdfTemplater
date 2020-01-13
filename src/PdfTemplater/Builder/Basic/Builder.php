@@ -9,6 +9,7 @@ use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\Document;
 use PdfTemplater\Layout\Basic\Element;
 use PdfTemplater\Layout\Basic\ElementFactory;
+use PdfTemplater\Layout\Basic\Font;
 use PdfTemplater\Layout\Basic\Layer;
 use PdfTemplater\Layout\Basic\Page;
 use PdfTemplater\Layout\Document as DocumentInterface;
@@ -65,16 +66,10 @@ class Builder implements BuilderInterface
             if ($childNode->getType() === 'page') {
                 $document->addPage($this->buildPage($childNode));
             } elseif ($childNode->getType() === 'font') {
-                $fontfile = $childNode->getAttribute('file');
-
-                if (!\is_readable($fontfile) || !\is_file($fontfile)) {
-                    throw new BuildException('Cannot read font file: [%s]', $fontfile);
-                }
-
-                $document->addFont($childNode->getAttribute('alias'), $fontfile);
+                $document->addFont($this->buildFont($childNode));
             }
         }
-        unset($childNode, $fontfile);
+        unset($childNode);
 
         return $document;
     }
@@ -151,22 +146,23 @@ class Builder implements BuilderInterface
      */
     protected function buildPage(Node $pageNode): Page
     {
-        if (!$this->checkPageNumber($pageNode->getAttribute('number'))) {
+        $number = $pageNode->getAttribute('number');
+        $width = $pageNode->getAttribute('width');
+        $height = $pageNode->getAttribute('height');
+
+        if (!$this->checkPageNumber($number)) {
             throw new BuildException('Page number must be an integer 0 or greater.');
         }
 
-        if (!$this->checkDimension($pageNode->getAttribute('width'))) {
+        if (!$this->checkDimension($width)) {
             throw new BuildException('Page width must be a float 0 or greater.');
         }
 
-        if (!$this->checkDimension($pageNode->getAttribute('height'))) {
+        if (!$this->checkDimension($height)) {
             throw new BuildException('Page height must be a float 0 or greater.');
         }
 
-        $page = new Page((int)$pageNode->getAttribute('number'));
-
-        $page->setWidth((float)$pageNode->getAttribute('width'));
-        $page->setHeight((float)$pageNode->getAttribute('height'));
+        $page = new Page((int)$number, (float)$width, (float)$height);
 
         $this->placeElements(\array_filter($pageNode->getChildren(), function (Node $elementNode) {
             return !\in_array($elementNode->getType(), ['document', 'page'], true);
@@ -179,7 +175,7 @@ class Builder implements BuilderInterface
      * Creates, arranges and lays out the elements for a page.
      *
      * @param Node[] $elementNodes
-     * @param Page $page
+     * @param Page   $page
      */
     private function placeElements(array $elementNodes, Page $page): void
     {
@@ -274,9 +270,9 @@ class Builder implements BuilderInterface
     /**
      * Assigns the relative box ID for the specified offset or dimension.
      *
-     * @param Box $box
+     * @param Box    $box
      * @param string $measurement
-     * @param Node $elementNode
+     * @param Node   $elementNode
      */
     private function assignBoxRelative(Box $box, string $measurement, Node $elementNode): void
     {
@@ -290,9 +286,9 @@ class Builder implements BuilderInterface
     /**
      * Assigns the specified relative or absolute dimension of the box.
      *
-     * @param Box $box
+     * @param Box    $box
      * @param string $dimension
-     * @param Node $elementNode
+     * @param Node   $elementNode
      */
     private function assignBoxDimension(Box $box, string $dimension, Node $elementNode): void
     {
@@ -316,9 +312,9 @@ class Builder implements BuilderInterface
     /**
      * Assigns the specified offset of the box.
      *
-     * @param Box $box
+     * @param Box    $box
      * @param string $offset
-     * @param Node $elementNode
+     * @param Node   $elementNode
      */
     private function assignBoxOffset(Box $box, string $offset, Node $elementNode): void
     {
@@ -382,30 +378,19 @@ class Builder implements BuilderInterface
 
         $factory->setExtendedAttributes($element, $elementNode->getAttributes());
 
-        if (!$element->isValid()) {
-            throw new BuildException('Element cannot be built completely!');
-        }
-
         return $element;
     }
 
     /**
      * Builds a Layer from a set of Elements.
      *
-     * @param int $num
+     * @param int    $num
      * @param Node[] $elementNodes
      * @return Layer
      */
     protected function buildLayer(int $num, array $elementNodes): Layer
     {
-        $layer = new Layer($num);
-
-        foreach ($elementNodes as $elementNode) {
-            $layer->addElement($this->buildElement($elementNode));
-        }
-        unset($elementNode);
-
-        return $layer;
+        return new Layer($num, \array_map([$this, 'buildElement'], $elementNodes));
     }
 
     /**
@@ -430,5 +415,47 @@ class Builder implements BuilderInterface
                 $element->setWidth($box->getWidth());
             }
         }
+    }
+
+    protected function buildFont(Node $fontNode): Font
+    {
+        $fontfile = $fontNode->getAttribute('file');
+        $name = $fontNode->getAttribute('name');
+
+        if (!$fontfile) {
+            if (!\in_array(\strtolower($name), ['helvetica', 'courier', 'symbol', 'times', 'zapfdingbats'], true)) {
+                throw new BuildException('Font file must be supplied for a non-core font.');
+            } else {
+                $fontfile = null;
+            }
+        } elseif (!\is_readable($fontfile) || !\is_file($fontfile)) {
+            throw new BuildException('Cannot read font file: [' . $fontfile . ']');
+        }
+
+        $style = null;
+
+        switch (\strtoupper((string)$fontNode->getAttribute('style'))) {
+            case 'B':
+            case Font::STYLE_BOLD:
+                $style = Font::STYLE_BOLD;
+                break;
+            case 'I':
+            case Font::STYLE_ITALIC:
+                $style = Font::STYLE_ITALIC;
+                break;
+            case 'BI':
+            case 'IB':
+            case Font::STYLE_BOLD_ITALIC:
+                $style = Font::STYLE_BOLD_ITALIC;
+                break;
+            case '':
+                $style = Font::STYLE_NORMAL;
+                break;
+            default:
+                throw new BuildException('Invalid font style.');
+                break;
+        }
+
+        return new Font($name, $style, $fontfile);
     }
 }
