@@ -15,77 +15,77 @@ class Box
     /**
      * @var float|null
      */
-    private $top;
+    private ?float $top = null;
 
     /**
      * @var float|null
      */
-    private $left;
+    private ?float $left = null;
 
     /**
      * @var float|null
      */
-    private $bottom;
+    private ?float $bottom = null;
 
     /**
      * @var float|null
      */
-    private $right;
+    private ?float $right = null;
 
     /**
      * @var float|null
      */
-    private $width;
+    private ?float $width = null;
 
     /**
      * @var float|null
      */
-    private $height;
+    private ?float $height = null;
 
     /**
      * @var float|null
      */
-    private $widthPercentage;
+    private ?float $widthPercentage = null;
 
     /**
      * @var float|null
      */
-    private $heightPercentage;
+    private ?float $heightPercentage = null;
 
     /**
      * @var string|null
      */
-    private $topRelative;
+    private ?string $topRelative = null;
 
     /**
      * @var string|null
      */
-    private $leftRelative;
+    private ?string $leftRelative = null;
 
     /**
      * @var string|null
      */
-    private $bottomRelative;
+    private ?string $bottomRelative = null;
 
     /**
      * @var string|null
      */
-    private $rightRelative;
+    private ?string $rightRelative = null;
 
     /**
      * @var string|null
      */
-    private $widthRelative;
+    private ?string $widthRelative = null;
 
     /**
      * @var string|null
      */
-    private $heightRelative;
+    private ?string $heightRelative = null;
 
     /**
      * @var string
      */
-    private $id;
+    private string $id;
 
     /**
      * Box constructor.
