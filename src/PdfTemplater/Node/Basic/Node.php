@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace PdfTemplater\Node\Basic;
 
 use PdfTemplater\Node\Node as NodeInterface;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Class Node
@@ -67,11 +66,7 @@ class Node implements NodeInterface
      */
     protected function generateId(): void
     {
-        try {
-            $this->id = Uuid::uuid4()->toString();
-        } catch (\Exception $ex) {
-            $this->id = \uniqid(\spl_object_id($this), true);
-        }
+        $this->id = \uniqid(\spl_object_id($this), true);
     }
 
     /**

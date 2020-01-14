@@ -175,7 +175,7 @@ class Builder implements BuilderInterface
      * Creates, arranges and lays out the elements for a page.
      *
      * @param Node[] $elementNodes
-     * @param Page   $page
+     * @param Page $page
      */
     private function placeElements(array $elementNodes, Page $page): void
     {
@@ -270,9 +270,9 @@ class Builder implements BuilderInterface
     /**
      * Assigns the relative box ID for the specified offset or dimension.
      *
-     * @param Box    $box
+     * @param Box $box
      * @param string $measurement
-     * @param Node   $elementNode
+     * @param Node $elementNode
      */
     private function assignBoxRelative(Box $box, string $measurement, Node $elementNode): void
     {
@@ -286,9 +286,9 @@ class Builder implements BuilderInterface
     /**
      * Assigns the specified relative or absolute dimension of the box.
      *
-     * @param Box    $box
+     * @param Box $box
      * @param string $dimension
-     * @param Node   $elementNode
+     * @param Node $elementNode
      */
     private function assignBoxDimension(Box $box, string $dimension, Node $elementNode): void
     {
@@ -312,9 +312,9 @@ class Builder implements BuilderInterface
     /**
      * Assigns the specified offset of the box.
      *
-     * @param Box    $box
+     * @param Box $box
      * @param string $offset
-     * @param Node   $elementNode
+     * @param Node $elementNode
      */
     private function assignBoxOffset(Box $box, string $offset, Node $elementNode): void
     {
@@ -384,7 +384,7 @@ class Builder implements BuilderInterface
     /**
      * Builds a Layer from a set of Elements.
      *
-     * @param int    $num
+     * @param int $num
      * @param Node[] $elementNodes
      * @return Layer
      */
@@ -457,5 +457,10 @@ class Builder implements BuilderInterface
         }
 
         return new Font($name, $style, $fontfile);
+    }
+
+    private function combineDefaults(Node $documentDefaults, Node $pageDefaults): Node
+    {
+
     }
 }

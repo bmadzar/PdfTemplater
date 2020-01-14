@@ -11,14 +11,13 @@
   ],
   "require-dev": {
     "tecnickcom/tcpdf": "^6.2.13",
-    "phpunit/phpunit": "^8.3.4"
+    "phpunit/phpunit": "^8.5",
+    "smalot/pdfparser": "v0.14.0"
   },
   "require": {
-    "ramsey/uuid": "^3.8",
     "ext-json": "*",
     "ext-dom": "*",
-    "ext-libxml": "*",
-    "smalot/pdfparser": "v0.14.0"
+    "ext-libxml": "*"
   },
   "autoload": {
     "psr-4": {
