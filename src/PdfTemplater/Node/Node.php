@@ -113,7 +113,7 @@ interface Node
      * @param string $id The identifier to search for.
      * @return null|Node The Node, or NULL if nothing is found.
      */
-    public function findById(string $id): ?Node;
+    public function getChildById(string $id): ?Node;
 
     /**
      * Gets the type of node.

@@ -70,10 +70,10 @@ class ParserTest extends TestCase
         $this->assertSame(['title' => 'test', 'description' => 'test'], $nodeTree->getAttributes());
 
         $this->assertCount(1, $nodeTree->getChildren());
-        $this->assertNotEmpty($nodeTree->findById('page1'));
+        $this->assertNotEmpty($nodeTree->getChildById('page1'));
 
-        $this->assertSame([], $nodeTree->findById('page1')->getChildren());
-        $this->assertSame(['height' => '100', 'width' => '100', 'number' => '1'], $nodeTree->findById('page1')->getAttributes());
+        $this->assertSame([], $nodeTree->getChildById('page1')->getChildren());
+        $this->assertSame(['height' => '100', 'width' => '100', 'number' => '1'], $nodeTree->getChildById('page1')->getAttributes());
     }
 
     public function testDuplicateId()

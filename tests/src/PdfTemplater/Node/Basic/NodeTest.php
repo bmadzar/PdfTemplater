@@ -25,7 +25,7 @@ class NodeTest extends TestCase
         $this->assertFalse($child->hasParent());
     }
 
-    public function testFindById()
+    public function testGetChildById()
     {
         $node = new Node('test');
         $child1 = new Node('test');
@@ -42,14 +42,14 @@ class NodeTest extends TestCase
 
         $child2->addChild($gchild3);
 
-        $this->assertSame($node, $node->findById($node->getId()));
-        $this->assertSame($child1, $node->findById($child1->getId()));
-        $this->assertSame($child2, $node->findById($child2->getId()));
-        $this->assertSame($gchild1, $node->findById($gchild1->getId()));
-        $this->assertSame($gchild2, $node->findById($gchild2->getId()));
-        $this->assertSame($gchild3, $node->findById($gchild3->getId()));
-        $this->assertNull($node->findById('_'));
-        $this->assertNull($node->findById(''));
+        $this->assertSame($node, $node->getChildById($node->getId()));
+        $this->assertSame($child1, $node->getChildById($child1->getId()));
+        $this->assertSame($child2, $node->getChildById($child2->getId()));
+        $this->assertSame($gchild1, $node->getChildById($gchild1->getId()));
+        $this->assertSame($gchild2, $node->getChildById($gchild2->getId()));
+        $this->assertSame($gchild3, $node->getChildById($gchild3->getId()));
+        $this->assertNull($node->getChildById('_'));
+        $this->assertNull($node->getChildById(''));
     }
 
     public function testGetType()

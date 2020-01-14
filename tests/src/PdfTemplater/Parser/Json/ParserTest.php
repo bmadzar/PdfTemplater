@@ -70,10 +70,10 @@ class ParserTest extends TestCase
         $this->assertSame([], $nodeTree->getAttributes());
 
         $this->assertCount(1, $nodeTree->getChildren());
-        $this->assertNotEmpty($nodeTree->findById('page1'));
+        $this->assertNotEmpty($nodeTree->getChildById('page1'));
 
-        $this->assertSame([], $nodeTree->findById('page1')->getChildren());
-        $this->assertSame([], $nodeTree->findById('page1')->getAttributes());
+        $this->assertSame([], $nodeTree->getChildById('page1')->getChildren());
+        $this->assertSame([], $nodeTree->getChildById('page1')->getAttributes());
     }
 
 
@@ -96,12 +96,12 @@ class ParserTest extends TestCase
 
         $nodeTree = $parser->parse($data);
 
-        $this->assertNotEmpty($nodeTree->findById('page1'));
-        $this->assertNotEmpty($nodeTree->findById('el1'));
+        $this->assertNotEmpty($nodeTree->getChildById('page1'));
+        $this->assertNotEmpty($nodeTree->getChildById('el1'));
 
         $this->assertEquals(['docAttr1' => 'docAttr1Val', 'docAttr2' => 'docAttr2Val'], $nodeTree->getAttributes());
-        $this->assertEquals(['pageAttr1' => 'pageAttr1Val', 'pageAttr2' => 'pageAttr2Val'], $nodeTree->findById('page1')->getAttributes());
-        $this->assertEquals(['elAttr1' => 'elAttr1Val', 'elAttr2' => 'elAttr2Val'], $nodeTree->findById('el1')->getAttributes());
+        $this->assertEquals(['pageAttr1' => 'pageAttr1Val', 'pageAttr2' => 'pageAttr2Val'], $nodeTree->getChildById('page1')->getAttributes());
+        $this->assertEquals(['elAttr1' => 'elAttr1Val', 'elAttr2' => 'elAttr2Val'], $nodeTree->getChildById('el1')->getAttributes());
     }
 
     public function testDuplicateId()

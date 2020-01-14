@@ -221,7 +221,7 @@ class Node implements NodeInterface
      * @param string $id The identifier to search for.
      * @return null|NodeInterface The Node, or NULL if nothing is found.
      */
-    public function findById(string $id): ?NodeInterface
+    public function getChildById(string $id): ?NodeInterface
     {
         if ($this->id === $id) {
             return $this;
@@ -232,7 +232,7 @@ class Node implements NodeInterface
         }
 
         foreach ($this->children as $child) {
-            if ($found = $child->findById($id)) {
+            if ($found = $child->getChildById($id)) {
                 return $found;
             }
         }
