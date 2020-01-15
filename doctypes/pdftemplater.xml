@@ -3,7 +3,6 @@
 
     <element name="Document">
         <complexType>
-            <element ref="t:Defaults" minOccurs="0" maxOccurs="1"/>
             <choice minOccurs="0" maxOccurs="unbounded">
                 <element ref="t:Page"/>
                 <element ref="t:Font"/>
@@ -17,18 +16,6 @@
         </complexType>
     </element>
 
-    <element name="Defaults">
-        <complexType>
-            <element ref="t:Page" minOccurs="0" maxOccurs="1"/>
-            <element ref="t:Bookmark" minOccurs="0" maxOccurs="1"/>
-            <element ref="t:Ellipse" minOccurs="0" maxOccurs="1"/>
-            <element ref="t:Image" minOccurs="0" maxOccurs="1"/>
-            <element ref="t:Line" minOccurs="0" maxOccurs="1"/>
-            <element ref="t:Rectangle" minOccurs="0" maxOccurs="1"/>
-            <element ref="t:Text" minOccurs="0" maxOccurs="1"/>
-        </complexType>
-    </element>
-
     <element name="Font">
         <complexType>
             <attribute name="name" type="string" use="required"/>
@@ -39,7 +26,6 @@
 
     <element name="Page">
         <complexType>
-            <element ref="t:Defaults" minOccurs="0" maxOccurs="1"/>
             <choice minOccurs="0" maxOccurs="unbounded">
                 <element ref="t:Bookmark"/>
                 <element ref="t:Ellipse"/>

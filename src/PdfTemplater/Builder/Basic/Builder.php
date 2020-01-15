@@ -417,6 +417,12 @@ class Builder implements BuilderInterface
         }
     }
 
+    /**
+     * Builds a Font from a Node.
+     *
+     * @param Node $fontNode
+     * @return Font
+     */
     protected function buildFont(Node $fontNode): Font
     {
         $fontfile = $fontNode->getAttribute('file');
@@ -457,18 +463,5 @@ class Builder implements BuilderInterface
         }
 
         return new Font($name, $style, $fontfile);
-    }
-
-    private function combineDefaults(Node $documentDefaults, Node $pageDefaults): Node
-    {
-        $combinedDefaults = clone $pageDefaults;
-
-        foreach ($documentDefaults->getChildren() as $child) {
-            $pageChild = $pageDefaults->getChildById($child->getId());
-
-            if ($pageChild !== null) {
-
-            }
-        }
     }
 }

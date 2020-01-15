@@ -2,7 +2,7 @@
 
         <!-- PDF Templater XML DTD v1.0 -->
 
-        <!ELEMENT Document (Defaults?, (Page | Font)*)>
+        <!ELEMENT Document (Page | Font)*>
         <!ATTLIST Document
                 author CDATA #IMPLIED
                 title CDATA #REQUIRED
@@ -12,9 +12,7 @@
                 id ID #IMPLIED
                 >
 
-        <!ELEMENT Defaults (Page | Ellipse | Image | Line | Rectangle | Text)*>
-
-        <!ELEMENT Page (Defaults?, (Bookmark | Ellipse | Image | Line | Rectangle | Text)*)>
+        <!ELEMENT Page (Bookmark | Ellipse | Image | Line | Rectangle | Text)*>
         <!ATTLIST Page
                 height CDATA #IMPLIED
                 width CDATA #IMPLIED
