@@ -18,7 +18,7 @@ class BookmarkElementTest extends TestCase
 
     public function testBasic()
     {
-        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 0, '');
+        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 0, 'testName');
 
         $this->assertSame('test', $test->getId());
         $this->assertSame(0, $test->getLevel());
@@ -26,14 +26,14 @@ class BookmarkElementTest extends TestCase
 
     public function testGetLevel()
     {
-        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 1, '');
+        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 1, 'testName');
 
         $this->assertSame(1, $test->getLevel());
     }
 
     public function testSetLevel()
     {
-        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 2, '');
+        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 2, 'testName');
 
         $test->setLevel(1);
 
@@ -42,7 +42,7 @@ class BookmarkElementTest extends TestCase
 
     public function testSetLevelInvalid()
     {
-        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 0, '');
+        $test = new BookmarkElement('test', 0.0, 0.0, 1.0, 1.0, 0, 'testName');
 
         $this->expectException(LayoutArgumentException::class);
 

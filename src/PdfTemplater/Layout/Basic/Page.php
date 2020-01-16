@@ -84,6 +84,10 @@ class Page implements PageInterface
      */
     public function setHeight(float $height): void
     {
+        if ($height < \PHP_FLOAT_EPSILON) {
+            throw new LayoutArgumentException('Page height must be > 0.00');
+        }
+
         $this->height = $height;
     }
 

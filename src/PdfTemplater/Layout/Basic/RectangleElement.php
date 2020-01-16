@@ -80,6 +80,10 @@ class RectangleElement extends Element implements RectangleElementInterface
      */
     public function setStrokeWidth(?float $width): void
     {
+        if ($width !== null && $width < 0.0) {
+            throw new LayoutArgumentException('Stroke width cannot be less than 0!');
+        }
+        
         $this->strokeWidth = $width;
     }
 

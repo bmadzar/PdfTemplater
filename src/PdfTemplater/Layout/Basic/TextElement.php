@@ -62,6 +62,7 @@ class TextElement extends RectangleElement implements TextElementInterface
         ?Color $fill,
         string $text,
         string $font,
+        Color $color,
         float $fontSize,
         float $lineSize,
         int $wrapMode,
@@ -73,6 +74,7 @@ class TextElement extends RectangleElement implements TextElementInterface
 
         $this->setText($text);
         $this->setFont($font);
+        $this->setColor($color);
         $this->setFontSize($fontSize);
         $this->setLineSize($lineSize);
         $this->setWrapMode($wrapMode);

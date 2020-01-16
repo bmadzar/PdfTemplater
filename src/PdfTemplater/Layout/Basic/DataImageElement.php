@@ -50,6 +50,8 @@ class DataImageElement extends RectangleElement implements ImageElement
     {
         parent::__construct($id, $left, $top, $width, $height, $stroke, $strokeWidth, $fill);
 
+        $this->temp = null;
+
         $this->setData($data);
         $this->setAltText($altText);
     }
@@ -67,7 +69,7 @@ class DataImageElement extends RectangleElement implements ImageElement
             throw new LayoutArgumentException('Invalid base64 data supplied.');
         }
 
-        $this->data = $data . \str_repeat('=', (4 - (\strlen($data) % 4) % 4));
+        $this->data = $data . \str_repeat('=', (4 - (\strlen($data) % 4)) % 4);
     }
 
     /**

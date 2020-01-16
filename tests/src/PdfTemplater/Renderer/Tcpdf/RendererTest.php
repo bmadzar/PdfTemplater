@@ -12,8 +12,8 @@ class RendererTest extends TestCase
 {
     private function parsePdf(string $pdfData): ParserDocument
     {
-        $header = \substr($pdfData, 0, 7);
-        $trailer = \substr($pdfData, -5);
+        $header = \substr($pdfData, 0, 8);
+        $trailer = \substr(\rtrim($pdfData), -5);
 
         $this->assertRegExp('/^%PDF-\d\.\d$/', $header);
         $this->assertSame('%%EOF', $trailer);

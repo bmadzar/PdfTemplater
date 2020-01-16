@@ -3,6 +3,7 @@
 namespace Layout\Basic;
 
 use PdfTemplater\Layout\Basic\Document;
+use PdfTemplater\Layout\Basic\Font;
 use PdfTemplater\Layout\Basic\Page;
 use PHPUnit\Framework\TestCase;
 
@@ -27,8 +28,8 @@ class DocumentTest extends TestCase
         $this->assertNull($test->getPage(1));
         $this->assertNull($test->getPage(2));
 
-        $page1 = new Page(1, );
-        $page2 = new Page(2);
+        $page1 = new Page(1, 1.0, 1.0, []);
+        $page2 = new Page(2, 1.0, 1.0, []);
 
         $test->addPage($page1);
         $test->addPage($page2);
@@ -43,8 +44,8 @@ class DocumentTest extends TestCase
 
         $this->assertSame([], $test->getFonts());
 
-        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'test1');
-        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'test2');
+        $test->addFont(new Font('test1', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
+        $test->addFont(new Font('test2', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
 
         $fonts = $test->getFonts();
 
@@ -90,9 +91,9 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $page1 = new Page(1);
-        $page2 = new Page(2);
-        $page3 = new Page(3);
+        $page1 = new Page(1, 1.0, 1.0, []);
+        $page2 = new Page(2, 1.0, 1.0, []);
+        $page3 = new Page(3, 1.0, 1.0, []);
 
         $test->addPage($page1);
         $test->addPage($page2);
@@ -114,9 +115,9 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $page1 = new Page(1);
-        $page2 = new Page(2);
-        $page3 = new Page(3);
+        $page1 = new Page(1, 1.0, 1.0, []);
+        $page2 = new Page(2, 1.0, 1.0, []);
+        $page3 = new Page(3, 1.0, 1.0, []);
 
         $test->addPage($page1);
         $test->addPage($page2);
@@ -153,7 +154,7 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $page1 = new Page(1);
+        $page1 = new Page(1, 1.0, 1.0, []);
 
         $test->addPage($page1);
 
@@ -175,7 +176,7 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
 
         $this->assertTrue($test->hasFont('TestFont'));
 
@@ -188,9 +189,12 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
 
-        $this->assertSame(__DIR__ . '/../../../../test_data/test_font.ttf', $test->getFont('TestFont'));
+        $font = $test->getFont('TestFont');
+
+        $this->assertInstanceOf(Font::class, $font);
+        $this->assertSame(\realpath(__DIR__ . '/../../../../data/test_data/test_font.ttf'), \realpath($font->getFile()));
     }
 
     public function testGetFont()
@@ -199,9 +203,12 @@ class DocumentTest extends TestCase
 
         $this->assertNull($test->getFont('TestFont'));
 
-        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
 
-        $this->assertSame(__DIR__ . '/../../../../test_data/test_font.ttf', $test->getFont('TestFont'));
+        $font = $test->getFont('TestFont');
+
+        $this->assertInstanceOf(Font::class, $font);
+        $this->assertSame(\realpath(__DIR__ . '/../../../../data/test_data/test_font.ttf'), \realpath($font->getFile()));
     }
 
     public function testGetPages()
@@ -210,8 +217,8 @@ class DocumentTest extends TestCase
 
         $this->assertSame([], $test->getPages());
 
-        $page1 = new Page(1);
-        $page2 = new Page(2);
+        $page1 = new Page(1, 1.0, 1.0, []);
+        $page2 = new Page(2, 1.0, 1.0, []);
 
         $test->addPage($page1);
         $test->addPage($page2);
@@ -226,7 +233,7 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $page1 = new Page(1);
+        $page1 = new Page(1, 1.0, 1.0, []);
 
         $test->addPage($page1);
 
@@ -254,7 +261,7 @@ class DocumentTest extends TestCase
 
         $this->assertFalse($test->hasFont('TestFont'));
 
-        $test->addFont(__DIR__ . '/../../../../test_data/test_font.ttf', 'TestFont');
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
 
         $this->assertTrue($test->hasFont('TestFont'));
     }

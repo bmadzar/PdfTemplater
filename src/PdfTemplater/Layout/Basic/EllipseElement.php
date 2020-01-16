@@ -6,6 +6,7 @@ namespace PdfTemplater\Layout\Basic;
 
 use PdfTemplater\Layout\Color;
 use PdfTemplater\Layout\EllipseElement as EllipseElementInterface;
+use PdfTemplater\Layout\LayoutArgumentException;
 
 /**
  * Class EllipseElement
@@ -79,6 +80,10 @@ class EllipseElement extends Element implements EllipseElementInterface
      */
     public function setStrokeWidth(?float $width): void
     {
+        if ($width !== null && $width < 0.0) {
+            throw new LayoutArgumentException('Stroke width cannot be less than 0!');
+        }
+
         $this->strokeWidth = $width;
     }
 
