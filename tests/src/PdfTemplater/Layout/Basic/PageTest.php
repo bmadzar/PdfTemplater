@@ -12,25 +12,18 @@ class PageTest extends TestCase
 
     public function testGetWidth()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
+
+        $this->assertSame(1.0, $test->getWidth());
 
         $test->setWidth(100.0);
 
         $this->assertSame(100.0, $test->getWidth());
     }
 
-    public function testGetWidthInvalid()
-    {
-        $test = new Page(1);
-
-        $this->expectException(LayoutArgumentException::class);
-
-        $test->getWidth();
-    }
-
     public function testSetNumber()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $test->setNumber(2);
 
@@ -39,7 +32,7 @@ class PageTest extends TestCase
 
     public function testSetNumberInvalid1()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -48,7 +41,7 @@ class PageTest extends TestCase
 
     public function testSetNumberInvalid2()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -57,14 +50,14 @@ class PageTest extends TestCase
 
     public function testBasic()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->assertSame(1, $test->getNumber());
     }
 
     public function testRemoveLayerByNumber()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $layer = new Layer(3);
 
@@ -79,7 +72,7 @@ class PageTest extends TestCase
 
     public function testGetNumber()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->assertSame(1, $test->getNumber());
 
@@ -90,7 +83,7 @@ class PageTest extends TestCase
 
     public function testRemoveLayer()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $layer = new Layer(3);
 
@@ -105,7 +98,9 @@ class PageTest extends TestCase
 
     public function testGetLayers()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
+
+        $this->assertSame([], $test->getLayers());
 
         $layer1 = new Layer(3);
         $layer2 = new Layer(4);
@@ -121,7 +116,7 @@ class PageTest extends TestCase
 
     public function testAddLayer()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $layer1 = new Layer(3);
         $layer2 = new Layer(4);
@@ -140,7 +135,7 @@ class PageTest extends TestCase
 
     public function testGetLayer()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $layer1 = new Layer(3);
         $layer2 = new Layer(4);
@@ -155,7 +150,7 @@ class PageTest extends TestCase
 
     public function testSetLayers()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $layer1 = new Layer(3);
         $layer2 = new Layer(4);
@@ -176,7 +171,7 @@ class PageTest extends TestCase
 
     public function testSetHeight()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $test->setHeight(100.0);
 
@@ -185,7 +180,7 @@ class PageTest extends TestCase
 
     public function testSetHeightInvalid1()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -194,7 +189,7 @@ class PageTest extends TestCase
 
     public function testSetHeightInvalid2()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -203,7 +198,7 @@ class PageTest extends TestCase
 
     public function testSetWidth()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $test->setWidth(100.0);
 
@@ -212,7 +207,7 @@ class PageTest extends TestCase
 
     public function testSetWidthInvalid1()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -221,7 +216,7 @@ class PageTest extends TestCase
 
     public function testSetWidthInvalid2()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -230,19 +225,12 @@ class PageTest extends TestCase
 
     public function testGetHeight()
     {
-        $test = new Page(1);
+        $test = new Page(1, 1.0, 1.0, []);
+
+        $this->assertSame(1.0, $test->getHeight());
 
         $test->setHeight(100.0);
 
         $this->assertSame(100.0, $test->getHeight());
-    }
-
-    public function testGetHeightInvalid()
-    {
-        $test = new Page(1);
-
-        $this->expectException(LayoutArgumentException::class);
-
-        $test->getHeight();
     }
 }

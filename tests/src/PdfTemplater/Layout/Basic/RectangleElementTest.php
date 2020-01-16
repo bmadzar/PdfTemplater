@@ -13,7 +13,7 @@ class RectangleElementTest extends TestCase
 
     public function testGetStrokeWidth()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->assertNull($test->getStrokeWidth());
 
@@ -24,7 +24,7 @@ class RectangleElementTest extends TestCase
 
     public function testGetFill()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->assertNull($test->getFill());
 
@@ -38,7 +38,7 @@ class RectangleElementTest extends TestCase
 
     public function testSetStroke()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $test->setStroke(new RgbColor(0.5, 0.5, 0.5));
 
@@ -54,7 +54,7 @@ class RectangleElementTest extends TestCase
 
     public function testSetFill()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $test->setFill(new RgbColor(0.5, 0.5, 0.5));
 
@@ -70,7 +70,7 @@ class RectangleElementTest extends TestCase
 
     public function testGetStroke()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->assertNull($test->getStroke());
 
@@ -84,7 +84,7 @@ class RectangleElementTest extends TestCase
 
     public function testSetStrokeWidth()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $test->setStrokeWidth(10.0);
 
@@ -97,17 +97,10 @@ class RectangleElementTest extends TestCase
 
     public function testSetStrokeWidthInvalid()
     {
-        $test = new RectangleElement('test');
+        $test = new RectangleElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->expectException(LayoutArgumentException::class);
 
         $test->setStrokeWidth(-10.0);
-    }
-
-    public function testIsValid()
-    {
-        $test = new RectangleElement('test');
-
-        $this->assertTrue($test->isValid());
     }
 }

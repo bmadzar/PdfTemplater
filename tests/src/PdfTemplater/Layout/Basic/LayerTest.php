@@ -48,9 +48,9 @@ class LayerTest extends TestCase
     {
         $test = new Layer(1);
 
-        $el1 = new Element('test1');
-        $el2 = new Element('test2');
-        $el3 = new Element('test3');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
+        $el2 = new Element('test2', 0.0, 0.0, 1.0, 1.0);
+        $el3 = new Element('test3', 0.0, 0.0, 1.0, 1.0);
 
         $test->setElements([$el1, $el2]);
 
@@ -68,9 +68,9 @@ class LayerTest extends TestCase
     {
         $test = new Layer(1);
 
-        $el1 = new Element('test1');
-        $el2 = new Element('test2');
-        $el3 = new Element('test3');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
+        $el2 = new Element('test2', 0.0, 0.0, 1.0, 1.0);
+        $el3 = new Element('test3', 0.0, 0.0, 1.0, 1.0);
 
         $test->resetElements([$el1, $el2]);
 
@@ -94,8 +94,8 @@ class LayerTest extends TestCase
 
         $this->assertSame([], $test->getElements());
 
-        $el1 = new Element('test1');
-        $el2 = new Element('test2');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
+        $el2 = new Element('test2', 0.0, 0.0, 1.0, 1.0);
 
         $test->setElements([$el1, $el2]);
 
@@ -109,7 +109,7 @@ class LayerTest extends TestCase
     {
         $test = new Layer(1);
 
-        $el1 = new Element('test1');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertNull($test->getElement('test1'));
 
@@ -122,8 +122,8 @@ class LayerTest extends TestCase
     {
         $test = new Layer(1);
 
-        $el1 = new Element('test1');
-        $el2 = new Element('test1');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
+        $el2 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertNull($test->getElement('test1'));
 
@@ -140,8 +140,8 @@ class LayerTest extends TestCase
     {
         $test = new Layer(1);
 
-        $el1 = new Element('test1');
-        $el2 = new Element('test2');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
+        $el2 = new Element('test2', 0.0, 0.0, 1.0, 1.0);
 
         $test->setElements([$el1, $el2]);
 
@@ -157,8 +157,8 @@ class LayerTest extends TestCase
     {
         $test = new Layer(1);
 
-        $el1 = new Element('test1');
-        $el2 = new Element('test2');
+        $el1 = new Element('test1', 0.0, 0.0, 1.0, 1.0);
+        $el2 = new Element('test2', 0.0, 0.0, 1.0, 1.0);
 
         $test->setElements([$el1, $el2]);
 

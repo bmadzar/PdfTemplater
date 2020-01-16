@@ -11,7 +11,7 @@ class ElementTest extends TestCase
 
     public function testGetTop()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertSame(0.0, $test->getTop());
 
@@ -22,7 +22,7 @@ class ElementTest extends TestCase
 
     public function testSetId()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertSame('test', $test->getId());
 
@@ -33,7 +33,7 @@ class ElementTest extends TestCase
 
     public function testSetLeft()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $test->setLeft(10.0);
 
@@ -50,7 +50,7 @@ class ElementTest extends TestCase
 
     public function testSetWidth()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $test->setWidth(10.0);
 
@@ -67,7 +67,7 @@ class ElementTest extends TestCase
 
     public function testSetHeight()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $test->setHeight(10.0);
 
@@ -84,14 +84,14 @@ class ElementTest extends TestCase
 
     public function testBasic()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertSame('test', $test->getId());
     }
 
     public function testSetTop()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $test->setTop(10.0);
 
@@ -108,9 +108,9 @@ class ElementTest extends TestCase
 
     public function testGetWidth()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
-        $this->assertSame(0.0, $test->getWidth());
+        $this->assertSame(1.0, $test->getWidth());
 
         $test->setWidth(10.0);
 
@@ -119,9 +119,9 @@ class ElementTest extends TestCase
 
     public function testGetHeight()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
-        $this->assertSame(0.0, $test->getHeight());
+        $this->assertSame(1.0, $test->getHeight());
 
         $test->setHeight(10.0);
 
@@ -130,7 +130,7 @@ class ElementTest extends TestCase
 
     public function testGetLeft()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertSame(0.0, $test->getLeft());
 
@@ -141,15 +141,8 @@ class ElementTest extends TestCase
 
     public function testGetId()
     {
-        $test = new Element('test');
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
 
         $this->assertSame('test', $test->getId());
-    }
-
-    public function testIsValid()
-    {
-        $test = new Element('test');
-
-        $this->assertTrue($test->isValid());
     }
 }

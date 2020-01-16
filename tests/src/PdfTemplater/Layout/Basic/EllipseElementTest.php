@@ -13,7 +13,7 @@ class EllipseElementTest extends TestCase
 
     public function testGetStrokeWidth()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->assertNull($test->getStrokeWidth());
 
@@ -24,7 +24,7 @@ class EllipseElementTest extends TestCase
 
     public function testSetStroke()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $test->setStroke(new RgbColor(0.5, 0.5, 0.5));
 
@@ -40,7 +40,7 @@ class EllipseElementTest extends TestCase
 
     public function testSetStrokeWidth()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $test->setStrokeWidth(10.0);
 
@@ -49,7 +49,7 @@ class EllipseElementTest extends TestCase
 
     public function testSetStrokeWidthInvalid()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -58,7 +58,7 @@ class EllipseElementTest extends TestCase
 
     public function testGetFill()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->assertNull($test->getFill());
 
@@ -72,7 +72,7 @@ class EllipseElementTest extends TestCase
 
     public function testSetFill()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $test->setFill(new RgbColor(0.5, 0.5, 0.5));
 
@@ -88,7 +88,7 @@ class EllipseElementTest extends TestCase
 
     public function testGetStroke()
     {
-        $test = new EllipseElement('test');
+        $test = new EllipseElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null);
 
         $this->assertNull($test->getStroke());
 
@@ -98,12 +98,5 @@ class EllipseElementTest extends TestCase
 
         $this->assertInstanceOf(Color::class, $clr);
         $this->assertSame([0.5, 0.5, 0.5], $clr->getRgb());
-    }
-
-    public function testIsValid()
-    {
-        $test = new EllipseElement('test');
-
-        $this->assertTrue($test->isValid());
     }
 }

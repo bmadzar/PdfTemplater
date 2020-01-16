@@ -9,50 +9,44 @@ use PHPUnit\Framework\TestCase;
 
 class DataImageElementTest extends TestCase
 {
+    /**
+     * @var string First test file
+     */
+    private static string $fd1;
+
+    /**
+     * @var string Second test file
+     */
+    private static string $fd2;
+
+    /**
+     * Preloads the two test images to avoid doing file I/O repeatedly.
+     */
+    public static function setUpBeforeClass(): void
+    {
+        self::$fd1 = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
+        self::$fd2 = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image_2.png'));
+    }
 
     public function testGetImageData()
     {
-        $test = new DataImageElement('test');
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
-        $fd = \file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png');
-
-        $test->setData($fd);
-
-        $this->assertSame($fd, $test->getImageData());
-    }
-
-    public function testGetImageDataUnset1()
-    {
-        $test = new DataImageElement('test');
-
-        $this->expectException(LayoutArgumentException::class);
-
-        $test->getImageData();
-    }
-
-    public function testGetImageDataUnset2()
-    {
-        $test = new DataImageElement('test');
-
-        $this->expectException(LayoutArgumentException::class);
-
-        $test->getImageFile();
+        $this->assertSame(self::$fd1, $test->getImageData());
     }
 
     public function testSetData()
     {
-        $test = new DataImageElement('test');
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
-        $if = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
+        $test->setData(self::$fd2);
 
-        $test->setData($if);
-
-        $this->assertSame($if, $test->getImageData());
+        $this->assertSame(self::$fd2, $test->getImageData());
     }
 
     public function testSetDataInvalid()
     {
-        $test = new DataImageElement('test');
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
         $this->expectException(LayoutArgumentException::class);
 
@@ -61,27 +55,16 @@ class DataImageElementTest extends TestCase
 
     public function testSetBinaryData()
     {
-        $test = new DataImageElement('test');
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
-        $if = \file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png');
+        $test->setBinaryData(\base64_decode(self::$fd2));
 
-        $test->setBinaryData($if);
-
-        $if = \base64_encode($if);
-
-        $this->assertSame($if, $test->getImageData());
-    }
-
-    public function testIsValid()
-    {
-        $test = new DataImageElement('test');
-
-
+        $this->assertSame(self::$fd2, $test->getImageData());
     }
 
     public function testSetAltText()
     {
-        $test = new DataImageElement('test');
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
         $test->setAltText('test2');
 
@@ -94,7 +77,7 @@ class DataImageElementTest extends TestCase
 
     public function testGetAltText()
     {
-        $test = new DataImageElement('test');
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
         $this->assertNull($test->getAltText());
 
@@ -105,9 +88,7 @@ class DataImageElementTest extends TestCase
 
     public function testGetImageFile()
     {
-        $test = new DataImageElement('test');
-
-        $test->setData(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
+        $test = new DataImageElement('test', 0.0, 0.0, 1.0, 1.0, null, null, null, self::$fd1, null);
 
         $if = $test->getImageFile();
 

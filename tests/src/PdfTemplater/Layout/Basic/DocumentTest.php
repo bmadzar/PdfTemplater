@@ -27,7 +27,7 @@ class DocumentTest extends TestCase
         $this->assertNull($test->getPage(1));
         $this->assertNull($test->getPage(2));
 
-        $page1 = new Page(1);
+        $page1 = new Page(1, );
         $page2 = new Page(2);
 
         $test->addPage($page1);

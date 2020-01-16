@@ -66,7 +66,7 @@ class Node implements NodeInterface
      */
     protected function generateId(): void
     {
-        $this->id = \uniqid(\spl_object_id($this), true);
+        $this->id = \uniqid((string)\spl_object_id($this), true);
     }
 
     /**
