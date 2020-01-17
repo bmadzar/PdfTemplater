@@ -19,35 +19,6 @@ class ElementFactory
 {
 
     /**
-     * Creates an Element of the given type.
-     *
-     * @param string $type
-     * @param string $id
-     * @return Element
-     */
-    public function createElement(string $type, string $id): Element
-    {
-        switch ($type) {
-            case 'text':
-                return new TextElement($id);
-            case 'rectangle':
-                return new RectangleElement($id);
-            case 'line':
-                return new LineElement($id);
-            case 'image':
-                return new DataImageElement($id);
-            case 'imagefile':
-                return new FileImageElement($id);
-            case 'ellipse':
-                return new EllipseElement($id);
-            case 'bookmark':
-                return new BookmarkElement($id);
-            default:
-                throw new LayoutArgumentException('Invalid Element type!');
-        }
-    }
-
-    /**
      * Extracts and sets the Element-specific extended attributes.
      *
      * @param Element  $element
