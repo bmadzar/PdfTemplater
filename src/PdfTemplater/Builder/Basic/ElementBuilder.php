@@ -288,15 +288,15 @@ class ElementBuilder
             return RgbColor::createFromHex($matches[1]);
         } elseif (\preg_match('/^\s*rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new RgbColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255);
-        } elseif (\preg_match('/^\s*rgba\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+        } elseif (\preg_match('/^\s*rgba\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new RgbColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255);
         } elseif (\preg_match('/^\s*hsl\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255);
-        } elseif (\preg_match('/^\s*hsla\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+        } elseif (\preg_match('/^\s*hsla\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new HslColor((float)$matches[1] / 360, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255);
         } elseif (\preg_match('/^\s*cmyk\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new CmykColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255);
-        } elseif (\preg_match('/^\s*cmyka\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
+        } elseif (\preg_match('/^\s*cmyka\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)\s*$/', $color, $matches)) {
             return new CmykColor((float)$matches[1] / 255, (float)$matches[2] / 255, (float)$matches[3] / 255, (float)$matches[4] / 255, (float)$matches[5] / 255);
         } else {
 
