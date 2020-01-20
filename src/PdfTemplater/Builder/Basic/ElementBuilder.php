@@ -57,51 +57,89 @@ class ElementBuilder
 
     private function buildTextElement(Node $elementNode): TextElement
     {
-        $element = new TextElement();
-
         $attributes = $elementNode->getAttributes();
 
-        if (isset($attributes['content'])) {
-            $element->setText($attributes['content']);
+        if (!isset($attributes['content'])) {
+            throw new LayoutArgumentException('Missing content!');
         } else {
-            $element->setText('');
+            $content = $attributes['content'];
         }
 
         if (!isset($attributes['font'], $attributes['fontsize']) || !\is_numeric($attributes['fontsize'])) {
             throw new LayoutArgumentException('Missing attribute!');
         } else {
-            $element->setFont($attributes['font']);
-            $element->setFontSize((float)$attributes['fontsize']);
+            $font = $attributes['font'];
+            $fontsize = (float)$attributes['fontsize'];
         }
 
         if (isset($attributes['wrap'])) {
-            if (!\is_numeric($attributes['wrap'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+            switch (\strtolower($attributes['wrap'])) {
+                case 'none':
+                case '':
+                case TextElement::WRAP_NONE:
+                    $wrap = TextElement::WRAP_NONE;
+                    break;
+                case 'hard':
+                case TextElement::WRAP_HARD:
+                    $wrap = TextElement::WRAP_HARD;
+                    break;
+                case 'soft':
+                case TextElement::WRAP_SOFT:
+                    $wrap = TextElement::WRAP_SOFT;
+                    break;
+                default:
+                    throw new LayoutArgumentException('Invalid attribute value!');
             }
-
-            $element->setWrapMode((int)$attributes['wrap']);
         } else {
-            $element->setWrapMode(TextElement::WRAP_NONE);
+            $wrap = TextElement::WRAP_NONE;
         }
 
         if (isset($attributes['align'])) {
-            if (!\is_numeric($attributes['align'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+            switch (\strtolower($attributes['align'])) {
+                case 'left':
+                case '':
+                case TextElement::ALIGN_LEFT:
+                    $align = TextElement::ALIGN_LEFT;
+                    break;
+                case 'right':
+                case TextElement::ALIGN_RIGHT:
+                    $align = TextElement::ALIGN_RIGHT;
+                    break;
+                case 'soft':
+                case TextElement::ALIGN_CENTER:
+                    $align = TextElement::ALIGN_CENTER;
+                    break;
+                case 'justify':
+                case TextElement::ALIGN_JUSTIFY:
+                    $align = TextElement::ALIGN_JUSTIFY;
+                    break;
+                default:
+                    throw new LayoutArgumentException('Invalid attribute value!');
             }
-
-            $element->setAlignMode((int)$attributes['align']);
         } else {
-            $element->setAlignMode(TextElement::ALIGN_LEFT);
+            $align = TextElement::ALIGN_LEFT;
         }
 
         if (isset($attributes['valign'])) {
-            if (!\is_numeric($attributes['valign'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+            switch (\strtolower($attributes['valign'])) {
+                case 'top':
+                case '':
+                case TextElement::VERTICAL_ALIGN_TOP:
+                    $valign = TextElement::VERTICAL_ALIGN_TOP;
+                    break;
+                case 'middle':
+                case TextElement::VERTICAL_ALIGN_MIDDLE:
+                    $valign = TextElement::VERTICAL_ALIGN_MIDDLE;
+                    break;
+                case 'bottom':
+                case TextElement::VERTICAL_ALIGN_BOTTOM:
+                    $valign = TextElement::VERTICAL_ALIGN_BOTTOM;
+                    break;
+                default:
+                    throw new LayoutArgumentException('Invalid attribute value!');
             }
-
-            $element->setVerticalAlignMode((int)$attributes['valign']);
         } else {
-            $element->setVerticalAlignMode(TextElement::VERTICAL_ALIGN_TOP);
+            $valign = TextElement::VERTICAL_ALIGN_TOP;
         }
 
         if (isset($attributes['linesize'])) {
@@ -109,23 +147,41 @@ class ElementBuilder
                 throw new LayoutArgumentException('Invalid attribute value!');
             }
 
-            $element->setLineSize((float)$attributes['linesize']);
+            $linesize = (float)$attributes['linesize'];
         } else {
-            $element->setLineSize($element->getFontSize());
+            $linesize = $fontsize;
         }
 
         if (isset($attributes['color'])) {
-            $element->setColor($this->toColor($attributes['color']));
+            $color = $this->toColor($attributes['color']);
         } else {
             throw new LayoutArgumentException('Missing attribute!');
         }
 
+        [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+
+        return new TextElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $stroke,
+            $strokewidth,
+            $fill,
+            $content,
+            $font,
+            $color,
+            $fontsize,
+            $linesize,
+            $wrap,
+            $align,
+            $valign
+        );
     }
 
     private function buildLineElement(Node $elementNode): LineElement
     {
-        $element = new LineElement();
-
         $attributes = $elementNode->getAttributes();
 
         if (isset($attributes['linewidth'])) {
@@ -133,126 +189,130 @@ class ElementBuilder
                 throw new LayoutArgumentException('Invalid attribute value!');
             }
 
-            $element->setLineWidth((float)$attributes['linewidth']);
+            $linewidth = (float)$attributes['linewidth'];
         } else {
             throw new LayoutArgumentException('Missing attribute!');
         }
 
         if (isset($attributes['linecolor'])) {
-            $element->setLineColor($this->toColor($attributes['linecolor']));
+            $linecolor = $this->toColor($attributes['linecolor']);
         } else {
             throw new LayoutArgumentException('Missing attribute!');
         }
 
-        return $attributes;
+        return new LineElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $linewidth,
+            $linecolor
+        );
     }
 
     private function buildRectangleElement(Node $elementNode): RectangleElement
     {
-        $element = new RectangleElement();
-
         $attributes = $elementNode->getAttributes();
 
-        if (isset($attributes['strokewidth'])) {
-            if (!\is_numeric($attributes['strokewidth'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
-            }
+        [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
 
-            $element->setStrokeWidth((float)$attributes['strokewidth']);
-        } else {
-            $element->setStrokeWidth(null);
-        }
-
-        if (isset($attributes['stroke'])) {
-            $element->setStroke($this->toColor($attributes['stroke']));
-        } else {
-            $element->setStroke(null);
-        }
-
-
-        if (isset($attributes['fill'])) {
-            $element->setFill($this->toColor($attributes['fill']));
-        } else {
-            $element->setFill(null);
-        }
-
-        return $element;
+        return new RectangleElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $stroke,
+            $strokewidth,
+            $fill
+        );
     }
 
     private function buildDataImageElement(Node $elementNode): DataImageElement
     {
-        $element = new DataImageElement();
-
         $attributes = $elementNode->getAttributes();
 
         if (isset($attributes['alt']) && $attributes['alt']) {
-            $element->setAltText($attributes['alt']);
+            $alt = $attributes['alt'];
+        } else {
+            $alt = null;
         }
 
         if (isset($attributes['data']) && $attributes['data']) {
-            $element->setData($attributes['data']);
+            $data = $attributes['data'];
         } else {
             throw new LayoutArgumentException('Missing attribute!');
         }
 
-        return $element;
+        [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+
+        return new DataImageElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $stroke,
+            $strokewidth,
+            $fill,
+            $data,
+            $alt
+        );
     }
 
     private function buildFileImageElement(Node $elementNode): FileImageElement
     {
-        $element = new FileImageElement();
-
         $attributes = $elementNode->getAttributes();
 
         if (isset($attributes['alt']) && $attributes['alt']) {
-            $element->setAltText($attributes['alt']);
+            $alt = $attributes['alt'];
+        } else {
+            $alt = null;
         }
 
         if (isset($attributes['file']) && $attributes['file']) {
-            $element->setFile($attributes['file']);
+            $file = $attributes['file'];
         } else {
             throw new LayoutArgumentException('Missing attribute!');
         }
 
-        return $element;
+        [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+
+        return new FileImageElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $stroke,
+            $strokewidth,
+            $fill,
+            $file,
+            $alt
+        );
     }
 
     private function buildEllipseElement(Node $elementNode): EllipseElement
     {
-        $element = new EllipseElement();
-
         $attributes = $elementNode->getAttributes();
 
-        if (isset($attributes['strokewidth'])) {
-            if (!\is_numeric($attributes['strokewidth'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
-            }
+        [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
 
-            $element->setStrokeWidth((float)$attributes['strokewidth']);
-        } else {
-            $element->setStrokeWidth(null);
-        }
-
-        if (isset($attributes['stroke'])) {
-            $element->setStroke($this->toColor($attributes['stroke']));
-        } else {
-            $element->setStroke(null);
-        }
-
-
-        if (isset($attributes['fill'])) {
-            $element->setFill($this->toColor($attributes['fill']));
-        } else {
-            $element->setFill(null);
-        }
-
-        return $element;
+        return new EllipseElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $stroke,
+            $strokewidth,
+            $fill
+        );
     }
 
     private function buildBookmarkElement(Node $elementNode): BookmarkElement
     {
-        $element = new BookmarkElement();
-
         $attributes = $elementNode->getAttributes();
 
         if (isset($attributes['level'])) {
@@ -260,18 +320,26 @@ class ElementBuilder
                 throw new LayoutArgumentException('Invalid attribute value!');
             }
 
-            $element->setLevel((int)$attributes['level']);
+            $level = (int)$attributes['level'];
         } else {
-            $element->setLevel(0);
+            $level = 0;
         }
 
         if (isset($attributes['name']) && $attributes['name']) {
-            $element->setName($attributes['name']);
+            $name = $attributes['name'];
         } else {
             throw new LayoutArgumentException('Missing attribute!');
         }
 
-        return $element;
+        return new BookmarkElement(
+            $elementNode->getId(),
+            (float)$elementNode->getAttribute('left'),
+            (float)$elementNode->getAttribute('top'),
+            (float)$elementNode->getAttribute('width'),
+            (float)$elementNode->getAttribute('height'),
+            $level,
+            $name
+        );
     }
 
     /**
@@ -322,5 +390,36 @@ class ElementBuilder
                     throw new LayoutArgumentException('Invalid color value supplied!');
             }
         }
+    }
+
+    /**
+     * @param string[] $attributes
+     * @return array
+     */
+    private function extractRectangleAttributes(array $attributes): array
+    {
+        if (isset($attributes['stroke'])) {
+            $stroke = $this->toColor($attributes['stroke']);
+        } else {
+            $stroke = null;
+        }
+
+        if (isset($attributes['strokewidth'])) {
+            if (!\is_numeric($attributes['strokewidth'])) {
+                throw new LayoutArgumentException('Invalid attribute value!');
+            }
+
+            $strokewidth = (float)$attributes['strokewidth'];
+        } else {
+            $strokewidth = null;
+        }
+
+        if (isset($attributes['fill'])) {
+            $fill = $this->toColor($attributes['fill']);
+        } else {
+            $fill = null;
+        }
+
+        return [$stroke, $strokewidth, $fill];
     }
 }

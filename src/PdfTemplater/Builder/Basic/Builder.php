@@ -5,13 +5,7 @@ namespace PdfTemplater\Builder\Basic;
 
 
 use PdfTemplater\Builder\Builder as BuilderInterface;
-use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\Document;
-use PdfTemplater\Layout\Basic\Element;
-use PdfTemplater\Layout\Basic\ElementFactory;
-use PdfTemplater\Layout\Basic\Font;
-use PdfTemplater\Layout\Basic\Layer;
-use PdfTemplater\Layout\Basic\Page;
 use PdfTemplater\Layout\Document as DocumentInterface;
 use PdfTemplater\Node\Node;
 

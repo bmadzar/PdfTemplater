@@ -7,7 +7,6 @@ use PdfTemplater\Layout\Basic\DataImageElement;
 use PdfTemplater\Layout\Basic\FileImageElement;
 use PdfTemplater\Layout\BookmarkElement;
 use PdfTemplater\Layout\Document;
-use PdfTemplater\Layout\Element;
 use PdfTemplater\Layout\EllipseElement;
 use PdfTemplater\Layout\Layer;
 use PdfTemplater\Layout\LayoutArgumentException;
@@ -48,45 +47,45 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $boxNode1 = new Node('rectangle', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '10',
-            'left' => '10',
+            'top'    => '10',
+            'left'   => '10',
         ]);
 
         $boxNode2 = new Node('rectangle', null, [
-            'width' => '200',
+            'width'  => '200',
             'height' => '200',
-            'top' => '50',
-            'left' => '50',
+            'top'    => '50',
+            'left'   => '50',
         ]);
 
         $pageNode1->addChild($boxNode1);
         $pageNode1->addChild($boxNode2);
 
         $pageNode2 = new Node('page', null, [
-            'width' => '300',
+            'width'  => '300',
             'height' => '400',
             'number' => '2',
         ]);
 
         $boxNode3 = new Node('ellipse', null, [
-            'width' => '350',
+            'width'  => '350',
             'height' => '250',
             'bottom' => '5',
-            'left' => '3',
+            'left'   => '3',
         ]);
 
         $pageNode2->addChild($boxNode3);
@@ -138,24 +137,24 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         for ($layer = 0; $layer < 10; ++$layer) {
             $boxNode = new Node('rectangle', null, [
-                'width' => '100',
+                'width'  => '100',
                 'height' => '100',
-                'top' => '100',
-                'left' => '100',
-                'layer' => $layer * 2,
+                'top'    => '100',
+                'left'   => '100',
+                'layer'  => $layer * 2,
             ]);
 
             $boxNode->setId('l' . ($layer * 2));
@@ -199,22 +198,22 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $attrs = [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '100',
-            'left' => '100',
+            'top'    => '100',
+            'left'   => '100',
         ];
 
         $boxNode1 = new Node('bookmark', 'bookmark', $attrs + ['name' => 'bookmark']);
@@ -300,22 +299,22 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $boxNode1 = new Node('bookmark', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '0',
-            'left' => '0',
+            'top'    => '0',
+            'left'   => '0',
         ]);
 
         $pageNode1->addChild($boxNode1);
@@ -331,22 +330,22 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $boxNode1 = new Node('line', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '0',
-            'left' => '0',
+            'top'    => '0',
+            'left'   => '0',
         ]);
 
         $pageNode1->addChild($boxNode1);
@@ -362,22 +361,22 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $boxNode1 = new Node('text', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '0',
-            'left' => '0',
+            'top'    => '0',
+            'left'   => '0',
         ]);
 
         $pageNode1->addChild($boxNode1);
@@ -393,22 +392,22 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $boxNode1 = new Node('image', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '0',
-            'left' => '0',
+            'top'    => '0',
+            'left'   => '0',
         ]);
 
         $pageNode1->addChild($boxNode1);
@@ -424,22 +423,22 @@ class BuilderTest extends TestCase
         $test = new Builder();
 
         $docNode = new Node('document', null, [
-            'title' => 'Test Title',
-            'author' => 'Test Author',
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
             'keywords' => 'kw1, kw2',
         ]);
 
         $pageNode1 = new Node('page', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '200',
-            'number' => '1'
+            'number' => '1',
         ]);
 
         $boxNode1 = new Node('imagefile', null, [
-            'width' => '100',
+            'width'  => '100',
             'height' => '100',
-            'top' => '0',
-            'left' => '0',
+            'top'    => '0',
+            'left'   => '0',
         ]);
 
         $pageNode1->addChild($boxNode1);
