@@ -41,19 +41,24 @@ class FontBuilder
 
         switch (\strtoupper((string)$fontNode->getAttribute('style'))) {
             case 'B':
+            case 'BOLD':
             case Font::STYLE_BOLD:
                 $style = Font::STYLE_BOLD;
                 break;
             case 'I':
+            case 'ITALIC':
             case Font::STYLE_ITALIC:
                 $style = Font::STYLE_ITALIC;
                 break;
             case 'BI':
             case 'IB':
+            case 'BOLDITALIC':
+            case 'ITALICBOLD':
             case Font::STYLE_BOLD_ITALIC:
                 $style = Font::STYLE_BOLD_ITALIC;
                 break;
             case '':
+            case Font::STYLE_NORMAL:
                 $style = Font::STYLE_NORMAL;
                 break;
             default:
