@@ -56,7 +56,7 @@ class FileImageElement extends RectangleElement implements ImageElement
      */
     public function getImageData(): string
     {
-        return \hash_file('base64', $this->file, false);
+        return \base64_encode(\file_get_contents($this->file));
     }
 
     /**

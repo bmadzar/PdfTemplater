@@ -139,9 +139,9 @@ class PageBuilder
         $layers = $this->separateIntoLayers($elementNodes);
 
         foreach ($layers as $num => $layerElements) {
-            $layer = $this->buildLayer($num, $layerElements);
+            $this->applyLayout($layerElements, $boxes);
 
-            $this->applyLayout($layer, $boxes);
+            $layer = $this->buildLayer($num, $layerElements);
 
             $page->addLayer($layer);
         }
@@ -331,26 +331,37 @@ class PageBuilder
     }
 
     /**
-     * Applies the dimensions of a set of Boxes to the elements in a Layer.
+     * Applies the dimensions of a set of Boxes to the corresponding Nodes.
      *
-     * @param Layer $layer
-     * @param Box[] $boxes
+     * @param Node[] $nodes
+     * @param Box[]  $boxes
      */
-    private function applyLayout(Layer $layer, array $boxes): void
+    private function applyLayout(array $nodes, array $boxes): void
     {
-        foreach ($layer->getElements() as $element) {
-            if (isset($boxes[$element->getId()])) {
-                $box = $boxes[$element->getId()];
+        foreach ($nodes as $node) {
+            if (isset($boxes[$node->getId()])) {
+                $box = $boxes[$node->getId()];
 
                 if (!$box->isResolved() || !$box->isValid()) {
                     throw new BuildException('Attempted to apply an unresolved or invalid Box!');
                 }
 
-                $element->setLeft($box->getLeft());
-                $element->setTop($box->getTop());
-                $element->setHeight($box->getHeight());
-                $element->setWidth($box->getWidth());
+                $node->setAttribute('left', $box->getLeft());
+                $node->setAttribute('top', $box->getTop());
+                $node->setAttribute('height', $box->getHeight());
+                $node->setAttribute('width', $box->getWidth());
+
+                $node->removeAttribute('right');
+                $node->removeAttribute('bottom');
+
+                $node->removeAttribute('left-rel');
+                $node->removeAttribute('top-rel');
+                $node->removeAttribute('right-rel');
+                $node->removeAttribute('bottom-rel');
+                $node->removeAttribute('height-rel');
+                $node->removeAttribute('width-rel');
             }
         }
+        unset($node);
     }
 }

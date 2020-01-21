@@ -20,9 +20,9 @@ interface Node
     /**
      * Node constructor.
      *
-     * @param string $type
+     * @param string      $type
      * @param string|null $id
-     * @param string[] $attributes
+     * @param string[]    $attributes
      */
     public function __construct(string $type, ?string $id = null, array $attributes = []);
 
@@ -165,4 +165,11 @@ interface Node
      * @param string $value
      */
     public function setAttribute(string $key, string $value);
+
+    /**
+     * Removes the attribute identified by $key.
+     *
+     * @param string $key
+     */
+    public function removeAttribute(string $key);
 }

@@ -68,7 +68,8 @@ class RendererTest extends TestCase
 
         $pdf = $this->parsePdf($data);
 
-        $this->assertCount(0, $pdf->getPages());
+        // PDFs will always have at least one default page
+        $this->assertCount(1, $pdf->getPages());
         $this->assertCount(0, $pdf->getFonts());
     }
 }

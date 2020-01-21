@@ -199,6 +199,10 @@ class Page implements PageInterface
      */
     public function setNumber(int $number): void
     {
+        if ($number <= 0) {
+            throw new LayoutArgumentException('Page number must be > 0');
+        }
+
         $this->number = $number;
     }
 }
