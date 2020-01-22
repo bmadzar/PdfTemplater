@@ -186,4 +186,19 @@ class FontBuilderTest extends TestCase
 
         $test->buildFont($node);
     }
+
+    public function testBuildFontInvalid4()
+    {
+        $test = new FontBuilder();
+
+        $node = new Node('wrongtype', null, [
+            'file'  => '',
+            'name'  => 'Courier',
+            'style' => '',
+        ]);
+
+        $this->expectException(BuildException::class);
+
+        $test->buildFont($node);
+    }
 }

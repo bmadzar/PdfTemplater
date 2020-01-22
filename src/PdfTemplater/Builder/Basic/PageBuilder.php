@@ -135,12 +135,11 @@ class PageBuilder
         $boxes[$pageBox->getId()] = $pageBox;
 
         $this->doLayout($boxes);
+        $this->applyLayout($elementNodes, $boxes);
 
         $layers = $this->separateIntoLayers($elementNodes);
 
         foreach ($layers as $num => $layerElements) {
-            $this->applyLayout($layerElements, $boxes);
-
             $layer = $this->buildLayer($num, $layerElements);
 
             $page->addLayer($layer);
