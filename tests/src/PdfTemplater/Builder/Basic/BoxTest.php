@@ -13,7 +13,6 @@ class BoxTest extends TestCase
     {
         $box = new Box('test');
 
-        $this->assertInstanceOf(Box::class, $box);
         $this->assertSame('test', $box->getId());
     }
 

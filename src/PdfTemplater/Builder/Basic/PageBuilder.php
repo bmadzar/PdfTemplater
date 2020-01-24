@@ -92,6 +92,10 @@ class PageBuilder
      */
     public function buildPage(Node $pageNode): Page
     {
+        if (\strtolower($pageNode->getType()) !== 'page') {
+            throw new BuildException('Incorrect node type!');
+        }
+
         $number = $pageNode->getAttribute('number');
         $width = $pageNode->getAttribute('width');
         $height = $pageNode->getAttribute('height');
@@ -346,10 +350,10 @@ class PageBuilder
                     throw new BuildException('Attempted to apply an unresolved or invalid Box!');
                 }
 
-                $node->setAttribute('left', $box->getLeft());
-                $node->setAttribute('top', $box->getTop());
-                $node->setAttribute('height', $box->getHeight());
-                $node->setAttribute('width', $box->getWidth());
+                $node->setAttribute('left', (string)$box->getLeft());
+                $node->setAttribute('top', (string)$box->getTop());
+                $node->setAttribute('height', (string)$box->getHeight());
+                $node->setAttribute('width', (string)$box->getWidth());
 
                 $node->removeAttribute('right');
                 $node->removeAttribute('bottom');

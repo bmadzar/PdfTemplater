@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Builder\Basic;
 
+use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\BookmarkElement;
 use PdfTemplater\Layout\Basic\CmykColor;
 use PdfTemplater\Layout\Basic\DataImageElement;
@@ -16,7 +17,6 @@ use PdfTemplater\Layout\Basic\RectangleElement;
 use PdfTemplater\Layout\Basic\RgbColor;
 use PdfTemplater\Layout\Basic\TextElement;
 use PdfTemplater\Layout\Color;
-use PdfTemplater\Layout\LayoutArgumentException;
 use PdfTemplater\Node\Node;
 
 /**
@@ -52,7 +52,7 @@ class ElementBuilder
             case 'bookmark':
                 return $this->buildBookmarkElement($elementNode);
             default:
-                throw new LayoutArgumentException('Invalid Element type!');
+                throw new BuildException('Invalid Element type!');
         }
     }
 
@@ -61,13 +61,13 @@ class ElementBuilder
         $attributes = $elementNode->getAttributes();
 
         if (!isset($attributes['content'])) {
-            throw new LayoutArgumentException('Missing content!');
+            throw new BuildException('Missing content!');
         } else {
             $content = $attributes['content'];
         }
 
         if (!isset($attributes['font'], $attributes['fontsize']) || !\is_numeric($attributes['fontsize'])) {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         } else {
             $font = $attributes['font'];
             $fontsize = (float)$attributes['fontsize'];
@@ -89,7 +89,7 @@ class ElementBuilder
                     $wrap = TextElement::WRAP_SOFT;
                     break;
                 default:
-                    throw new LayoutArgumentException('Invalid attribute value!');
+                    throw new BuildException('Invalid attribute value!');
             }
         } else {
             $wrap = TextElement::WRAP_NONE;
@@ -115,7 +115,7 @@ class ElementBuilder
                     $align = TextElement::ALIGN_JUSTIFY;
                     break;
                 default:
-                    throw new LayoutArgumentException('Invalid attribute value!');
+                    throw new BuildException('Invalid attribute value!');
             }
         } else {
             $align = TextElement::ALIGN_LEFT;
@@ -137,7 +137,7 @@ class ElementBuilder
                     $valign = TextElement::VERTICAL_ALIGN_BOTTOM;
                     break;
                 default:
-                    throw new LayoutArgumentException('Invalid attribute value!');
+                    throw new BuildException('Invalid attribute value!');
             }
         } else {
             $valign = TextElement::VERTICAL_ALIGN_TOP;
@@ -145,7 +145,7 @@ class ElementBuilder
 
         if (isset($attributes['linesize'])) {
             if (!\is_numeric($attributes['linesize'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+                throw new BuildException('Invalid attribute value!');
             }
 
             $linesize = (float)$attributes['linesize'];
@@ -156,7 +156,7 @@ class ElementBuilder
         if (isset($attributes['color'])) {
             $color = $this->toColor($attributes['color']);
         } else {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         }
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
@@ -187,18 +187,18 @@ class ElementBuilder
 
         if (isset($attributes['linewidth'])) {
             if (!\is_numeric($attributes['linewidth'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+                throw new BuildException('Invalid attribute value!');
             }
 
             $linewidth = (float)$attributes['linewidth'];
         } else {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         }
 
         if (isset($attributes['linecolor'])) {
             $linecolor = $this->toColor($attributes['linecolor']);
         } else {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         }
 
         return new LineElement(
@@ -243,7 +243,7 @@ class ElementBuilder
         if (isset($attributes['data']) && $attributes['data']) {
             $data = $attributes['data'];
         } else {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         }
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
@@ -275,7 +275,7 @@ class ElementBuilder
         if (isset($attributes['file']) && $attributes['file']) {
             $file = $attributes['file'];
         } else {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         }
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
@@ -318,7 +318,7 @@ class ElementBuilder
 
         if (isset($attributes['level'])) {
             if (!\is_numeric($attributes['level'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+                throw new BuildException('Invalid attribute value!');
             }
 
             $level = (int)$attributes['level'];
@@ -329,7 +329,7 @@ class ElementBuilder
         if (isset($attributes['name']) && $attributes['name']) {
             $name = $attributes['name'];
         } else {
-            throw new LayoutArgumentException('Missing attribute!');
+            throw new BuildException('Missing attribute!');
         }
 
         return new BookmarkElement(
@@ -388,7 +388,7 @@ class ElementBuilder
                 case 'transparent':
                     return new RgbColor(1.0, 1.0, 1.0, 0.0);
                 default:
-                    throw new LayoutArgumentException('Invalid color value supplied!');
+                    throw new BuildException('Invalid color value supplied!');
             }
         }
     }
@@ -407,7 +407,7 @@ class ElementBuilder
 
         if (isset($attributes['strokewidth'])) {
             if (!\is_numeric($attributes['strokewidth'])) {
-                throw new LayoutArgumentException('Invalid attribute value!');
+                throw new BuildException('Invalid attribute value!');
             }
 
             $strokewidth = (float)$attributes['strokewidth'];

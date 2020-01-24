@@ -25,6 +25,10 @@ class FontBuilder
      */
     public function buildFont(Node $fontNode): Font
     {
+        if (\strtolower($fontNode->getType()) !== 'font') {
+            throw new BuildException('Incorrect node type!');
+        }
+
         $fontfile = $fontNode->getAttribute('file');
         $name = $fontNode->getAttribute('name');
 

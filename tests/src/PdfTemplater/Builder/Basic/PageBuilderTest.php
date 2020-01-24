@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Builder\Basic;
 
 use PdfTemplater\Builder\Basic\PageBuilder;
+use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Element;
 use PdfTemplater\Layout\Layer;
 use PdfTemplater\Layout\Page;
@@ -43,7 +44,7 @@ class PageBuilderTest extends TestCase
             'height' => '10.0',
         ]);
 
-        $element = new Node('element', 'test1', [
+        $element = new Node('rectangle', 'test1', [
             'top'    => '10.0',
             'left'   => '11.0',
             'width'  => '12.0',
@@ -81,7 +82,7 @@ class PageBuilderTest extends TestCase
             'height' => '10.0',
         ]);
 
-        $element1 = new Node('element', 'test1', [
+        $element1 = new Node('rectangle', 'test1', [
             'top'    => '10.0',
             'left'   => '11.0',
             'width'  => '12.0',
@@ -89,7 +90,7 @@ class PageBuilderTest extends TestCase
             'layer'  => 1,
         ]);
 
-        $element2 = new Node('element', 'test2', [
+        $element2 = new Node('rectangle', 'test2', [
             'top'    => '20.0',
             'left'   => '21.0',
             'width'  => '22.0',
@@ -141,7 +142,7 @@ class PageBuilderTest extends TestCase
             'height' => '10.0',
         ]);
 
-        $element = new Node('element', 'test1', [
+        $element = new Node('rectangle', 'test1', [
             'top'    => '10.0',
             'left'   => '11.0',
             'width'  => '12.0',
@@ -160,6 +161,66 @@ class PageBuilderTest extends TestCase
         $element = $layer->getElement('test2');
 
         $this->assertNull($element);
+    }
+
+    public function testBuildPageInvalid1()
+    {
+        $test = new PageBuilder();
+
+        $node = new Node('document', null, [
+            'number' => '1',
+            'width'  => '11.0',
+            'height' => '10.0',
+        ]);
+
+        $this->expectException(BuildException::class);
+
+        $test->buildPage($node);
+    }
+
+    public function testBuildPageInvalid2()
+    {
+        $test = new PageBuilder();
+
+        $node = new Node('document', null, [
+            'number' => '-1',
+            'width'  => '11.0',
+            'height' => '10.0',
+        ]);
+
+        $this->expectException(BuildException::class);
+
+        $test->buildPage($node);
+    }
+
+    public function testBuildPageInvalid3()
+    {
+        $test = new PageBuilder();
+
+        $node = new Node('document', null, [
+            'number' => '1',
+            'width'  => '-11.0',
+            'height' => '10.0',
+        ]);
+
+        $this->expectException(BuildException::class);
+
+        $test->buildPage($node);
+    }
+
+    public function testBuildPageInvalid4()
+    {
+        $test = new PageBuilder();
+
+        $node = new Node('document', null, [
+            'number' => '1',
+            'width'  => '11.0',
+            'height' => '-10.0',
+        ]);
+
+        $this->expectException(BuildException::class);
+
+        $test->buildPage($node);
     }
 
 }
