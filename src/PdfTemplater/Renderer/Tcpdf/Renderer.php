@@ -23,31 +23,19 @@ use PdfTemplater\Renderer\RenderProcessException;
  *
  * Renders a PDF using TCPDF. Requires TCPDF be included in the autoload path.
  *
- * @package PdfTemplater\Renderer\Tcpdf
+ * @package PdfTemplater\RendererTcpdf
  */
 class Renderer implements RendererInterface
 {
     private const CREATOR = 'PdfTemplater';
 
     /**
-     * Renderer constructor.
-     *
-     * @throws RenderEnvironmentException Thrown if TCPDF is not found.
-     */
-    public function __construct()
-    {
-        if (!\class_exists(\TCPDF::class, true)) {
-            throw new RenderEnvironmentException('TCPDF not found, cannot use Tcpdf\Renderer.');
-        }
-    }
-
-    /**
      * Sets the TCPDF metadata. (e.g. title, author)
      *
-     * @param \TCPDF   $pdf
+     * @param Tcpdf    $pdf
      * @param Document $document
      */
-    protected function setDocumentMetadata(\TCPDF $pdf, Document $document)
+    protected function setDocumentMetadata(Tcpdf $pdf, Document $document)
     {
         if ($document->hasMetadataValue('author')) {
             $pdf->SetAuthor($document->getMetadataValue('author'));
@@ -65,24 +53,12 @@ class Renderer implements RendererInterface
     }
 
     /**
-     * Sets the TCPDF document properties. (e.g. compression, protection)
-     *
-     * @param \TCPDF $pdf
-     */
-    protected function setDocumentProperties(\TCPDF $pdf)
-    {
-        $pdf->SetCompression(true);
-
-        $pdf->setPageUnit('pt');
-    }
-
-    /**
      * Renders an element.
      *
-     * @param \TCPDF  $pdf
+     * @param Tcpdf   $pdf
      * @param Element $element
      */
-    protected function renderElement(\TCPDF $pdf, Element $element)
+    protected function renderElement(Tcpdf $pdf, Element $element)
     {
         if ($element instanceof TextElement) {
             $this->renderTextElement($pdf, $element);
@@ -104,10 +80,10 @@ class Renderer implements RendererInterface
     /**
      * Renders a page.
      *
-     * @param \TCPDF $pdf
-     * @param Page   $page
+     * @param Tcpdf $pdf
+     * @param Page  $page
      */
-    protected function renderPage(\TCPDF $pdf, Page $page)
+    protected function renderPage(Tcpdf $pdf, Page $page)
     {
         $pdf->AddPage('', [$page->getWidth(), $page->getHeight()], false, false);
 
@@ -130,13 +106,12 @@ class Renderer implements RendererInterface
      * Common method that backs all the public render*() methods.
      *
      * @param Document $document
-     * @return \TCPDF
+     * @return Tcpdf
      */
-    protected function renderCommon(Document $document): \TCPDF
+    protected function renderCommon(Document $document): Tcpdf
     {
-        $pdf = new \TCPDF();
+        $pdf = new Tcpdf();
 
-        $this->setDocumentProperties($pdf);
         $this->setDocumentMetadata($pdf, $document);
 
         $pages = $document->getPages();
@@ -201,10 +176,10 @@ class Renderer implements RendererInterface
     /**
      * Renders a rectangle.
      *
-     * @param \TCPDF           $pdf
+     * @param Tcpdf            $pdf
      * @param RectangleElement $element
      */
-    private function renderRectangleElement(\TCPDF $pdf, RectangleElement $element)
+    private function renderRectangleElement(Tcpdf $pdf, RectangleElement $element)
     {
         $mode = '';
         $line = null;
@@ -243,10 +218,10 @@ class Renderer implements RendererInterface
     /**
      * Renders an image.
      *
-     * @param \TCPDF       $pdf
+     * @param Tcpdf        $pdf
      * @param ImageElement $element
      */
-    private function renderImageElement(\TCPDF $pdf, ImageElement $element)
+    private function renderImageElement(Tcpdf $pdf, ImageElement $element)
     {
         $line = 0;
 
@@ -298,10 +273,10 @@ class Renderer implements RendererInterface
      * Renders text.
      * TCPDF cannot control the word wrapping mode, so that parameter has no effect.
      *
-     * @param \TCPDF      $pdf
+     * @param Tcpdf       $pdf
      * @param TextElement $element
      */
-    private function renderTextElement(\TCPDF $pdf, TextElement $element)
+    private function renderTextElement(Tcpdf $pdf, TextElement $element)
     {
         if (!$element->getText()) {
             return; // No text, no point in drawing anything
@@ -384,10 +359,10 @@ class Renderer implements RendererInterface
     /**
      * Renders an ellipse.
      *
-     * @param \TCPDF         $pdf
+     * @param Tcpdf          $pdf
      * @param EllipseElement $element
      */
-    private function renderEllipseElement(\TCPDF $pdf, EllipseElement $element)
+    private function renderEllipseElement(Tcpdf $pdf, EllipseElement $element)
     {
         $mode = '';
         $line = null;
@@ -430,10 +405,10 @@ class Renderer implements RendererInterface
     /**
      * Renders a line.
      *
-     * @param \TCPDF      $pdf
+     * @param Tcpdf       $pdf
      * @param LineElement $element
      */
-    private function renderLineElement(\TCPDF $pdf, LineElement $element)
+    private function renderLineElement(Tcpdf $pdf, LineElement $element)
     {
         $line = [
             'all' => [
@@ -454,10 +429,10 @@ class Renderer implements RendererInterface
     /**
      * Renders a bookmark.
      *
-     * @param \TCPDF          $pdf
+     * @param Tcpdf           $pdf
      * @param BookmarkElement $element
      */
-    private function renderBookmarkElement(\TCPDF $pdf, BookmarkElement $element)
+    private function renderBookmarkElement(Tcpdf $pdf, BookmarkElement $element)
     {
         $pdf->Bookmark(
             $element->getName(),
