@@ -382,23 +382,26 @@ class BoxTest extends TestCase
             $finals = [];
 
             foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
-                if (isset($line[\strtolower($dim)])) {
-                    $box->{'set' . $dim}((float)$line[\strtolower($dim)]);
+                $ldim = \strtolower($dim);
+                $ldimr = $ldim . 'Relative';
+                
+                if (isset($line[$ldim]) && $line[$ldim] !== '') {
+                    $box->{'set' . $dim}((float)$line[$ldim]);
                 }
 
-                if (isset($line[\strtolower($dim) . 'Relative'])) {
-                    $box->{'set' . $dim . 'Relative'}((string)$line[\strtolower($dim)]);
+                if (isset($line[$ldimr]) && $line[$ldimr] !== '') {
+                    $box->{'set' . $dim . 'Relative'}((string)$line[$ldimr]);
                 }
 
                 $finals[$dim] = (float)$line['final' . $dim];
             }
             unset($dim);
 
-            if (isset($line['widthPercentage'])) {
+            if (isset($line['widthPercentage']) && $line['widthPercentage'] !== '') {
                 $box->setWidthPercentage((float)$line['widthPercentage']);
             }
 
-            if (isset($line['heightPercentage'])) {
+            if (isset($line['heightPercentage']) && $line['heightPercentage'] !== '') {
                 $box->setHeightPercentage((float)$line['heightPercentage']);
             }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Builder\Basic;
 
+use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\Font;
 use PdfTemplater\Node\Node;
@@ -34,7 +35,7 @@ class FontBuilder
 
         if (!$fontfile) {
             if (!\in_array(\strtolower($name), ['helvetica', 'courier', 'symbol', 'times', 'zapfdingbats'], true)) {
-                throw new BuildException('Font file must be supplied for a non-core font.');
+                throw new BuildArgumentException('Font file must be supplied for a non-core font.');
             } else {
                 $fontfile = null;
             }
@@ -42,9 +43,13 @@ class FontBuilder
             throw new BuildException('Cannot read font file: [' . $fontfile . ']');
         }
 
+        if ($fontNode->getAttribute('style') === null) {
+            throw new BuildArgumentException('Missing attribute!');
+        }
+
         $style = null;
 
-        switch (\strtoupper((string)$fontNode->getAttribute('style'))) {
+        switch (\strtoupper($fontNode->getAttribute('style'))) {
             case 'B':
             case 'BOLD':
             case Font::STYLE_BOLD:
@@ -67,7 +72,7 @@ class FontBuilder
                 $style = Font::STYLE_NORMAL;
                 break;
             default:
-                throw new BuildException('Invalid font style.');
+                throw new BuildArgumentException('Invalid font style.');
                 break;
         }
 

@@ -27,11 +27,18 @@ interface Node
     public function __construct(string $type, ?string $id = null, array $attributes = []);
 
     /**
-     * Sets or replaces the set of child Nodes.
+     * Sets the set of child Nodes.
      *
      * @param Node[] $nodes The set of child Nodes.
      */
     public function setChildren(array $nodes): void;
+
+    /**
+     * Clears and optionally sets the set of child Nodes.
+     *
+     * @param Node[] $nodes The set of child Nodes.
+     */
+    public function resetChildren(array $nodes = []): void;
 
     /**
      * Gets the set of child Nodes. The set may be empty.

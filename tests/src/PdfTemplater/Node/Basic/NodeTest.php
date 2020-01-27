@@ -164,12 +164,14 @@ class NodeTest extends TestCase
         $node->setChildren([$child1, $child3]);
 
         $this->assertTrue($node->hasChild($child1));
-        $this->assertFalse($node->hasChild($child2));
+        $this->assertTrue($node->hasChild($child2));
         $this->assertTrue($node->hasChild($child3));
 
         $node->setChildren([]);
 
-        $this->assertFalse($node->hasChildren());
+        $this->assertTrue($node->hasChild($child1));
+        $this->assertTrue($node->hasChild($child2));
+        $this->assertTrue($node->hasChild($child3));
     }
 
     public function testGetParent()

@@ -87,7 +87,7 @@ class PageBuilderTest extends TestCase
             'left'   => '11.0',
             'width'  => '12.0',
             'height' => '13.0',
-            'layer'  => 1,
+            'layer'  => '1',
         ]);
 
         $element2 = new Node('rectangle', 'test2', [
@@ -95,7 +95,7 @@ class PageBuilderTest extends TestCase
             'left'   => '21.0',
             'width'  => '22.0',
             'height' => '23.0',
-            'layer'  => 2,
+            'layer'  => '2',
         ]);
 
         $node->addChild($element1);

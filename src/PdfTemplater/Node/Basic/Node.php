@@ -70,22 +70,31 @@ class Node implements NodeInterface
     }
 
     /**
-     * Sets or replaces the set of child Nodes.
+     * Sets the set of child Nodes.
      *
      * @param NodeInterface[] $nodes The set of child Nodes.
      */
     public function setChildren(array $nodes): void
     {
-        $newNodes = \array_filter($nodes, function (Node $node) {
-            return !\in_array($node, $this->children, true);
-        });
+        foreach ($nodes as $node) {
+            $this->addChild($node);
+        }
+        unset($node);
+    }
 
-        $oldNodes = \array_filter($this->children, function (Node $node) use ($nodes) {
-            return !\in_array($node, $nodes, true);
-        });
+    /**
+     * Clears and optionally sets the set of child Nodes.
+     *
+     * @param NodeInterface[] $nodes The set of child Nodes.
+     */
+    public function resetChildren(array $nodes = []): void
+    {
+        foreach ($this->children as $oldNode) {
+            $this->removeChild($oldNode);
+        }
+        unset($oldNode);
 
-        \array_walk($oldNodes, [$this, 'removeChild']);
-        \array_walk($newNodes, [$this, 'addChild']);
+        $this->setChildren($nodes);
     }
 
     /**
@@ -116,6 +125,8 @@ class Node implements NodeInterface
      */
     public function addChild(NodeInterface $childNode): void
     {
+        $this->removeChild($childNode);
+
         $this->children[$childNode->getId()] = $childNode;
 
         if ($childNode->getParent() !== $this) {
@@ -279,11 +290,7 @@ class Node implements NodeInterface
     public function setAttributes(array $attributes): void
     {
         foreach ($attributes as $key => $value) {
-            if (!\is_scalar($value)) {
-                throw new \TypeError('Attribute value must be scalar.');
-            }
-
-            $this->attributes[$key] = (string)$value;
+            $this->setAttribute((string)$key, $value);
         }
         unset($key, $value);
     }

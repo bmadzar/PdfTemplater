@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Builder\Basic;
 
 use PdfTemplater\Builder\Basic\FontBuilder;
+use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Font;
 use PdfTemplater\Node\Basic\Node;
@@ -96,21 +97,6 @@ class FontBuilderTest extends TestCase
     {
         $test = new FontBuilder();
 
-        $node = new Node('font', null, [
-            'file' => '',
-            'name' => 'Courier',
-        ]);
-
-        $font = $test->buildFont($node);
-
-        $this->assertSame('Courier', $font->getName());
-        $this->assertSame(Font::STYLE_NORMAL, $font->getStyle());
-    }
-
-    public function testBuildFont7()
-    {
-        $test = new FontBuilder();
-
         foreach (['B' => Font::STYLE_BOLD, 'I' => Font::STYLE_ITALIC, 'BI' => Font::STYLE_BOLD_ITALIC, 'IB' => Font::STYLE_BOLD_ITALIC] as $key => $style) {
             $node = new Node('font', null, [
                 'file'  => '',
@@ -125,7 +111,7 @@ class FontBuilderTest extends TestCase
         unset($key, $style);
     }
 
-    public function testBuildFont8()
+    public function testBuildFont7()
     {
         $test = new FontBuilder();
 
@@ -168,7 +154,7 @@ class FontBuilderTest extends TestCase
             'style' => 'fakestyle',
         ]);
 
-        $this->expectException(BuildException::class);
+        $this->expectException(BuildArgumentException::class);
 
         $test->buildFont($node);
     }
@@ -201,5 +187,20 @@ class FontBuilderTest extends TestCase
         $this->expectException(BuildException::class);
 
         $test->buildFont($node);
+    }
+
+    public function testBuildFontInvalid5()
+    {
+        $test = new FontBuilder();
+
+        $node = new Node('font', null, [
+            'file' => '',
+            'name' => 'Courier',
+        ]);
+
+        $this->expectException(BuildArgumentException::class);
+
+        $test->buildFont($node);
+
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Builder\Basic;
 
+use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\BookmarkElement;
 use PdfTemplater\Layout\Basic\CmykColor;
@@ -61,13 +62,13 @@ class ElementBuilder
         $attributes = $elementNode->getAttributes();
 
         if (!isset($attributes['content'])) {
-            throw new BuildException('Missing content!');
+            throw new BuildArgumentException('Missing content!');
         } else {
             $content = $attributes['content'];
         }
 
         if (!isset($attributes['font'], $attributes['fontsize']) || !\is_numeric($attributes['fontsize'])) {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         } else {
             $font = $attributes['font'];
             $fontsize = (float)$attributes['fontsize'];
@@ -89,7 +90,7 @@ class ElementBuilder
                     $wrap = TextElement::WRAP_SOFT;
                     break;
                 default:
-                    throw new BuildException('Invalid attribute value!');
+                    throw new BuildArgumentException('Invalid attribute value!');
             }
         } else {
             $wrap = TextElement::WRAP_NONE;
@@ -115,7 +116,7 @@ class ElementBuilder
                     $align = TextElement::ALIGN_JUSTIFY;
                     break;
                 default:
-                    throw new BuildException('Invalid attribute value!');
+                    throw new BuildArgumentException('Invalid attribute value!');
             }
         } else {
             $align = TextElement::ALIGN_LEFT;
@@ -137,7 +138,7 @@ class ElementBuilder
                     $valign = TextElement::VERTICAL_ALIGN_BOTTOM;
                     break;
                 default:
-                    throw new BuildException('Invalid attribute value!');
+                    throw new BuildArgumentException('Invalid attribute value!');
             }
         } else {
             $valign = TextElement::VERTICAL_ALIGN_TOP;
@@ -145,7 +146,7 @@ class ElementBuilder
 
         if (isset($attributes['linesize'])) {
             if (!\is_numeric($attributes['linesize'])) {
-                throw new BuildException('Invalid attribute value!');
+                throw new BuildArgumentException('Invalid attribute value!');
             }
 
             $linesize = (float)$attributes['linesize'];
@@ -156,17 +157,18 @@ class ElementBuilder
         if (isset($attributes['color'])) {
             $color = $this->toColor($attributes['color']);
         } else {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         }
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
         return new TextElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $stroke,
             $strokewidth,
             $fill,
@@ -187,26 +189,28 @@ class ElementBuilder
 
         if (isset($attributes['linewidth'])) {
             if (!\is_numeric($attributes['linewidth'])) {
-                throw new BuildException('Invalid attribute value!');
+                throw new BuildArgumentException('Invalid attribute value!');
             }
 
             $linewidth = (float)$attributes['linewidth'];
         } else {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         }
 
         if (isset($attributes['linecolor'])) {
             $linecolor = $this->toColor($attributes['linecolor']);
         } else {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         }
+
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
         return new LineElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $linewidth,
             $linecolor
         );
@@ -217,13 +221,14 @@ class ElementBuilder
         $attributes = $elementNode->getAttributes();
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
         return new RectangleElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $stroke,
             $strokewidth,
             $fill
@@ -243,17 +248,18 @@ class ElementBuilder
         if (isset($attributes['data']) && $attributes['data']) {
             $data = $attributes['data'];
         } else {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         }
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
         return new DataImageElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $stroke,
             $strokewidth,
             $fill,
@@ -275,17 +281,18 @@ class ElementBuilder
         if (isset($attributes['file']) && $attributes['file']) {
             $file = $attributes['file'];
         } else {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         }
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
         return new FileImageElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $stroke,
             $strokewidth,
             $fill,
@@ -300,12 +307,14 @@ class ElementBuilder
 
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
 
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
+
         return new EllipseElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $stroke,
             $strokewidth,
             $fill
@@ -318,7 +327,7 @@ class ElementBuilder
 
         if (isset($attributes['level'])) {
             if (!\is_numeric($attributes['level'])) {
-                throw new BuildException('Invalid attribute value!');
+                throw new BuildArgumentException('Invalid attribute value!');
             }
 
             $level = (int)$attributes['level'];
@@ -329,15 +338,17 @@ class ElementBuilder
         if (isset($attributes['name']) && $attributes['name']) {
             $name = $attributes['name'];
         } else {
-            throw new BuildException('Missing attribute!');
+            throw new BuildArgumentException('Missing attribute!');
         }
+
+        [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
         return new BookmarkElement(
             $elementNode->getId(),
-            (float)$elementNode->getAttribute('left'),
-            (float)$elementNode->getAttribute('top'),
-            (float)$elementNode->getAttribute('width'),
-            (float)$elementNode->getAttribute('height'),
+            $left,
+            $top,
+            $width,
+            $height,
             $level,
             $name
         );
@@ -388,9 +399,33 @@ class ElementBuilder
                 case 'transparent':
                     return new RgbColor(1.0, 1.0, 1.0, 0.0);
                 default:
-                    throw new BuildException('Invalid color value supplied!');
+                    throw new BuildArgumentException('Invalid color value supplied!');
             }
         }
+    }
+
+    /**
+     * @param string[] $attributes
+     * @return float[]
+     */
+    private function extractBoxAttributes(array $attributes): array
+    {
+        $extracted = ['left' => null, 'top' => null, 'width' => null, 'height' => null];
+
+        foreach (\array_keys($extracted) as $att) {
+            if (isset($attributes[$att])) {
+                if (!\is_numeric($attributes[$att])) {
+                    throw new BuildArgumentException('Invalid attribute value!');
+                }
+
+                $extracted[$att] = (float)$attributes[$att];
+            } else {
+                throw new BuildArgumentException('Missing attribute!');
+            }
+        }
+        unset($att);
+
+        return \array_values($extracted);
     }
 
     /**
@@ -407,7 +442,7 @@ class ElementBuilder
 
         if (isset($attributes['strokewidth'])) {
             if (!\is_numeric($attributes['strokewidth'])) {
-                throw new BuildException('Invalid attribute value!');
+                throw new BuildArgumentException('Invalid attribute value!');
             }
 
             $strokewidth = (float)$attributes['strokewidth'];

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Builder\Basic;
 
+use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\Layer;
 use PdfTemplater\Layout\Basic\Page;
@@ -101,15 +102,15 @@ class PageBuilder
         $height = $pageNode->getAttribute('height');
 
         if (!$this->checkPageNumber($number)) {
-            throw new BuildException('Page number must be an integer 0 or greater.');
+            throw new BuildArgumentException('Page number must be an integer 0 or greater.');
         }
 
         if (!$this->checkDimension($width)) {
-            throw new BuildException('Page width must be a float 0 or greater.');
+            throw new BuildArgumentException('Page width must be a float 0 or greater.');
         }
 
         if (!$this->checkDimension($height)) {
-            throw new BuildException('Page height must be a float 0 or greater.');
+            throw new BuildArgumentException('Page height must be a float 0 or greater.');
         }
 
         $page = new Page((int)$number, (float)$width, (float)$height);
@@ -254,7 +255,7 @@ class PageBuilder
         } elseif ($this->checkDimension($val)) {
             $box->{'set' . \ucfirst($dimension)}((float)$val);
         } elseif ($val !== null) {
-            throw new BuildException('Invalid ' . $dimension . ' supplied for Element.');
+            throw new BuildArgumentException('Invalid ' . $dimension . ' supplied for Element.');
         }
     }
 
@@ -272,7 +273,7 @@ class PageBuilder
         if ($this->checkOffset($val)) {
             $box->{'set' . \ucfirst($offset)}((float)$val);
         } elseif ($val !== null) {
-            throw new BuildException('Invalid ' . $offset . ' supplied for Element.');
+            throw new BuildArgumentException('Invalid ' . $offset . ' supplied for Element.');
         }
     }
 
@@ -302,7 +303,7 @@ class PageBuilder
                 // Not using else here as the loop above may have resolved all dependencies
                 if ($box->isResolved()) {
                     if (!$box->isValid()) {
-                        throw new BuildException('Invalid box values!');
+                        throw new BuildArgumentException('Invalid box values!');
                     }
 
                     unset($unresolved[$box->getId()]);

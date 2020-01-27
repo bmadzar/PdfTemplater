@@ -34,12 +34,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('bookmark', null, [
-            'level'  => 1,
+            'level'  => '1',
             'name'   => 'test',
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         /**
@@ -61,12 +61,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('bookmark', null, [
-            'level'  => -1,
+            'level'  => '-1',
             'name'   => 'test',
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -79,12 +79,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('bookmark', null, [
-            'level'  => 1,
+            'level'  => '1',
             'name'   => 'test',
-            'width'  => -10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '-10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -97,12 +97,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('bookmark', null, [
-            'level'  => 1,
+            'level'  => '1',
             'name'   => 'test',
-            'width'  => 10.0,
-            'height' => -11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '-11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -115,12 +115,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('bookmark', null, [
-            'level'  => 1,
-            'name'   => null,
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'level'  => '1',
+            'name'   => '',
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -133,11 +133,11 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('bookmark', null, [
-            'level'  => 1,
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'level'  => '1',
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -149,14 +149,14 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../test_data/test_image.png'));
+        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
 
         $node = new Node('image', null, [
             'data'   => $data,
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         /**
@@ -176,11 +176,11 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('image', null, [
-            'data'   => null,
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'data'   => '',
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -193,10 +193,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('image', null, [
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -208,14 +208,14 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../test_data/test_image.png'));
+        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
 
         $node = new Node('image', null, [
             'data'   => $data,
-            'width'  => -10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '-10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -228,14 +228,14 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../test_data/test_image.png'));
+        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
 
         $node = new Node('image', null, [
             'data'   => $data,
-            'width'  => 10.0,
-            'height' => -11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '-11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -248,10 +248,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('ellipse', null, [
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         /**
@@ -276,11 +276,11 @@ class ElementBuilderTest extends TestCase
         $node = new Node('ellipse', null, [
             'stroke'      => '#FFF',
             'fill'        => '#ABC',
-            'strokewidth' => 9.0,
-            'width'       => 10.0,
-            'height'      => 11.0,
-            'top'         => 12.0,
-            'left'        => 13.0,
+            'strokewidth' => '9.0',
+            'width'       => '10.0',
+            'height'      => '11.0',
+            'top'         => '12.0',
+            'left'        => '13.0',
         ]);
 
         /**
@@ -303,10 +303,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('ellipse', null, [
-            'width'  => -10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '-10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -319,10 +319,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('ellipse', null, [
-            'width'  => 10.0,
-            'height' => -11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '-11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -334,14 +334,14 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = __DIR__ . '/../../../../test_data/test_image.png';
+        $data = __DIR__ . '/../../../../data/test_data/test_image.png';
 
         $node = new Node('imagefile', null, [
             'file'   => $data,
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         /**
@@ -361,11 +361,11 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('imagefile', null, [
-            'file'   => null,
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'file'   => '',
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -378,10 +378,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('imagefile', null, [
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -393,14 +393,14 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = __DIR__ . '/../../../../test_data/test_image.png';
+        $data = __DIR__ . '/../../../../data/test_data/test_image.png';
 
         $node = new Node('imagefile', null, [
             'file'   => $data,
-            'width'  => -10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '-10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -413,14 +413,14 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = __DIR__ . '/../../../../test_data/test_image.png';
+        $data = __DIR__ . '/../../../../data/test_data/test_image.png';
 
         $node = new Node('imagefile', null, [
             'file'   => $data,
-            'width'  => 10.0,
-            'height' => -11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '-11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -433,12 +433,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('line', null, [
-            'lineWidth' => 5.0,
-            'lineColor' => '#ABC',
-            'width'     => 10.0,
-            'height'    => 11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'linewidth' => '5.0',
+            'linecolor' => '#ABC',
+            'width'     => '10.0',
+            'height'    => '11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         /**
@@ -460,12 +460,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('line', null, [
-            'lineWidth' => -5.0,
+            'lineWidth' => '-5.0',
             'lineColor' => '#ABC',
-            'width'     => 10.0,
-            'height'    => 11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'width'     => '10.0',
+            'height'    => '11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -478,12 +478,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('line', null, [
-            'lineWidth' => 5.0,
+            'lineWidth' => '5.0',
             'lineColor' => '####',
-            'width'     => 10.0,
-            'height'    => 11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'width'     => '10.0',
+            'height'    => '11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -497,10 +497,10 @@ class ElementBuilderTest extends TestCase
 
         $node = new Node('line', null, [
             'lineColor' => '#ABC',
-            'width'     => 10.0,
-            'height'    => 11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'width'     => '10.0',
+            'height'    => '11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -513,11 +513,11 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('line', null, [
-            'lineWidth' => 5.0,
-            'width'     => 10.0,
-            'height'    => 11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'lineWidth' => '5.0',
+            'width'     => '10.0',
+            'height'    => '11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -530,12 +530,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('line', null, [
-            'lineWidth' => 5.0,
+            'lineWidth' => '5.0',
             'lineColor' => '#ABC',
-            'width'     => -10.0,
-            'height'    => 11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'width'     => '-10.0',
+            'height'    => '11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -548,12 +548,12 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('line', null, [
-            'lineWidth' => 5.0,
+            'lineWidth' => '5.0',
             'lineColor' => '#ABC',
-            'width'     => 10.0,
-            'height'    => -11.0,
-            'top'       => 12.0,
-            'left'      => 13.0,
+            'width'     => '10.0',
+            'height'    => '-11.0',
+            'top'       => '12.0',
+            'left'      => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -566,10 +566,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('rectangle', null, [
-            'width'  => 10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         /**
@@ -594,11 +594,11 @@ class ElementBuilderTest extends TestCase
         $node = new Node('rectangle', null, [
             'stroke'      => '#FFF',
             'fill'        => '#ABC',
-            'strokewidth' => 9.0,
-            'width'       => 10.0,
-            'height'      => 11.0,
-            'top'         => 12.0,
-            'left'        => 13.0,
+            'strokewidth' => '9.0',
+            'width'       => '10.0',
+            'height'      => '11.0',
+            'top'         => '12.0',
+            'left'        => '13.0',
         ]);
 
         /**
@@ -621,10 +621,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('rectangle', null, [
-            'width'  => -10.0,
-            'height' => 11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '-10.0',
+            'height' => '11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);
@@ -637,10 +637,10 @@ class ElementBuilderTest extends TestCase
         $test = new ElementBuilder();
 
         $node = new Node('rectangle', null, [
-            'width'  => 10.0,
-            'height' => -11.0,
-            'top'    => 12.0,
-            'left'   => 13.0,
+            'width'  => '10.0',
+            'height' => '-11.0',
+            'top'    => '12.0',
+            'left'   => '13.0',
         ]);
 
         $this->expectException(BuildException::class);

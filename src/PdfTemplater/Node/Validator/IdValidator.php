@@ -8,7 +8,7 @@ use PdfTemplater\Node\Node;
 /**
  * Class IdValidator
  *
- * A helper class that will validate a Node tree, checking for duplicated IDs.
+ * A helper class that will validate a Node tree, checking for duplicate IDs.
  *
  * @package PdfTemplater\Node
  */

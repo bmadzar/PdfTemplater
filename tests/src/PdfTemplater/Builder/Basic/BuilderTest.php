@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Builder\Basic;
 
+use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\DataImageElement;
 use PdfTemplater\Layout\Basic\FileImageElement;
@@ -155,7 +156,7 @@ class BuilderTest extends TestCase
                 'height' => '100',
                 'top'    => '100',
                 'left'   => '100',
-                'layer'  => $layer * 2,
+                'layer'  => (string)($layer * 2),
             ]);
 
             $boxNode->setId('l' . ($layer * 2));
@@ -219,9 +220,9 @@ class BuilderTest extends TestCase
 
         $boxNode1 = new Node('bookmark', 'bookmark', $attrs + ['name' => 'bookmark']);
         $boxNode2 = new Node('ellipse', 'ellipse', $attrs + []);
-        $boxNode3 = new Node('line', 'line', $attrs + ['linewidth' => 1.0, 'linecolor' => '#000000']);
+        $boxNode3 = new Node('line', 'line', $attrs + ['linewidth' => '1.0', 'linecolor' => '#000000']);
         $boxNode4 = new Node('rectangle', 'rectangle', $attrs + []);
-        $boxNode5 = new Node('text', 'text', $attrs + ['font' => 'Times', 'fontsize' => 12.0, 'color' => '#000000', 'content' => 'test content']);
+        $boxNode5 = new Node('text', 'text', $attrs + ['font' => 'Times', 'fontsize' => '12.0', 'color' => '#000000', 'content' => 'test content']);
         $boxNode6 = new Node('image', 'image', $attrs + ['data' => \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'))]);
         $boxNode7 = new Node('imagefile', 'imagefile', $attrs + ['file' => __DIR__ . '/../../../../data/test_data/test_image.png']);
 
@@ -321,7 +322,7 @@ class BuilderTest extends TestCase
         $pageNode1->addChild($boxNode1);
         $docNode->addChild($pageNode1);
 
-        $this->expectException(LayoutArgumentException::class);
+        $this->expectException(BuildArgumentException::class);
 
         $test->build($docNode);
     }
@@ -352,7 +353,7 @@ class BuilderTest extends TestCase
         $pageNode1->addChild($boxNode1);
         $docNode->addChild($pageNode1);
 
-        $this->expectException(LayoutArgumentException::class);
+        $this->expectException(BuildArgumentException::class);
 
         $test->build($docNode);
     }
@@ -383,7 +384,7 @@ class BuilderTest extends TestCase
         $pageNode1->addChild($boxNode1);
         $docNode->addChild($pageNode1);
 
-        $this->expectException(LayoutArgumentException::class);
+        $this->expectException(BuildArgumentException::class);
 
         $test->build($docNode);
     }
@@ -414,7 +415,7 @@ class BuilderTest extends TestCase
         $pageNode1->addChild($boxNode1);
         $docNode->addChild($pageNode1);
 
-        $this->expectException(LayoutArgumentException::class);
+        $this->expectException(BuildArgumentException::class);
 
         $test->build($docNode);
     }
@@ -445,7 +446,7 @@ class BuilderTest extends TestCase
         $pageNode1->addChild($boxNode1);
         $docNode->addChild($pageNode1);
 
-        $this->expectException(LayoutArgumentException::class);
+        $this->expectException(BuildArgumentException::class);
 
         $test->build($docNode);
     }
