@@ -320,6 +320,31 @@ class BoxTest extends TestCase
         $box1->resolve($box2);
     }
 
+    /**
+     * @dataProvider readCsvDirectory
+     * @param string $dataFile
+     */
+    public function testRandomFiles(string $dataFile)
+    {
+        $this->doResolutionTest($dataFile);
+    }
+
+    public function readCsvDirectory()
+    {
+        $dir = \scandir(__DIR__ . '/../../../../data/box_sets');
+
+        if ($dir === false) {
+            $this->markTestIncomplete('Could not read data dir.');
+        } else {
+            $dir = \array_filter($dir, fn(string $file) => \substr($file, -4) === '.csv');
+
+            foreach ($dir as $file) {
+                yield $file => [__DIR__ . '/../../../../data/box_sets/' . $file];
+            }
+            unset($file);
+        }
+    }
+
     private function doResolutionTest(string $dataFile)
     {
         if (!\is_readable($dataFile) || !\is_file($dataFile)) {
@@ -349,7 +374,7 @@ class BoxTest extends TestCase
             $this->assertTrue($box->isValid());
 
             foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
-                $this->assertSame($boxDatum['finals'][$dim], $box->{'get' . $dim});
+                $this->assertSame($boxDatum['finals'][$dim], $box->{'get' . $dim}());
             }
             unset($dim);
         }
@@ -378,13 +403,13 @@ class BoxTest extends TestCase
         while ($line = \fgetcsv($fh)) {
             $line = \array_combine($header, $line);
 
-            $box = new Box($line['id']);
+            $box    = new Box($line['id']);
             $finals = [];
 
             foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
-                $ldim = \strtolower($dim);
+                $ldim  = \strtolower($dim);
                 $ldimr = $ldim . 'Relative';
-                
+
                 if (isset($line[$ldim]) && $line[$ldim] !== '') {
                     $box->{'set' . $dim}((float)$line[$ldim]);
                 }
