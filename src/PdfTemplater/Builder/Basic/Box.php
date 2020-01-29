@@ -488,10 +488,6 @@ class Box
      */
     public function resolve(Box $box): void
     {
-        if (!\in_array($box->id, $this->getDependencies(), true)) {
-            return;
-        }
-
         if ($box === $this) {
             throw new ConstraintException('Cycle encountered!');
         }
