@@ -416,7 +416,7 @@ class Box
         // If all three are set, they must add up
         // If bottom and top are set, bottom cannot be above top
         if ($this->height !== null && $this->top !== null && $this->bottom !== null) {
-            if (!\abs($this->top + $this->height - $this->bottom) < 0.001) {
+            if (!\abs($this->top + $this->height - $this->bottom) < \PHP_FLOAT_EPSILON) {
                 return false;
             }
         } elseif (\count(\array_filter([$this->top, $this->height, $this->bottom], '\\is_null')) >= 2) {
@@ -429,7 +429,7 @@ class Box
         // If all three are set, they must add up
         // If right and left are set, right cannot be to the left of left
         if ($this->width !== null && $this->left !== null && $this->right !== null) {
-            if (!\abs($this->left + $this->width - $this->right) < 0.001) {
+            if (!\abs($this->left + $this->width - $this->right) < \PHP_FLOAT_EPSILON) {
                 return false;
             }
         } elseif (\count(\array_filter([$this->left, $this->width, $this->right], '\\is_null')) >= 2) {
@@ -492,36 +492,132 @@ class Box
             throw new ConstraintException('Cycle encountered!');
         }
 
-        // Using dynamic features results in less code BUT may be too slow...
-        foreach (['width', 'height'] as $dim) {
-            if ($box->id === $this->{$dim . 'Relative'}) {
-                if ($box->{$dim . 'Relative'} === $this->id) {
-                    throw new ConstraintException('Cycle encountered on ' . $dim);
-                } elseif ($box->{$dim . 'Relative'}) {
-                    // Cascade -- since width and height are percentages, we multiply
-                    $this->{$dim . 'Relative'} = $box->{$dim . 'Relative'};
-                    $this->{$dim . 'Percentage'} *= $box->{$dim . 'Percentage'};
-                } else {
-                    // $box has an absolute width/height, so we can assign the dimension directly
-                    $this->$dim = $this->{$dim . 'Percentage'} * $box->$dim;
-                    $this->{$dim . 'Percentage'} = null;
-                    $this->{$dim . 'Relative'} = null;
-                }
-            }
+        if ($this->isResolved()) {
+            return;
+        } else {
+            $this->resolveInternal();
         }
-        unset($dim);
 
-        foreach (['left', 'right', 'top', 'bottom'] as $dim) {
-            if ($box->id === $this->{$dim . 'Relative'}) {
-                if ($box->{$dim . 'Relative'} === $this->id) {
-                    throw new ConstraintException('Cycle encountered on ' . $dim);
-                } else {
-                    // This will conveniently handle both the cascade and the absolute case!
-                    $this->$dim += $box->$dim;
-                    $this->{$dim . 'Relative'} = $box->{$dim . 'Relative'};
-                }
+        /// WIDTH ///
+
+        if ($box->id === $this->widthRelative) {
+            if ($box->widthRelative === $this->id) {
+                throw new ConstraintException('Cycle encountered on width');
+            } elseif ($box->widthRelative) {
+                // Cascade -- since width is a percentage, we multiply
+                $this->widthRelative   = $box->widthRelative;
+                $this->widthPercentage *= $box->widthPercentage;
+            } else {
+                // $box has an absolute width, so we can assign the dimension directly
+                $this->width           = $this->widthPercentage * $box->width;
+                $this->widthPercentage = null;
+                $this->widthRelative   = null;
             }
         }
-        unset($dim);
+
+        /// HEIGHT ///
+
+        if ($box->id === $this->heightRelative) {
+            if ($box->heightRelative === $this->id) {
+                throw new ConstraintException('Cycle encountered on height');
+            } elseif ($box->heightRelative) {
+                // Cascade -- since height is a percentage, we multiply
+                $this->heightRelative   = $box->heightRelative;
+                $this->heightPercentage *= $box->heightPercentage;
+            } else {
+                // $box has an absolute height, so we can assign the dimension directly
+                $this->height           = $this->heightPercentage * $box->height;
+                $this->heightPercentage = null;
+                $this->heightRelative   = null;
+            }
+        }
+
+        /// LEFT ///
+
+        if ($box->id === $this->leftRelative) {
+            if ($box->leftRelative === $this->id) {
+                throw new ConstraintException('Cycle encountered on left');
+            } else {
+                // This will conveniently handle both the cascade and the absolute case!
+                $this->left         += $box->left;
+                $this->leftRelative = $box->leftRelative;
+            }
+        }
+
+        /// RIGHT ///
+
+        if ($box->id === $this->rightRelative) {
+            if ($box->rightRelative === $this->id) {
+                throw new ConstraintException('Cycle encountered on right');
+            } else {
+                // This will conveniently handle both the cascade and the absolute case!
+                $this->right         += $box->right;
+                $this->rightRelative = $box->rightRelative;
+            }
+        }
+
+        /// TOP ///
+
+        if ($box->id === $this->topRelative) {
+            if ($box->topRelative === $this->id) {
+                throw new ConstraintException('Cycle encountered on top');
+            } else {
+                // This will conveniently handle both the cascade and the absolute case!
+                $this->top         += $box->top;
+                $this->topRelative = $box->topRelative;
+            }
+        }
+
+        /// BOTTOM ///
+
+        if ($box->id === $this->bottomRelative) {
+            if ($box->bottomRelative === $this->id) {
+                throw new ConstraintException('Cycle encountered on bottom');
+            } else {
+                // This will conveniently handle both the cascade and the absolute case!
+                $this->bottom         += $box->bottom;
+                $this->bottomRelative = $box->bottomRelative;
+            }
+        }
+
+        if ($this->isResolved()) {
+            return;
+        } else {
+            $this->resolveInternal();
+        }
+    }
+
+    /**
+     * Eliminates dependencies that can be calculated (e.g. if left and width are known, right is left + width)
+     */
+    private function resolveInternal(): void
+    {
+        if ($this->widthRelative === null) {
+            if ($this->rightRelative === null && $this->leftRelative !== null) {
+                $this->left         = $this->right - $this->width;
+                $this->leftRelative = null;
+            } elseif ($this->rightRelative !== null && $this->leftRelative === null) {
+                $this->right         = $this->left + $this->width;
+                $this->rightRelative = null;
+            }
+        } elseif ($this->rightRelative !== null && $this->leftRelative !== null) {
+            $this->width           = $this->right - $this->left;
+            $this->widthPercentage = null;
+            $this->widthRelative   = null;
+        }
+
+        if ($this->heightRelative === null) {
+            if ($this->bottomRelative === null && $this->topRelative !== null) {
+                $this->top         = $this->bottom - $this->height;
+                $this->topRelative = null;
+            } elseif ($this->bottomRelative !== null && $this->topRelative === null) {
+                $this->bottom         = $this->top + $this->height;
+                $this->bottomRelative = null;
+            }
+        } elseif ($this->topRelative !== null && $this->bottomRelative !== null) {
+            $this->height           = $this->bottom - $this->top;
+            $this->heightPercentage = null;
+            $this->heightRelative   = null;
+        }
     }
 }

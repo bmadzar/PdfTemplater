@@ -345,32 +345,44 @@ class BoxTest extends TestCase
         }
     }
 
-    private function doResolutionTest(string $dataFile)
+    private function doResolutionTest(string $dataFile): void
     {
         if (!\is_readable($dataFile) || !\is_file($dataFile)) {
             $this->markTestSkipped();
         }
 
-        $boxData = $this->loadBoxData($dataFile);
+        $boxData         = $this->loadBoxData($dataFile);
+        $resolvedBoxData = [];
 
-        for ($i = 0, $s = \count($boxData); $i < $s; ++$i) {
-            for ($j = ($i + 1); $j < $s; ++$j) {
-                /** @var Box $box1 */
-                $box1 = $boxData[$i]['box'];
-                /** @var Box $box2 */
-                $box2 = $boxData[$j]['box'];
+        while (\count($boxData) > \count($resolvedBoxData)) {
+            foreach ($boxData as $boxId => $boxDatum) {
+                /** @var Box $box */
+                $box = $boxDatum['box'];
 
-                $box1->resolve($box2);
+                foreach ($box->getDependencies() as $dependency) {
+                    if (!isset($boxData[$dependency]) && !isset($resolvedBoxData[$dependency])) {
+                        $this->markTestIncomplete();
+                    }
+
+                    /** @var Box $box2 */
+                    $box2 = $boxData[$dependency]['box'] ?? $resolvedBoxData[$dependency]['box'];
+
+                    $box->resolve($box2);
+                }
+                unset($dependency);
+
+                if ($box->isResolved()) {
+                    $resolvedBoxData[$boxId] = $boxDatum;
+                    unset($boxData[$boxId]);
+                }
             }
-            unset($j, $box1, $box2);
+            unset($boxDatum, $boxId, $box);
         }
-        unset($i, $s);
 
-        foreach ($boxData as $boxDatum) {
+        foreach ($resolvedBoxData as $boxDatum) {
             /** @var Box $box */
             $box = $boxDatum['box'];
 
-            $this->assertTrue($box->isResolved());
             $this->assertTrue($box->isValid());
 
             foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
@@ -381,7 +393,11 @@ class BoxTest extends TestCase
         unset($boxDatum, $box);
     }
 
-    private function loadBoxData($dataFile)
+    /**
+     * @param $dataFile
+     * @return array
+     */
+    private function loadBoxData(string $dataFile): array
     {
         $fh = \fopen($dataFile, 'r');
 
@@ -430,7 +446,7 @@ class BoxTest extends TestCase
                 $box->setHeightPercentage((float)$line['heightPercentage']);
             }
 
-            $boxData[] = ['box' => $box, 'finals' => $finals];
+            $boxData[$box->getId()] = ['box' => $box, 'finals' => $finals];
         }
         unset($line, $box, $finals, $header);
 
