@@ -102,8 +102,15 @@ class Box
      */
     public function getTop(): ?float
     {
-        if ($this->top === null && $this->bottom !== null && $this->height !== null && $this->isResolved()) {
-            return $this->bottom - $this->height;
+        if (
+            $this->top === null &&
+            $this->bottom !== null &&
+            $this->height !== null &&
+            $this->bottomRelative === null &&
+            $this->heightRelative === null
+        ) {
+            $this->top = $this->bottom - $this->height;
+            $this->topRelative = null;
         }
 
         return $this->top;
@@ -122,8 +129,15 @@ class Box
      */
     public function getLeft(): ?float
     {
-        if ($this->left === null && $this->right !== null && $this->width !== null && $this->isResolved()) {
-            return $this->right - $this->width;
+        if (
+            $this->left === null &&
+            $this->right !== null &&
+            $this->width !== null &&
+            $this->rightRelative === null &&
+            $this->widthRelative === null
+        ) {
+            $this->left = $this->right - $this->width;
+            $this->leftRelative = null;
         }
 
         return $this->left;
@@ -142,8 +156,16 @@ class Box
      */
     public function getWidth(): ?float
     {
-        if ($this->width === null && $this->right !== null && $this->left !== null && $this->isResolved()) {
-            return $this->right - $this->left;
+        if (
+            $this->width === null &&
+            $this->right !== null &&
+            $this->left !== null &&
+            $this->rightRelative === null &&
+            $this->leftRelative === null
+        ) {
+            $this->width = $this->right - $this->left;
+            $this->widthPercentage = null;
+            $this->widthRelative = null;
         }
 
         return $this->width;
@@ -166,8 +188,16 @@ class Box
      */
     public function getHeight(): ?float
     {
-        if ($this->height === null && $this->top !== null && $this->bottom !== null && $this->isResolved()) {
-            return $this->bottom - $this->top;
+        if (
+            $this->height === null &&
+            $this->top !== null &&
+            $this->bottom !== null &&
+            $this->topRelative === null &&
+            $this->bottomRelative === null
+        ) {
+            $this->height = $this->bottom - $this->top;
+            $this->heightPercentage = null;
+            $this->heightRelative = null;
         }
 
         return $this->height;
@@ -366,8 +396,15 @@ class Box
      */
     public function getBottom(): ?float
     {
-        if ($this->bottom === null && $this->height !== null && $this->top !== null && $this->isResolved()) {
-            return $this->top + $this->height;
+        if (
+            $this->bottom === null &&
+            $this->height !== null &&
+            $this->top !== null &&
+            $this->heightRelative === null &&
+            $this->topRelative === null
+        ) {
+            $this->bottom = $this->top + $this->height;
+            $this->bottomRelative = null;
         }
 
         return $this->bottom;
@@ -386,8 +423,15 @@ class Box
      */
     public function getRight(): ?float
     {
-        if ($this->right === null && $this->width !== null && $this->left !== null && $this->isResolved()) {
-            return $this->left + $this->width;
+        if (
+            $this->right === null &&
+            $this->width !== null &&
+            $this->left !== null &&
+            $this->widthRelative === null &&
+            $this->leftRelative === null
+        ) {
+            $this->right = $this->left + $this->width;
+            $this->rightRelative = null;
         }
 
         return $this->right;
@@ -505,13 +549,13 @@ class Box
                 throw new ConstraintException('Cycle encountered on width');
             } elseif ($box->widthRelative) {
                 // Cascade -- since width is a percentage, we multiply
-                $this->widthRelative   = $box->widthRelative;
+                $this->widthRelative = $box->widthRelative;
                 $this->widthPercentage *= $box->widthPercentage;
             } else {
                 // $box has an absolute width, so we can assign the dimension directly
-                $this->width           = $this->widthPercentage * $box->width;
+                $this->width = $this->widthPercentage * $box->width;
                 $this->widthPercentage = null;
-                $this->widthRelative   = null;
+                $this->widthRelative = null;
             }
         }
 
@@ -522,13 +566,13 @@ class Box
                 throw new ConstraintException('Cycle encountered on height');
             } elseif ($box->heightRelative) {
                 // Cascade -- since height is a percentage, we multiply
-                $this->heightRelative   = $box->heightRelative;
+                $this->heightRelative = $box->heightRelative;
                 $this->heightPercentage *= $box->heightPercentage;
             } else {
                 // $box has an absolute height, so we can assign the dimension directly
-                $this->height           = $this->heightPercentage * $box->height;
+                $this->height = $this->heightPercentage * $box->height;
                 $this->heightPercentage = null;
-                $this->heightRelative   = null;
+                $this->heightRelative = null;
             }
         }
 
@@ -539,7 +583,7 @@ class Box
                 throw new ConstraintException('Cycle encountered on left');
             } else {
                 // This will conveniently handle both the cascade and the absolute case!
-                $this->left         += $box->left;
+                $this->left += $box->left;
                 $this->leftRelative = $box->leftRelative;
             }
         }
@@ -551,7 +595,7 @@ class Box
                 throw new ConstraintException('Cycle encountered on right');
             } else {
                 // This will conveniently handle both the cascade and the absolute case!
-                $this->right         += $box->right;
+                $this->right += $box->right;
                 $this->rightRelative = $box->rightRelative;
             }
         }
@@ -563,7 +607,7 @@ class Box
                 throw new ConstraintException('Cycle encountered on top');
             } else {
                 // This will conveniently handle both the cascade and the absolute case!
-                $this->top         += $box->top;
+                $this->top += $box->top;
                 $this->topRelative = $box->topRelative;
             }
         }
@@ -575,7 +619,7 @@ class Box
                 throw new ConstraintException('Cycle encountered on bottom');
             } else {
                 // This will conveniently handle both the cascade and the absolute case!
-                $this->bottom         += $box->bottom;
+                $this->bottom += $box->bottom;
                 $this->bottomRelative = $box->bottomRelative;
             }
         }
@@ -594,30 +638,30 @@ class Box
     {
         if ($this->widthRelative === null) {
             if ($this->rightRelative === null && $this->leftRelative !== null) {
-                $this->left         = $this->right - $this->width;
+                $this->left = $this->right - $this->width;
                 $this->leftRelative = null;
             } elseif ($this->rightRelative !== null && $this->leftRelative === null) {
-                $this->right         = $this->left + $this->width;
+                $this->right = $this->left + $this->width;
                 $this->rightRelative = null;
             }
         } elseif ($this->rightRelative !== null && $this->leftRelative !== null) {
-            $this->width           = $this->right - $this->left;
+            $this->width = $this->right - $this->left;
             $this->widthPercentage = null;
-            $this->widthRelative   = null;
+            $this->widthRelative = null;
         }
 
         if ($this->heightRelative === null) {
             if ($this->bottomRelative === null && $this->topRelative !== null) {
-                $this->top         = $this->bottom - $this->height;
+                $this->top = $this->bottom - $this->height;
                 $this->topRelative = null;
             } elseif ($this->bottomRelative !== null && $this->topRelative === null) {
-                $this->bottom         = $this->top + $this->height;
+                $this->bottom = $this->top + $this->height;
                 $this->bottomRelative = null;
             }
         } elseif ($this->topRelative !== null && $this->bottomRelative !== null) {
-            $this->height           = $this->bottom - $this->top;
+            $this->height = $this->bottom - $this->top;
             $this->heightPercentage = null;
-            $this->heightRelative   = null;
+            $this->heightRelative = null;
         }
     }
 }
