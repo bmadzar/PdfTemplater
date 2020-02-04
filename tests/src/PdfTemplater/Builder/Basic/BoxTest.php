@@ -33,11 +33,11 @@ class BoxTest extends TestCase
 
         $this->assertNull($box->getTop());
 
-        $box->setTop(1.0);
+        $box->setTop(1.0, null);
 
         $this->assertSame(1.0, $box->getTop());
 
-        $box->setTop(-1.0);
+        $box->setTop(-1.0, null);
 
         $this->assertSame(-1.0, $box->getTop());
     }
@@ -48,11 +48,11 @@ class BoxTest extends TestCase
 
         $this->assertNull($box->getBottom());
 
-        $box->setBottom(1.0);
+        $box->setBottom(1.0, null);
 
         $this->assertSame(1.0, $box->getBottom());
 
-        $box->setBottom(-1.0);
+        $box->setBottom(-1.0, null);
 
         $this->assertSame(-1.0, $box->getBottom());
     }
@@ -64,11 +64,11 @@ class BoxTest extends TestCase
 
         $this->assertNull($box->getLeft());
 
-        $box->setLeft(1.0);
+        $box->setLeft(1.0, null);
 
         $this->assertSame(1.0, $box->getLeft());
 
-        $box->setLeft(-1.0);
+        $box->setLeft(-1.0, null);
 
         $this->assertSame(-1.0, $box->getLeft());
     }
@@ -79,11 +79,11 @@ class BoxTest extends TestCase
 
         $this->assertNull($box->getRight());
 
-        $box->setRight(1.0);
+        $box->setRight(1.0, null);
 
         $this->assertSame(1.0, $box->getRight());
 
-        $box->setRight(-1.0);
+        $box->setRight(-1.0, null);
 
         $this->assertSame(-1.0, $box->getRight());
     }
@@ -124,13 +124,13 @@ class BoxTest extends TestCase
 
         $this->assertNull($box->getWidthPercentage());
 
-        $box->setWidthPercentage(1.0);
+        $box->setWidthPercentage(1.0, 'test2');
 
         $this->assertSame(1.0, $box->getWidthPercentage());
 
         $this->expectException(BoxArgumentException::class);
 
-        $box->setWidthPercentage(-1.0);
+        $box->setWidthPercentage(-1.0, 'test2');
     }
 
     public function testHeightPercentage()
@@ -139,116 +139,21 @@ class BoxTest extends TestCase
 
         $this->assertNull($box->getHeightPercentage());
 
-        $box->setHeightPercentage(1.0);
+        $box->setHeightPercentage(1.0, 'test2');
 
         $this->assertSame(1.0, $box->getHeightPercentage());
 
         $this->expectException(BoxArgumentException::class);
 
-        $box->setHeightPercentage(-1.0);
-    }
-
-    public function testTopRelative()
-    {
-        $box = new Box('test');
-
-        $this->assertNull($box->getTopRelative());
-
-        $box->setTopRelative('test2');
-
-        $this->assertSame('test2', $box->getTopRelative());
-
-        $this->expectException(ConstraintException::class);
-
-        $box->setTopRelative('test');
-    }
-
-
-    public function testBottomRelative()
-    {
-        $box = new Box('test');
-
-        $this->assertNull($box->getBottomRelative());
-
-        $box->setBottomRelative('test2');
-
-        $this->assertSame('test2', $box->getBottomRelative());
-
-        $this->expectException(ConstraintException::class);
-
-        $box->setBottomRelative('test');
-    }
-
-
-    public function testLeftRelative()
-    {
-        $box = new Box('test');
-
-        $this->assertNull($box->getLeftRelative());
-
-        $box->setLeftRelative('test2');
-
-        $this->assertSame('test2', $box->getLeftRelative());
-
-        $this->expectException(ConstraintException::class);
-
-        $box->setLeftRelative('test');
-    }
-
-
-    public function testRightRelative()
-    {
-        $box = new Box('test');
-
-        $this->assertNull($box->getRightRelative());
-
-        $box->setRightRelative('test2');
-
-        $this->assertSame('test2', $box->getRightRelative());
-
-        $this->expectException(ConstraintException::class);
-
-        $box->setRightRelative('test');
-    }
-
-
-    public function testHeightRelative()
-    {
-        $box = new Box('test');
-
-        $this->assertNull($box->getHeightRelative());
-
-        $box->setHeightRelative('test2');
-
-        $this->assertSame('test2', $box->getHeightRelative());
-
-        $this->expectException(ConstraintException::class);
-
-        $box->setHeightRelative('test');
-    }
-
-    public function testWidthRelative()
-    {
-        $box = new Box('test');
-
-        $this->assertNull($box->getWidthRelative());
-
-        $box->setWidthRelative('test2');
-
-        $this->assertSame('test2', $box->getWidthRelative());
-
-        $this->expectException(ConstraintException::class);
-
-        $box->setWidthRelative('test');
+        $box->setHeightPercentage(-1.0, 'test2');
     }
 
     public function testDependencies()
     {
         $box = new Box('test');
 
-        foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
-            $box->{'set' . $dim}(1.0);
-            $box->{'set' . $dim . 'Relative'}($dim);
+        foreach (['Right', 'Left', 'Top', 'Bottom', 'WidthPercentage', 'HeightPercentage'] as $dim) {
+            $box->{'set' . $dim}(1.0, $dim);
         }
         unset($dim);
 
@@ -256,7 +161,7 @@ class BoxTest extends TestCase
 
         \sort($deps, SORT_ASC);
 
-        $this->assertSame(['Bottom', 'Height', 'Left', 'Right', 'Top', 'Width'], $deps);
+        $this->assertSame(['Bottom', 'HeightPercentage', 'Left', 'Right', 'Top', 'WidthPercentage'], $deps);
     }
 
     public function testAbsoluteIsAlwaysResolved()
@@ -268,7 +173,7 @@ class BoxTest extends TestCase
         foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
             $box = new Box('test');
 
-            $box->{'set' . $dim}(1.0);
+            $box->{'set' . $dim}(1.0, null);
 
             $this->assertTrue($box->isResolved());
         }
@@ -278,11 +183,10 @@ class BoxTest extends TestCase
 
     public function testRelativeIsNotResolved()
     {
-        foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
+        foreach (['Right', 'Left', 'Top', 'Bottom', 'WidthPercentage', 'HeightPercentage'] as $dim) {
             $box = new Box('test');
 
-            $box->{'set' . $dim}(1.0);
-            $box->{'set' . $dim . 'Relative'}('test2');
+            $box->{'set' . $dim}(1.0, 'test2');
 
             $this->assertFalse($box->isResolved());
         }
@@ -295,10 +199,9 @@ class BoxTest extends TestCase
         $box1 = new Box('test');
         $box2 = new Box('test2');
 
-        $box1->setRight(1.0);
-        $box1->setRightRelative('test2');
+        $box1->setRight(1.0, 'test2');
 
-        $box2->setLeft(1.0);
+        $box2->setRight(1.0, null);
 
         $this->assertTrue($box2->isResolved());
         $this->assertFalse($box1->isResolved());
@@ -312,8 +215,8 @@ class BoxTest extends TestCase
         $box1 = new Box('test1');
         $box2 = new Box('test2');
 
-        $box1->setWidthRelative('test2');
-        $box2->setWidthRelative('test1');
+        $box1->setWidthPercentage(100.0, 'test2');
+        $box2->setWidthPercentage(100.0, 'test1');
 
         $this->expectException(ConstraintException::class);
 
@@ -358,6 +261,10 @@ class BoxTest extends TestCase
             foreach ($boxData as $boxId => $boxDatum) {
                 /** @var Box $box */
                 $box = $boxDatum['box'];
+
+                if (!$box->isValid()) {
+                    $this->markTestIncomplete();
+                }
 
                 foreach ($box->getDependencies() as $dependency) {
                     if (!isset($boxData[$dependency]) && !isset($resolvedBoxData[$dependency])) {
@@ -422,29 +329,38 @@ class BoxTest extends TestCase
             $box    = new Box($line['id']);
             $finals = [];
 
-            foreach (['Right', 'Left', 'Top', 'Bottom', 'Width', 'Height'] as $dim) {
+            foreach (['Right', 'Left', 'Top', 'Bottom'] as $dim) {
                 $ldim  = \strtolower($dim);
                 $ldimr = $ldim . 'Relative';
 
                 if (isset($line[$ldim]) && $line[$ldim] !== '') {
-                    $box->{'set' . $dim}((float)$line[$ldim]);
-                }
+                    if (isset($line[$ldimr]) && $line[$ldimr] !== '') {
+                        $relDim = (string)$line[$ldimr];
+                    } else {
+                        $relDim = null;
+                    }
 
-                if (isset($line[$ldimr]) && $line[$ldimr] !== '') {
-                    $box->{'set' . $dim . 'Relative'}((string)$line[$ldimr]);
+                    $box->{'set' . $dim}((float)$line[$ldim], $relDim);
                 }
 
                 $finals[$dim] = (float)$line['final' . $dim];
             }
             unset($dim);
 
-            if (isset($line['widthPercentage']) && $line['widthPercentage'] !== '') {
-                $box->setWidthPercentage((float)$line['widthPercentage']);
-            }
+            foreach (['Width', 'Height'] as $dim) {
+                $ldim  = \strtolower($dim);
+                $ldimr = $ldim . 'Relative';
+                $ldimp = $ldim . 'Percentage';
 
-            if (isset($line['heightPercentage']) && $line['heightPercentage'] !== '') {
-                $box->setHeightPercentage((float)$line['heightPercentage']);
+                if (isset($line[$ldim]) && $line[$ldim] !== '') {
+                    $box->{'set' . $dim}((float)$line[$ldim]);
+                } elseif (isset($line[$ldimr], $line[$ldimp]) && $line[$ldimr] !== '' && $line[$ldimp] !== '') {
+                    $box->{'set' . $dim . 'Percentage'}((float)$line[$ldimp], (string)$line[$ldimr]);
+                }
+
+                $finals[$dim] = (float)$line['final' . $dim];
             }
+            unset($dim);
 
             $boxData[$box->getId()] = ['box' => $box, 'finals' => $finals];
         }

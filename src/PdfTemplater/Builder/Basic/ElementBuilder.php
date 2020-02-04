@@ -18,6 +18,7 @@ use PdfTemplater\Layout\Basic\RectangleElement;
 use PdfTemplater\Layout\Basic\RgbColor;
 use PdfTemplater\Layout\Basic\TextElement;
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\LayoutArgumentException;
 use PdfTemplater\Node\Node;
 
 /**
@@ -70,7 +71,7 @@ class ElementBuilder
         if (!isset($attributes['font'], $attributes['fontsize']) || !\is_numeric($attributes['fontsize'])) {
             throw new BuildArgumentException('Missing attribute!');
         } else {
-            $font = $attributes['font'];
+            $font     = $attributes['font'];
             $fontsize = (float)$attributes['fontsize'];
         }
 
@@ -163,24 +164,28 @@ class ElementBuilder
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new TextElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $stroke,
-            $strokewidth,
-            $fill,
-            $content,
-            $font,
-            $color,
-            $fontsize,
-            $linesize,
-            $wrap,
-            $align,
-            $valign
-        );
+        try {
+            return new TextElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $stroke,
+                $strokewidth,
+                $fill,
+                $content,
+                $font,
+                $color,
+                $fontsize,
+                $linesize,
+                $wrap,
+                $align,
+                $valign
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     private function buildLineElement(Node $elementNode): LineElement
@@ -205,15 +210,19 @@ class ElementBuilder
 
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new LineElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $linewidth,
-            $linecolor
-        );
+        try {
+            return new LineElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $linewidth,
+                $linecolor
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     private function buildRectangleElement(Node $elementNode): RectangleElement
@@ -223,16 +232,20 @@ class ElementBuilder
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new RectangleElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $stroke,
-            $strokewidth,
-            $fill
-        );
+        try {
+            return new RectangleElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $stroke,
+                $strokewidth,
+                $fill
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     private function buildDataImageElement(Node $elementNode): DataImageElement
@@ -254,18 +267,22 @@ class ElementBuilder
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new DataImageElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $stroke,
-            $strokewidth,
-            $fill,
-            $data,
-            $alt
-        );
+        try {
+            return new DataImageElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $stroke,
+                $strokewidth,
+                $fill,
+                $data,
+                $alt
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     private function buildFileImageElement(Node $elementNode): FileImageElement
@@ -287,18 +304,22 @@ class ElementBuilder
         [$stroke, $strokewidth, $fill] = $this->extractRectangleAttributes($attributes);
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new FileImageElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $stroke,
-            $strokewidth,
-            $fill,
-            $file,
-            $alt
-        );
+        try {
+            return new FileImageElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $stroke,
+                $strokewidth,
+                $fill,
+                $file,
+                $alt
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     private function buildEllipseElement(Node $elementNode): EllipseElement
@@ -309,16 +330,20 @@ class ElementBuilder
 
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new EllipseElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $stroke,
-            $strokewidth,
-            $fill
-        );
+        try {
+            return new EllipseElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $stroke,
+                $strokewidth,
+                $fill
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     private function buildBookmarkElement(Node $elementNode): BookmarkElement
@@ -343,15 +368,19 @@ class ElementBuilder
 
         [$left, $top, $width, $height] = $this->extractBoxAttributes($attributes);
 
-        return new BookmarkElement(
-            $elementNode->getId(),
-            $left,
-            $top,
-            $width,
-            $height,
-            $level,
-            $name
-        );
+        try {
+            return new BookmarkElement(
+                $elementNode->getId(),
+                $left,
+                $top,
+                $width,
+                $height,
+                $level,
+                $name
+            );
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Element constructor.', 0, $ex);
+        }
     }
 
     /**

@@ -133,8 +133,8 @@ class PageBuilder
         $boxes = $this->createBoxes($elementNodes);
 
         $pageBox = new Box(self::PAGE_BOX_ID);
-        $pageBox->setLeft(0.00);
-        $pageBox->setTop(0.00);
+        $pageBox->setLeft(0.00, null);
+        $pageBox->setTop(0.00, null);
         $pageBox->setWidth($page->getWidth());
         $pageBox->setHeight($page->getHeight());
 
@@ -196,13 +196,6 @@ class PageBuilder
         foreach ($elementNodes as $elementNode) {
             $box = new Box($elementNode->getId());
 
-            $this->assignBoxRelative($box, 'width', $elementNode);
-            $this->assignBoxRelative($box, 'height', $elementNode);
-            $this->assignBoxRelative($box, 'top', $elementNode);
-            $this->assignBoxRelative($box, 'left', $elementNode);
-            $this->assignBoxRelative($box, 'bottom', $elementNode);
-            $this->assignBoxRelative($box, 'right', $elementNode);
-
             $this->assignBoxDimension($box, 'width', $elementNode);
             $this->assignBoxDimension($box, 'height', $elementNode);
 
@@ -218,22 +211,6 @@ class PageBuilder
     }
 
     /**
-     * Assigns the relative box ID for the specified offset or dimension.
-     *
-     * @param Box    $box
-     * @param string $measurement
-     * @param Node   $elementNode
-     */
-    private function assignBoxRelative(Box $box, string $measurement, Node $elementNode): void
-    {
-        $val = $elementNode->getAttribute($measurement . '-rel');
-
-        if ($val) {
-            $box->{'set' . \ucfirst($measurement) . 'Relative'}($val);
-        }
-    }
-
-    /**
      * Assigns the specified relative or absolute dimension of the box.
      *
      * @param Box    $box
@@ -243,15 +220,12 @@ class PageBuilder
     private function assignBoxDimension(Box $box, string $dimension, Node $elementNode): void
     {
         $val = $elementNode->getAttribute($dimension);
+        $rel = $elementNode->getAttribute($dimension . '-rel');
 
         if ($this->checkRelativeDimension($val)) {
-            $box->{'set' . \ucfirst($dimension) . 'Percentage'}((float)\trim($val, " \t\n\r\0\x0B%") / 100);
-
             // A percentage dimension must be relative to something
             // If no rel attribute is provided, they are relative to the page
-            if ($box->{'get' . \ucfirst($dimension) . 'Relative'} === null) {
-                $box->{'set' . \ucfirst($dimension) . 'Relative'} = self::PAGE_BOX_ID;
-            }
+            $box->{'set' . \ucfirst($dimension) . 'Percentage'}((float)\trim($val, " \t\n\r\0\x0B%") / 100, $rel ?? self::PAGE_BOX_ID);
         } elseif ($this->checkDimension($val)) {
             $box->{'set' . \ucfirst($dimension)}((float)$val);
         } elseif ($val !== null) {
@@ -269,9 +243,10 @@ class PageBuilder
     private function assignBoxOffset(Box $box, string $offset, Node $elementNode): void
     {
         $val = $elementNode->getAttribute($offset);
+        $rel = $elementNode->getAttribute($offset . '-rel');
 
         if ($this->checkOffset($val)) {
-            $box->{'set' . \ucfirst($offset)}((float)$val);
+            $box->{'set' . \ucfirst($offset)}((float)$val, $rel);
         } elseif ($val !== null) {
             throw new BuildArgumentException('Invalid ' . $offset . ' supplied for Element.');
         }

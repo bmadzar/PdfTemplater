@@ -7,6 +7,7 @@ namespace PdfTemplater\Builder\Basic;
 use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
 use PdfTemplater\Layout\Basic\Font;
+use PdfTemplater\Layout\LayoutArgumentException;
 use PdfTemplater\Node\Node;
 
 /**
@@ -31,7 +32,7 @@ class FontBuilder
         }
 
         $fontfile = $fontNode->getAttribute('file');
-        $name = $fontNode->getAttribute('name');
+        $name     = $fontNode->getAttribute('name');
 
         if (!$fontfile) {
             if (!\in_array(\strtolower($name), ['helvetica', 'courier', 'symbol', 'times', 'zapfdingbats'], true)) {
@@ -52,23 +53,23 @@ class FontBuilder
         switch (\strtoupper($fontNode->getAttribute('style'))) {
             case 'B':
             case 'BOLD':
-            case Font::STYLE_BOLD:
+            case (string)Font::STYLE_BOLD:
                 $style = Font::STYLE_BOLD;
                 break;
             case 'I':
             case 'ITALIC':
-            case Font::STYLE_ITALIC:
+            case (string)Font::STYLE_ITALIC:
                 $style = Font::STYLE_ITALIC;
                 break;
             case 'BI':
             case 'IB':
             case 'BOLDITALIC':
             case 'ITALICBOLD':
-            case Font::STYLE_BOLD_ITALIC:
+            case (string)Font::STYLE_BOLD_ITALIC:
                 $style = Font::STYLE_BOLD_ITALIC;
                 break;
             case '':
-            case Font::STYLE_NORMAL:
+            case (string)Font::STYLE_NORMAL:
                 $style = Font::STYLE_NORMAL;
                 break;
             default:
@@ -76,6 +77,10 @@ class FontBuilder
                 break;
         }
 
-        return new Font($name, $style, $fontfile);
+        try {
+            return new Font($name, $style, $fontfile);
+        } catch (LayoutArgumentException $ex) {
+            throw new BuildException('Invalid parameters provided to Font constructor.', 0, $ex);
+        }
     }
 }

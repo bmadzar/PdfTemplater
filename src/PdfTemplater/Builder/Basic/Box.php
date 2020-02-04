@@ -13,6 +13,15 @@ namespace PdfTemplater\Builder\Basic;
 class Box
 {
     /**
+     * Using PHP_FLOAT_EPSILON won't work, as the error adds up over many operations.
+     * So we pick a larger value that is still insignificant given the problem domain.
+     *
+     * 10e-X, where X is the value of RESOLUTION
+     */
+    private const RESOLUTION = 5;
+    private const RESOLUTION_EPSILON = 10 ** -self::RESOLUTION;
+
+    /**
      * @var float|null
      */
     private ?float $top = null;
@@ -102,26 +111,27 @@ class Box
      */
     public function getTop(): ?float
     {
-        if (
-            $this->top === null &&
-            $this->bottom !== null &&
-            $this->height !== null &&
-            $this->bottomRelative === null &&
-            $this->heightRelative === null
-        ) {
-            $this->top = $this->bottom - $this->height;
-            $this->topRelative = null;
-        }
-
-        return $this->top;
+        return $this->top === null ? null : \round($this->top, self::RESOLUTION);
     }
 
     /**
-     * @param float $top
+     * @param float       $top
+     * @param string|null $topRelative
      */
-    public function setTop(?float $top): void
+    public function setTop(?float $top, ?string $topRelative): void
     {
-        $this->top = $top;
+        if ($topRelative !== null && $top === null) {
+            throw new ConstraintException('Cannot set relative dimension to null.');
+        }
+
+        if ($topRelative === $this->id) {
+            throw new ConstraintException('Cannot set a box relative to itself.');
+        }
+
+        $this->top         = $top;
+        $this->topRelative = $topRelative;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -129,26 +139,27 @@ class Box
      */
     public function getLeft(): ?float
     {
-        if (
-            $this->left === null &&
-            $this->right !== null &&
-            $this->width !== null &&
-            $this->rightRelative === null &&
-            $this->widthRelative === null
-        ) {
-            $this->left = $this->right - $this->width;
-            $this->leftRelative = null;
-        }
-
-        return $this->left;
+        return $this->left === null ? null : \round($this->left, self::RESOLUTION);
     }
 
     /**
-     * @param float $left
+     * @param float       $left
+     * @param string|null $leftRelative
      */
-    public function setLeft(?float $left): void
+    public function setLeft(?float $left, ?string $leftRelative): void
     {
-        $this->left = $left;
+        if ($leftRelative !== null && $left === null) {
+            throw new ConstraintException('Cannot set relative dimension to null.');
+        }
+
+        if ($leftRelative === $this->id) {
+            throw new ConstraintException('Cannot set a box relative to itself.');
+        }
+
+        $this->left         = $left;
+        $this->leftRelative = $leftRelative;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -156,19 +167,7 @@ class Box
      */
     public function getWidth(): ?float
     {
-        if (
-            $this->width === null &&
-            $this->right !== null &&
-            $this->left !== null &&
-            $this->rightRelative === null &&
-            $this->leftRelative === null
-        ) {
-            $this->width = $this->right - $this->left;
-            $this->widthPercentage = null;
-            $this->widthRelative = null;
-        }
-
-        return $this->width;
+        return $this->width === null ? null : \round($this->width, self::RESOLUTION);
     }
 
     /**
@@ -176,11 +175,18 @@ class Box
      */
     public function setWidth(?float $width): void
     {
-        if ($width < 0.00) {
-            throw new BoxArgumentException('Width must be 0 or greater.');
+        if ($width !== null) {
+            if ($width < 0.00) {
+                throw new BoxArgumentException('Width must be 0 or greater.');
+            }
+
+            $this->widthPercentage = null;
+            $this->widthRelative   = null;
         }
 
         $this->width = $width;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -188,19 +194,7 @@ class Box
      */
     public function getHeight(): ?float
     {
-        if (
-            $this->height === null &&
-            $this->top !== null &&
-            $this->bottom !== null &&
-            $this->topRelative === null &&
-            $this->bottomRelative === null
-        ) {
-            $this->height = $this->bottom - $this->top;
-            $this->heightPercentage = null;
-            $this->heightRelative = null;
-        }
-
-        return $this->height;
+        return $this->height === null ? null : \round($this->height, self::RESOLUTION);
     }
 
     /**
@@ -208,11 +202,18 @@ class Box
      */
     public function setHeight(?float $height): void
     {
-        if ($height < 0.00) {
-            throw new BoxArgumentException('Height must be 0 or greater.');
+        if ($height !== null) {
+            if ($height < 0.00) {
+                throw new BoxArgumentException('Width must be 0 or greater.');
+            }
+
+            $this->heightPercentage = null;
+            $this->heightRelative   = null;
         }
 
         $this->height = $height;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -220,19 +221,35 @@ class Box
      */
     public function getWidthPercentage(): ?float
     {
-        return $this->widthPercentage;
+        return $this->widthPercentage === null ? null : \round($this->widthPercentage, self::RESOLUTION + 2);
     }
 
     /**
-     * @param float $widthPercentage
+     * @param float       $widthPercentage
+     * @param string|null $widthRelative
      */
-    public function setWidthPercentage(?float $widthPercentage): void
+    public function setWidthPercentage(?float $widthPercentage, ?string $widthRelative): void
     {
-        if ($widthPercentage < 0.00) {
-            throw new BoxArgumentException('Width percentage must be 0 or greater.');
+        if ($widthRelative !== null && $widthPercentage === null) {
+            throw new ConstraintException('Cannot set relative dimension to null.');
+        }
+
+        if ($widthRelative === $this->id) {
+            throw new ConstraintException('Cannot set a box relative to itself.');
+        }
+
+        if ($widthPercentage !== null) {
+            if ($widthPercentage < 0.00) {
+                throw new BoxArgumentException('Width percentage must be 0 or greater.');
+            }
+
+            $this->width = null;
         }
 
         $this->widthPercentage = $widthPercentage;
+        $this->widthRelative   = $widthRelative;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -240,19 +257,35 @@ class Box
      */
     public function getHeightPercentage(): ?float
     {
-        return $this->heightPercentage;
+        return $this->heightPercentage === null ? null : \round($this->heightPercentage, self::RESOLUTION + 2);
     }
 
     /**
-     * @param float $heightPercentage
+     * @param float       $heightPercentage
+     * @param string|null $heightRelative
      */
-    public function setHeightPercentage(?float $heightPercentage): void
+    public function setHeightPercentage(?float $heightPercentage, ?string $heightRelative): void
     {
-        if ($heightPercentage < 0.00) {
-            throw new BoxArgumentException('Height percentage must be 0 or greater.');
+        if ($heightRelative !== null && $heightPercentage === null) {
+            throw new ConstraintException('Cannot set relative dimension to null.');
+        }
+
+        if ($heightRelative === $this->id) {
+            throw new ConstraintException('Cannot set a box relative to itself.');
+        }
+
+        if ($heightPercentage !== null) {
+            if ($heightPercentage < 0.00) {
+                throw new BoxArgumentException('Height percentage must be 0 or greater.');
+            }
+
+            $this->height = null;
         }
 
         $this->heightPercentage = $heightPercentage;
+        $this->heightRelative   = $heightRelative;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -264,35 +297,11 @@ class Box
     }
 
     /**
-     * @param string $topRelative
-     */
-    public function setTopRelative(?string $topRelative): void
-    {
-        if ($topRelative === $this->id) {
-            throw new ConstraintException('Attempting to set a box relative to itself!');
-        }
-
-        $this->topRelative = $topRelative;
-    }
-
-    /**
      * @return string
      */
     public function getLeftRelative(): ?string
     {
         return $this->leftRelative;
-    }
-
-    /**
-     * @param string $leftRelative
-     */
-    public function setLeftRelative(?string $leftRelative): void
-    {
-        if ($leftRelative === $this->id) {
-            throw new ConstraintException('Attempting to set a box relative to itself!');
-        }
-
-        $this->leftRelative = $leftRelative;
     }
 
     /**
@@ -304,35 +313,11 @@ class Box
     }
 
     /**
-     * @param string $bottomRelative
-     */
-    public function setBottomRelative(?string $bottomRelative): void
-    {
-        if ($bottomRelative === $this->id) {
-            throw new ConstraintException('Attempting to set a box relative to itself!');
-        }
-
-        $this->bottomRelative = $bottomRelative;
-    }
-
-    /**
      * @return string
      */
     public function getRightRelative(): ?string
     {
         return $this->rightRelative;
-    }
-
-    /**
-     * @param string $rightRelative
-     */
-    public function setRightRelative(?string $rightRelative): void
-    {
-        if ($rightRelative === $this->id) {
-            throw new ConstraintException('Attempting to set a box relative to itself!');
-        }
-
-        $this->rightRelative = $rightRelative;
     }
 
     /**
@@ -344,35 +329,11 @@ class Box
     }
 
     /**
-     * @param string $widthRelative
-     */
-    public function setWidthRelative(?string $widthRelative): void
-    {
-        if ($widthRelative === $this->id) {
-            throw new ConstraintException('Attempting to set a box relative to itself!');
-        }
-
-        $this->widthRelative = $widthRelative;
-    }
-
-    /**
      * @return string
      */
     public function getHeightRelative(): ?string
     {
         return $this->heightRelative;
-    }
-
-    /**
-     * @param string $heightRelative
-     */
-    public function setHeightRelative(?string $heightRelative): void
-    {
-        if ($heightRelative === $this->id) {
-            throw new ConstraintException('Attempting to set a box relative to itself!');
-        }
-
-        $this->heightRelative = $heightRelative;
     }
 
     /**
@@ -396,26 +357,27 @@ class Box
      */
     public function getBottom(): ?float
     {
-        if (
-            $this->bottom === null &&
-            $this->height !== null &&
-            $this->top !== null &&
-            $this->heightRelative === null &&
-            $this->topRelative === null
-        ) {
-            $this->bottom = $this->top + $this->height;
-            $this->bottomRelative = null;
-        }
-
-        return $this->bottom;
+        return $this->bottom === null ? null : \round($this->bottom, self::RESOLUTION);
     }
 
     /**
-     * @param float|null $bottom
+     * @param float|null  $bottom
+     * @param string|null $bottomRelative
      */
-    public function setBottom(?float $bottom): void
+    public function setBottom(?float $bottom, ?string $bottomRelative): void
     {
-        $this->bottom = $bottom;
+        if ($bottomRelative !== null && $bottom === null) {
+            throw new ConstraintException('Cannot set relative dimension to null.');
+        }
+
+        if ($bottomRelative === $this->id) {
+            throw new ConstraintException('Cannot set a box relative to itself.');
+        }
+
+        $this->bottom         = $bottom;
+        $this->bottomRelative = $bottomRelative;
+
+        $this->resolveInternal();
     }
 
     /**
@@ -423,66 +385,162 @@ class Box
      */
     public function getRight(): ?float
     {
-        if (
-            $this->right === null &&
-            $this->width !== null &&
-            $this->left !== null &&
-            $this->widthRelative === null &&
-            $this->leftRelative === null
-        ) {
-            $this->right = $this->left + $this->width;
-            $this->rightRelative = null;
-        }
-
-        return $this->right;
+        return $this->right === null ? null : \round($this->right, self::RESOLUTION);
     }
 
     /**
-     * @param float|null $right
+     * @param float|null  $right
+     * @param string|null $rightRelative
      */
-    public function setRight(?float $right): void
+    public function setRight(?float $right, ?string $rightRelative): void
     {
-        $this->right = $right;
+        if ($rightRelative !== null && $right === null) {
+            throw new ConstraintException('Cannot set relative dimension to null.');
+        }
+
+        if ($rightRelative === $this->id) {
+            throw new ConstraintException('Cannot set a box relative to itself.');
+        }
+
+        $this->right         = $right;
+        $this->rightRelative = $rightRelative;
+
+        $this->resolveInternal();
     }
 
     /**
      * Validates that all dimensions are set correctly.
      *
-     * @return bool|null
+     * @return bool
      */
-    public function isValid(): ?bool
+    public function isValid(): bool
     {
-        if (!$this->isResolved()) {
-            return null;
+        if ($this->isResolved()) {
+            return $this->isValidResolved();
+        } else {
+            return $this->isValidUnresolved();
+        }
+    }
+
+    /**
+     * Validates a resolved Box.
+     *
+     * @return bool
+     */
+    private function isValidResolved(): bool
+    {
+        // All values must be set
+        if (
+            $this->top === null ||
+            $this->right === null ||
+            $this->bottom === null ||
+            $this->left === null ||
+            $this->width === null ||
+            $this->height === null
+        ) {
+            return false;
         }
 
-        // At least two of top, bottom and height must be set
-        // If all three are set, they must add up
-        // If bottom and top are set, bottom cannot be above top
-        if ($this->height !== null && $this->top !== null && $this->bottom !== null) {
-            if (!\abs($this->top + $this->height - $this->bottom) < \PHP_FLOAT_EPSILON) {
-                return false;
-            }
-        } elseif (\count(\array_filter([$this->top, $this->height, $this->bottom], '\\is_null')) >= 2) {
-            return false;
-        } elseif ($this->top !== null && $this->bottom !== null && $this->top <= $this->bottom) {
+        // Values must be sane, we cannot have an inside-out or degenerate Box
+        if (
+            $this->top >= $this->bottom ||
+            $this->left >= $this->right
+        ) {
             return false;
         }
 
-        // At least two of left, right and width must be set
-        // If all three are set, they must add up
-        // If right and left are set, right cannot be to the left of left
-        if ($this->width !== null && $this->left !== null && $this->right !== null) {
-            if (!\abs($this->left + $this->width - $this->right) < \PHP_FLOAT_EPSILON) {
-                return false;
-            }
-        } elseif (\count(\array_filter([$this->left, $this->width, $this->right], '\\is_null')) >= 2) {
-            return false;
-        } elseif ($this->left !== null && $this->right !== null && $this->right <= $this->left) {
+        // Values must be consistent: height must be bottom - top, width must be right - left
+        $hdelta = $this->right - $this->left - $this->width;
+        $vdelta = $this->bottom - $this->top - $this->height;
+
+        if (
+            $hdelta > self::RESOLUTION_EPSILON ||
+            $hdelta < -self::RESOLUTION_EPSILON ||
+            $vdelta > self::RESOLUTION_EPSILON ||
+            $vdelta < -self::RESOLUTION_EPSILON
+        ) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Validates an unresolved Box.
+     *
+     * @return bool
+     */
+    private function isValidUnresolved(): bool
+    {
+        // At least two values from each axis must be set
+
+        $horizontal = ($this->left === null ? 0 : 1) + ($this->right === null ? 0 : 1) + (($this->widthPercentage === null && $this->width === null) ? 0 : 1);
+        $vertical   = ($this->top === null ? 0 : 1) + ($this->bottom === null ? 0 : 1) + (($this->heightPercentage === null && $this->height === null) ? 0 : 1);
+
+        if ($horizontal < 2 || $vertical < 2) {
+            return false;
+        }
+
+        // If they are resolved, values must be sane
+
+        if (
+            $this->rightRelative === null &&
+            $this->leftRelative === null &&
+            $this->widthRelative === null &&
+            $this->left !== null &&
+            $this->right !== null &&
+            $this->width !== null &&
+            $this->left >= $this->right
+        ) {
+            return false;
+        }
+
+        if (
+            $this->bottomRelative === null &&
+            $this->topRelative === null &&
+            $this->heightRelative === null &&
+            $this->bottom !== null &&
+            $this->top !== null &&
+            $this->height !== null &&
+            $this->top >= $this->bottom
+        ) {
+            return false;
+        }
+
+        // If they are resolved, then right - left must equal width, bottom - top must equal height
+
+        if (
+            $this->rightRelative === null &&
+            $this->leftRelative === null &&
+            $this->widthRelative === null &&
+            $this->left !== null &&
+            $this->right !== null &&
+            $this->width !== null &&
+            (
+                ($this->right - $this->left - $this->width) > self::RESOLUTION_EPSILON ||
+                ($this->right - $this->left - $this->width) < -self::RESOLUTION_EPSILON
+            )
+        ) {
+            return false;
+        }
+
+        if (
+            $this->bottomRelative === null &&
+            $this->topRelative === null &&
+            $this->heightRelative === null &&
+            $this->bottom !== null &&
+            $this->top !== null &&
+            $this->height !== null &&
+            (
+                ($this->bottom - $this->top - $this->height) > self::RESOLUTION_EPSILON ||
+                ($this->bottom - $this->top - $this->height) < -self::RESOLUTION_EPSILON
+            )
+        ) {
+            return false;
+        }
+
+        return true;
+
     }
 
     /**
@@ -538,8 +596,6 @@ class Box
 
         if ($this->isResolved()) {
             return;
-        } else {
-            $this->resolveInternal();
         }
 
         /// WIDTH ///
@@ -547,15 +603,14 @@ class Box
         if ($box->id === $this->widthRelative) {
             if ($box->widthRelative === $this->id) {
                 throw new ConstraintException('Cycle encountered on width');
-            } elseif ($box->widthRelative) {
+            } elseif ($box->widthRelative !== null) {
                 // Cascade -- since width is a percentage, we multiply
-                $this->widthRelative = $box->widthRelative;
+                $this->widthRelative   = $box->widthRelative;
                 $this->widthPercentage *= $box->widthPercentage;
-            } else {
-                // $box has an absolute width, so we can assign the dimension directly
-                $this->width = $this->widthPercentage * $box->width;
+            } elseif ($box->width !== null) {
+                $this->width           = $this->widthPercentage * $box->width;
                 $this->widthPercentage = null;
-                $this->widthRelative = null;
+                $this->widthRelative   = null;
             }
         }
 
@@ -564,15 +619,15 @@ class Box
         if ($box->id === $this->heightRelative) {
             if ($box->heightRelative === $this->id) {
                 throw new ConstraintException('Cycle encountered on height');
-            } elseif ($box->heightRelative) {
+            } elseif ($box->heightRelative !== null) {
                 // Cascade -- since height is a percentage, we multiply
-                $this->heightRelative = $box->heightRelative;
+                $this->heightRelative   = $box->heightRelative;
                 $this->heightPercentage *= $box->heightPercentage;
-            } else {
+            } elseif ($box->width !== null) {
                 // $box has an absolute height, so we can assign the dimension directly
-                $this->height = $this->heightPercentage * $box->height;
+                $this->height           = $this->heightPercentage * $box->height;
                 $this->heightPercentage = null;
-                $this->heightRelative = null;
+                $this->heightRelative   = null;
             }
         }
 
@@ -581,9 +636,8 @@ class Box
         if ($box->id === $this->leftRelative) {
             if ($box->leftRelative === $this->id) {
                 throw new ConstraintException('Cycle encountered on left');
-            } else {
-                // This will conveniently handle both the cascade and the absolute case!
-                $this->left += $box->left;
+            } elseif ($box->left !== null) {
+                $this->left         += $box->left;
                 $this->leftRelative = $box->leftRelative;
             }
         }
@@ -593,9 +647,8 @@ class Box
         if ($box->id === $this->rightRelative) {
             if ($box->rightRelative === $this->id) {
                 throw new ConstraintException('Cycle encountered on right');
-            } else {
-                // This will conveniently handle both the cascade and the absolute case!
-                $this->right += $box->right;
+            } elseif ($box->right !== null) {
+                $this->right         += $box->right;
                 $this->rightRelative = $box->rightRelative;
             }
         }
@@ -605,9 +658,8 @@ class Box
         if ($box->id === $this->topRelative) {
             if ($box->topRelative === $this->id) {
                 throw new ConstraintException('Cycle encountered on top');
-            } else {
-                // This will conveniently handle both the cascade and the absolute case!
-                $this->top += $box->top;
+            } elseif ($box->top !== null) {
+                $this->top         += $box->top;
                 $this->topRelative = $box->topRelative;
             }
         }
@@ -617,51 +669,73 @@ class Box
         if ($box->id === $this->bottomRelative) {
             if ($box->bottomRelative === $this->id) {
                 throw new ConstraintException('Cycle encountered on bottom');
-            } else {
-                // This will conveniently handle both the cascade and the absolute case!
-                $this->bottom += $box->bottom;
+            } elseif ($box->bottom !== null) {
+                $this->bottom         += $box->bottom;
                 $this->bottomRelative = $box->bottomRelative;
             }
         }
 
-        if ($this->isResolved()) {
-            return;
-        } else {
-            $this->resolveInternal();
-        }
+        $this->resolveInternal();
     }
 
     /**
-     * Eliminates dependencies that can be calculated (e.g. if left and width are known, right is left + width)
+     * For each axis, if two of the three dimensions are known,
+     * the third can be calculated.
      */
-    private function resolveInternal(): void
+    private function resolveInternal()
     {
-        if ($this->widthRelative === null) {
-            if ($this->rightRelative === null && $this->leftRelative !== null) {
-                $this->left = $this->right - $this->width;
-                $this->leftRelative = null;
-            } elseif ($this->rightRelative !== null && $this->leftRelative === null) {
-                $this->right = $this->left + $this->width;
-                $this->rightRelative = null;
-            }
-        } elseif ($this->rightRelative !== null && $this->leftRelative !== null) {
-            $this->width = $this->right - $this->left;
+        if (
+            $this->leftRelative === null &&
+            $this->left !== null &&
+            $this->rightRelative === null &&
+            $this->right !== null
+        ) {
+            $this->width           = $this->right - $this->left;
+            $this->widthRelative   = null;
             $this->widthPercentage = null;
-            $this->widthRelative = null;
+        } elseif (
+            $this->leftRelative === null &&
+            $this->left !== null &&
+            $this->widthRelative === null &&
+            $this->width !== null
+        ) {
+            $this->right         = $this->left + $this->width;
+            $this->rightRelative = null;
+        } elseif (
+            $this->rightRelative === null &&
+            $this->right !== null &&
+            $this->widthRelative === null &&
+            $this->width !== null
+        ) {
+            $this->left         = $this->right - $this->width;
+            $this->leftRelative = null;
         }
 
-        if ($this->heightRelative === null) {
-            if ($this->bottomRelative === null && $this->topRelative !== null) {
-                $this->top = $this->bottom - $this->height;
-                $this->topRelative = null;
-            } elseif ($this->bottomRelative !== null && $this->topRelative === null) {
-                $this->bottom = $this->top + $this->height;
-                $this->bottomRelative = null;
-            }
-        } elseif ($this->topRelative !== null && $this->bottomRelative !== null) {
-            $this->height = $this->bottom - $this->top;
+        if (
+            $this->topRelative === null &&
+            $this->top !== null &&
+            $this->bottomRelative === null &&
+            $this->bottom !== null
+        ) {
+            $this->height           = $this->bottom - $this->top;
+            $this->heightRelative   = null;
             $this->heightPercentage = null;
-            $this->heightRelative = null;
+        } elseif (
+            $this->topRelative === null &&
+            $this->top !== null &&
+            $this->heightRelative === null &&
+            $this->height !== null
+        ) {
+            $this->bottom         = $this->top + $this->height;
+            $this->bottomRelative = null;
+        } elseif (
+            $this->bottomRelative === null &&
+            $this->bottom !== null &&
+            $this->heightRelative === null &&
+            $this->height !== null
+        ) {
+            $this->top         = $this->bottom - $this->height;
+            $this->topRelative = null;
         }
     }
 }
