@@ -5,13 +5,16 @@ namespace PdfTemplater\Builder\Basic;
 
 use PdfTemplater\Builder\BuildArgumentException;
 use PdfTemplater\Builder\BuildException;
+use PdfTemplater\Layout\Basic\CmykColor;
 use PdfTemplater\Layout\Basic\DataImageElement;
 use PdfTemplater\Layout\Basic\FileImageElement;
+use PdfTemplater\Layout\Basic\HslColor;
+use PdfTemplater\Layout\Basic\RgbColor;
 use PdfTemplater\Layout\BookmarkElement;
+use PdfTemplater\Layout\Color;
 use PdfTemplater\Layout\Document;
 use PdfTemplater\Layout\EllipseElement;
 use PdfTemplater\Layout\Layer;
-use PdfTemplater\Layout\LayoutArgumentException;
 use PdfTemplater\Layout\LineElement;
 use PdfTemplater\Layout\Page;
 use PdfTemplater\Layout\RectangleElement;
@@ -294,6 +297,115 @@ class BuilderTest extends TestCase
         $this->assertSame(100.0, $el1->getHeight());
         $this->assertSame(100.0, $el1->getLeft());
         $this->assertSame(100.0, $el1->getTop());
+    }
+
+    public function generateColorStrings()
+    {
+        return [
+            ['#FF0000', new RgbColor(1.0, 0.0, 0.0, 1.0)],
+            ['#F00', new RgbColor(1.0, 0.0, 0.0, 1.0)],
+            ['red', new RgbColor(1.0, 0.0, 0.0, 1.0)],
+            ['green', new RgbColor(0.0, 1.0, 0.0, 1.0)],
+            ['blue', new RgbColor(0.0, 0.0, 1.0, 1.0)],
+            ['black', new RgbColor(0.0, 0.0, 0.0, 1.0)],
+            ['white', new RgbColor(1.0, 1.0, 1.0, 1.0)],
+            ['yellow', new RgbColor(1.0, 1.0, 0.0, 1.0)],
+            ['transparent', new RgbColor(1.0, 1.0, 1.0, 0.0)],
+            ['rgb(255, 0, 0)', new RgbColor(1.0, 0.0, 0.0, 1.0)],
+            ['rgba(255, 0, 0, 127)', new RgbColor(1.0, 0.0, 0.0, 127 / 255)],
+            ['hsl(180, 127, 127)', new HslColor(0.5, 127 / 255, 127 / 255)],
+            ['hsla(180, 127, 127, 127)', new HslColor(0.5, 127 / 255, 127 / 255, 127 / 255)],
+            ['cmyk(127, 127, 127, 127)', new CmykColor(127 / 255, 127 / 255, 127 / 255, 127 / 255)],
+            ['cmyka(127, 127, 127, 127, 127)', new CmykColor(127 / 255, 127 / 255, 127 / 255, 127 / 255, 127 / 255)],
+        ];
+    }
+
+    /**
+     * @dataProvider generateColorStrings
+     * @param string $colorString
+     * @param Color  $expected
+     */
+    public function testBuildColors(string $colorString, Color $expected)
+    {
+        $test = new Builder();
+
+        $docNode = new Node('document', null, [
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
+            'keywords' => 'kw1, kw2',
+        ]);
+
+        $pageNode1 = new Node('page', null, [
+            'width'  => '100',
+            'height' => '200',
+            'number' => '1',
+        ]);
+
+        $line = new Node('line', 'line', [
+            'width'     => '100',
+            'height'    => '100',
+            'top'       => '100',
+            'left'      => '100',
+            'linewidth' => '1.0',
+            'linecolor' => $colorString,
+        ]);
+
+        $pageNode1->addChild($line);
+        $docNode->addChild($pageNode1);
+
+        $doc = $test->build($docNode);
+
+        $page = $doc->getPage(1);
+
+        $this->assertInstanceOf(Page::class, $page);
+
+        $layer = $page->getLayer(0);
+
+        $this->assertInstanceOf(Layer::class, $layer);
+
+        /** @var LineElement $el */
+        $el = $layer->getElement('line');
+
+        $this->assertInstanceOf(LineElement::class, $el);
+
+        if ($colorString !== 'transparent') {
+            $this->assertSame($expected->getRgb(), $el->getLineColor()->getRgb());
+        }
+
+        $this->assertSame($expected->getAlpha(), $el->getLineColor()->getAlpha());
+    }
+
+    public function testBuildColorsInvalid()
+    {
+        $test = new Builder();
+
+        $docNode = new Node('document', null, [
+            'title'    => 'Test Title',
+            'author'   => 'Test Author',
+            'keywords' => 'kw1, kw2',
+        ]);
+
+        $pageNode1 = new Node('page', null, [
+            'width'  => '100',
+            'height' => '200',
+            'number' => '1',
+        ]);
+
+        $line = new Node('line', 'line', [
+            'width'     => '100',
+            'height'    => '100',
+            'top'       => '100',
+            'left'      => '100',
+            'linewidth' => '1.0',
+            'linecolor' => 'invalid',
+        ]);
+
+        $pageNode1->addChild($line);
+        $docNode->addChild($pageNode1);
+
+        $this->expectException(BuildArgumentException::class);
+
+        $test->build($docNode);
     }
 
     public function testBuildInvalid1()

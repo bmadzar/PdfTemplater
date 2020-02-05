@@ -13,7 +13,6 @@ use PdfTemplater\Layout\ImageElement;
 use PdfTemplater\Layout\Page;
 use PdfTemplater\Layout\RectangleElement;
 use PdfTemplater\Layout\TextElement;
-use PdfTemplater\Renderer\RenderEnvironmentException;
 use PdfTemplater\Renderer\Renderer as RendererInterface;
 use PdfTemplater\Renderer\RenderInputException;
 use PdfTemplater\Renderer\RenderProcessException;
@@ -193,7 +192,7 @@ class Renderer implements RendererInterface
 
             $line = [
                 'all' => [
-                    'color' => $element->getStroke()->getCmyk(),
+                    'color' => $element->getStroke()->getCmyk(0.0, 100.0),
                     'width' => $element->getStrokeWidth(),
                 ],
             ];
@@ -211,7 +210,7 @@ class Renderer implements RendererInterface
             $element->getHeight(),
             $mode,
             $line ?: [],
-            $element->getFill() ? $element->getFill()->getCmyk() : []
+            $element->getFill() ? $element->getFill()->getCmyk(0.0, 100.0) : []
         );
     }
 
@@ -228,7 +227,7 @@ class Renderer implements RendererInterface
         if ($element->getStroke() && $element->getStrokeWidth()) {
             $line = [
                 'LTRB' => [
-                    'color' => $element->getStroke()->getCmyk(),
+                    'color' => $element->getStroke()->getCmyk(0.0, 100.0),
                     'width' => $element->getStrokeWidth(),
                 ],
             ];
@@ -242,7 +241,7 @@ class Renderer implements RendererInterface
                 $element->getHeight(),
                 'F',
                 [],
-                $element->getFill()->getCmyk()
+                $element->getFill()->getCmyk(0.0, 100.0)
             );
         }
 
@@ -287,14 +286,14 @@ class Renderer implements RendererInterface
         if ($element->getStroke() && $element->getStrokeWidth()) {
             $line = [
                 'LTRB' => [
-                    'color' => $element->getStroke()->getCmyk(),
+                    'color' => $element->getStroke()->getCmyk(0.0, 100.0),
                     'width' => $element->getStrokeWidth(),
                 ],
             ];
         }
 
         if ($element->getFill()) {
-            $pdf->SetFillColorArray($element->getFill()->getCmyk());
+            $pdf->SetFillColorArray($element->getFill()->getCmyk(0.0, 100.0));
         }
 
         if ($element->getWrapMode() === TextElement::WRAP_NONE) {
@@ -375,10 +374,8 @@ class Renderer implements RendererInterface
             $mode .= 'D';
 
             $line = [
-                'all' => [
-                    'color' => $element->getStroke()->getCmyk(),
-                    'width' => $element->getStrokeWidth(),
-                ],
+                'color' => $element->getStroke()->getCmyk(0.0, 100.0),
+                'width' => $element->getStrokeWidth(),
             ];
         }
 
@@ -397,7 +394,7 @@ class Renderer implements RendererInterface
             360,
             $mode,
             $line ?: [],
-            $element->getFill() ? $element->getFill()->getCmyk() : [],
+            $element->getFill() ? $element->getFill()->getCmyk(0.0, 100.0) : [],
             2
         );
     }
@@ -411,10 +408,8 @@ class Renderer implements RendererInterface
     private function renderLineElement(Tcpdf $pdf, LineElement $element)
     {
         $line = [
-            'all' => [
-                'color' => $element->getLineColor()->getCmyk(),
-                'width' => $element->getLineWidth(),
-            ],
+            'color' => $element->getLineColor()->getCmyk(0.0, 100.0),
+            'width' => $element->getLineWidth(),
         ];
 
         $pdf->Line(

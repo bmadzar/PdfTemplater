@@ -130,7 +130,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getRed(float $min = 0, float $max = 1): float
+    public function getRed(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -147,7 +147,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getGreen(float $min = 0, float $max = 1): float
+    public function getGreen(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -164,7 +164,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getBlue(float $min = 0, float $max = 1): float
+    public function getBlue(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -181,7 +181,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getAlpha(float $min = 0, float $max = 1): float
+    public function getAlpha(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -198,7 +198,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getHue(float $min = 0, float $max = 1): float
+    public function getHue(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -208,8 +208,8 @@ class CmykColor implements Color
         $g = $this->getGreen();
         $b = $this->getBlue();
 
-        $cmax = \max($r, $g, $b);
-        $cmin = \min($r, $g, $b);
+        $cmax  = \max($r, $g, $b);
+        $cmin  = \min($r, $g, $b);
         $delta = $cmax - $cmin;
 
         if ($delta < 0.001) {
@@ -241,14 +241,14 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getSaturation(float $min = 0, float $max = 1): float
+    public function getSaturation(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $cmax = \max($this->getRed(), $this->getGreen(), $this->getBlue());
-        $cmin = \min($this->getRed(), $this->getGreen(), $this->getBlue());
+        $cmax  = \max($this->getRed(), $this->getGreen(), $this->getBlue());
+        $cmin  = \min($this->getRed(), $this->getGreen(), $this->getBlue());
         $delta = $cmax - $cmin;
 
         if ($delta < 0.001) {
@@ -266,7 +266,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getLightness(float $min = 0, float $max = 1): float
+    public function getLightness(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -286,7 +286,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getCyan(float $min = 0, float $max = 1): float
+    public function getCyan(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -303,7 +303,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getMagenta(float $min = 0, float $max = 1): float
+    public function getMagenta(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -320,7 +320,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getYellow(float $min = 0, float $max = 1): float
+    public function getYellow(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -337,7 +337,7 @@ class CmykColor implements Color
      * @return float
      * @throws LayoutArgumentException If $min >= $max.
      */
-    public function getBlack(float $min = 0, float $max = 1): float
+    public function getBlack(float $min = 0.0, float $max = 1.0): float
     {
         if ($min >= $max) {
             throw new LayoutArgumentException('Min must be less than max.');
@@ -377,31 +377,37 @@ class CmykColor implements Color
     /**
      * Gets the RGB color as a three-element array.
      *
-     * @return array
+     * @param float $min
+     * @param float $max
+     * @return float[]
      */
-    public function getRgb(): array
+    public function getRgb(float $min = 0.0, float $max = 1.0): array
     {
-        return [$this->getRed(), $this->getGreen(), $this->getBlue()];
+        return [$this->getRed($min, $max), $this->getGreen($min, $max), $this->getBlue($min, $max)];
     }
 
     /**
      * Gets the HSL color as a three-element array.
      *
-     * @return array
+     * @param float $min
+     * @param float $max
+     * @return float[]
      */
-    public function getHsl(): array
+    public function getHsl(float $min = 0.0, float $max = 1.0): array
     {
-        return [$this->getHue(), $this->getSaturation(), $this->getLightness()];
+        return [$this->getHue($min, $max), $this->getSaturation($min, $max), $this->getLightness($min, $max)];
     }
 
     /**
      * Gets the CMYK color as a four-element array.
      *
-     * @return array
+     * @param float $min
+     * @param float $max
+     * @return float[]
      */
-    public function getCmyk(): array
+    public function getCmyk(float $min = 0.0, float $max = 1.0): array
     {
-        return [$this->cyan, $this->magenta, $this->yellow, $this->black];
+        return [$this->getCyan($min, $max), $this->getMagenta($min, $max), $this->getYellow($min, $max), $this->getBlack($min, $max)];
     }
 
     /**

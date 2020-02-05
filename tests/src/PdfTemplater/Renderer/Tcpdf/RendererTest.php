@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Renderer\Tcpdf;
 
 use PdfTemplater\Layout\Basic\Document;
-use PdfTemplater\Layout\Basic\Element;
 use PdfTemplater\Layout\Basic\Layer;
 use PdfTemplater\Layout\Basic\Page;
 use PdfTemplater\Layout\Basic\RectangleElement;
@@ -18,7 +17,7 @@ class RendererTest extends TestCase
 {
     private function parsePdf(string $pdfData): ParserDocument
     {
-        $header = \substr($pdfData, 0, 8);
+        $header  = \substr($pdfData, 0, 8);
         $trailer = \substr(\rtrim($pdfData), -5);
 
         $this->assertRegExp('/^%PDF-\d\.\d$/', $header);
@@ -82,10 +81,28 @@ class RendererTest extends TestCase
     public function testRender2()
     {
         $test = new Renderer();
-        $doc = new Document();
-        $page = new Page(1, 8.5 * 72, 11.0 * 72);
-        $layer = new Layer(0);
-        $element = new RectangleElement('test', 2.0 * 72, 3.0 * 72, 1.5 * 72, 3.5 * 72, new RgbColor(0.0, 0.0, 0.0), 36.0, new RgbColor(1.0, 0.5, 0.0));
+
+        $doc   = new Document();
+        $page1 = new Page(1, 10.0, 10.0, []);
+        $page2 = new Page(2, 10.0, 10.0, []);
+
+        $doc->addPage($page1);
+        $doc->addPage($page2);
+
+        $data = $test->render($doc);
+
+        $pdf = $this->parsePdf($data);
+
+        $this->assertCount(2, $pdf->getPages());
+    }
+
+    public function testRender3()
+    {
+        $test    = new Renderer();
+        $doc     = new Document();
+        $page    = new Page(1, 8.5 * 72, 11.0 * 72);
+        $layer   = new Layer(0);
+        $element = new RectangleElement('test', 1.0 * 72, 4.0 * 72, 1.5 * 72, 0.5 * 72, new RgbColor(0.0, 0.0, 0.0), 18.0, new RgbColor(1.0, 0.5, 0.0));
 
         $layer->addElement($element);
         $page->addLayer($layer);
@@ -105,5 +122,19 @@ class RendererTest extends TestCase
 
         $objContent = $obj->getContent();
 
+        $this->assertStringContainsString(
+            '0.000000 0.500000 1.000000 0.000000 k',
+            $objContent
+        );
+
+        $this->assertStringContainsString(
+            '18.000000 w 0.000000 0.000000 0.000000 1.000000 K',
+            $objContent
+        );
+
+        $this->assertStringContainsString(
+            '72.000000 504.000000 108.000000 -36.000000 re B',
+            $objContent
+        );
     }
 }
