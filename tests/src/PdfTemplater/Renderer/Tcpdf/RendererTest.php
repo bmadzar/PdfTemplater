@@ -4,6 +4,11 @@ declare(strict_types=1);
 namespace Renderer\Tcpdf;
 
 use PdfTemplater\Layout\Basic\Document;
+use PdfTemplater\Layout\Basic\Element;
+use PdfTemplater\Layout\Basic\Layer;
+use PdfTemplater\Layout\Basic\Page;
+use PdfTemplater\Layout\Basic\RectangleElement;
+use PdfTemplater\Layout\Basic\RgbColor;
 use PdfTemplater\Renderer\Tcpdf\Renderer;
 use PHPUnit\Framework\TestCase;
 use Smalot\PdfParser\Document as ParserDocument;
@@ -72,5 +77,33 @@ class RendererTest extends TestCase
         // PDFs will always have at least one default page
         $this->assertCount(1, $pdf->getPages());
         $this->assertCount(2, $pdf->getFonts());
+    }
+
+    public function testRender2()
+    {
+        $test = new Renderer();
+        $doc = new Document();
+        $page = new Page(1, 8.5 * 72, 11.0 * 72);
+        $layer = new Layer(0);
+        $element = new RectangleElement('test', 2.0 * 72, 3.0 * 72, 1.5 * 72, 3.5 * 72, new RgbColor(0.0, 0.0, 0.0), 36.0, new RgbColor(1.0, 0.5, 0.0));
+
+        $layer->addElement($element);
+        $page->addLayer($layer);
+        $doc->addPage($page);
+
+        $data = $test->render($doc);
+
+        $pdf = $this->parsePdf($data);
+
+        $pages = $pdf->getPages();
+
+        $this->assertCount(1, $pages);
+
+        $pdfPage = $pages[0];
+
+        $obj = $pdfPage->get('Contents');
+
+        $objContent = $obj->getContent();
+
     }
 }

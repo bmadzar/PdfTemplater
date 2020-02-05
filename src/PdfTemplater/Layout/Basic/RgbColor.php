@@ -355,7 +355,7 @@ class RgbColor implements Color
 
         $ob = 1 - $this->getBlack();
 
-        return ((($ob - $this->red) / $ob) * $max) + $min;
+        return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->red) / $ob) * $max) + $min;
     }
 
     /**
@@ -374,7 +374,7 @@ class RgbColor implements Color
 
         $ob = 1 - $this->getBlack();
 
-        return ((($ob - $this->green) / $ob) * $max) + $min;
+        return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->green) / $ob) * $max) + $min;
     }
 
     /**
@@ -393,7 +393,7 @@ class RgbColor implements Color
 
         $ob = 1 - $this->getBlack();
 
-        return ((($ob - $this->blue) / $ob) * $max) + $min;
+        return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->blue) / $ob) * $max) + $min;
     }
 
     /**
