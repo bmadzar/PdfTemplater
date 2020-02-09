@@ -12,13 +12,16 @@ use PHPUnit\Framework\TestCase;
 
 class FontBuilderTest extends TestCase
 {
+    private const DATA_FILE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'test_data';
 
     public function testBuildFont1()
     {
         $test = new FontBuilder();
 
         $node = new Node('font', null, [
-            'file'  => __DIR__ . '/../../../../data/test_data/test_font.ttf',
+            'file'  => self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf',
             'name'  => 'TestFont',
             'style' => '',
         ]);
@@ -164,7 +167,7 @@ class FontBuilderTest extends TestCase
         $test = new FontBuilder();
 
         $node = new Node('font', null, [
-            'file'  => __DIR__ . '/../../../../data/test_data/does_not_exist.ttf',
+            'file'  => self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'does_not_exist.ttf',
             'name'  => 'TestFont',
             'style' => '',
         ]);

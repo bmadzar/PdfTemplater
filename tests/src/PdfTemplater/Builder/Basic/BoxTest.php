@@ -7,7 +7,9 @@ use PHPUnit\Framework\TestCase;
 
 class BoxTest extends TestCase
 {
-    private const DATA_FILE_PATH = __DIR__ . '/../../../../data/resolution_tests';
+    private const DATA_FILE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'box_sets';
 
     public function testConstruct()
     {
@@ -234,7 +236,7 @@ class BoxTest extends TestCase
 
     public function readCsvDirectory()
     {
-        $dir = \scandir(__DIR__ . '/../../../../data/box_sets');
+        $dir = \scandir(self::DATA_FILE_PATH);
 
         if ($dir === false) {
             $this->markTestIncomplete('Could not read data dir.');
@@ -242,7 +244,7 @@ class BoxTest extends TestCase
             $dir = \array_filter($dir, fn(string $file) => \substr($file, -4) === '.csv');
 
             foreach ($dir as $file) {
-                yield $file => [__DIR__ . '/../../../../data/box_sets/' . $file];
+                yield $file => [self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . $file];
             }
             unset($file);
         }

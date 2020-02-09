@@ -221,13 +221,17 @@ class BuilderTest extends TestCase
             'left'   => '100',
         ];
 
+        $testImagePath =
+            __DIR__ . '' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+            'data' . \DIRECTORY_SEPARATOR . 'test_data' . \DIRECTORY_SEPARATOR . 'test_image.png';
+
         $boxNode1 = new Node('bookmark', 'bookmark', $attrs + ['name' => 'bookmark']);
         $boxNode2 = new Node('ellipse', 'ellipse', $attrs + []);
         $boxNode3 = new Node('line', 'line', $attrs + ['linewidth' => '1.0', 'linecolor' => '#000000']);
         $boxNode4 = new Node('rectangle', 'rectangle', $attrs + []);
         $boxNode5 = new Node('text', 'text', $attrs + ['font' => 'Times', 'fontsize' => '12.0', 'color' => '#000000', 'content' => 'test content']);
-        $boxNode6 = new Node('image', 'image', $attrs + ['data' => \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'))]);
-        $boxNode7 = new Node('imagefile', 'imagefile', $attrs + ['file' => __DIR__ . '/../../../../data/test_data/test_image.png']);
+        $boxNode6 = new Node('image', 'image', $attrs + ['data' => \base64_encode(\file_get_contents($testImagePath))]);
+        $boxNode7 = new Node('imagefile', 'imagefile', $attrs + ['file' => $testImagePath]);
 
         $pageNode1->addChild($boxNode1);
         $pageNode1->addChild($boxNode2);

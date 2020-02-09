@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
 
 class DocumentTest extends TestCase
 {
+    private const DATA_FILE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'test_data';
 
     public function testHasMetadataValue()
     {
@@ -45,8 +48,8 @@ class DocumentTest extends TestCase
 
         $this->assertSame([], $test->getFonts());
 
-        $test->addFont(new Font('test1', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
-        $test->addFont(new Font('test2', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
+        $test->addFont(new Font('test1', Font::STYLE_NORMAL, self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'));
+        $test->addFont(new Font('test2', Font::STYLE_NORMAL, self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'));
 
         $fonts = $test->getFonts();
 
@@ -177,7 +180,7 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'));
 
         $this->assertTrue($test->hasFont('TestFont'));
 
@@ -190,12 +193,12 @@ class DocumentTest extends TestCase
     {
         $test = new Document();
 
-        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'));
 
         $font = $test->getFont('TestFont');
 
         $this->assertInstanceOf(Font::class, $font);
-        $this->assertSame(\realpath(__DIR__ . '/../../../../data/test_data/test_font.ttf'), \realpath($font->getFile()));
+        $this->assertSame(\realpath(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'), \realpath($font->getFile()));
     }
 
     public function testGetFont()
@@ -204,12 +207,12 @@ class DocumentTest extends TestCase
 
         $this->assertNull($test->getFont('TestFont'));
 
-        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'));
 
         $font = $test->getFont('TestFont');
 
         $this->assertInstanceOf(Font::class, $font);
-        $this->assertSame(\realpath(__DIR__ . '/../../../../data/test_data/test_font.ttf'), \realpath($font->getFile()));
+        $this->assertSame(\realpath(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'), \realpath($font->getFile()));
     }
 
     public function testGetPages()
@@ -262,7 +265,7 @@ class DocumentTest extends TestCase
 
         $this->assertFalse($test->hasFont('TestFont'));
 
-        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, __DIR__ . '/../../../../data/test_data/test_font.ttf'));
+        $test->addFont(new Font('TestFont', Font::STYLE_NORMAL, self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_font.ttf'));
 
         $this->assertTrue($test->hasFont('TestFont'));
     }

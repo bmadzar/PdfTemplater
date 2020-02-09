@@ -24,7 +24,7 @@
         <!ATTLIST Font
                 file CDATA #IMPLIED
                 name CDATA #REQUIRED
-                style CDATA #REQUIRED
+                style CDATA #IMPLIED
                 >
 
         <!ELEMENT Bookmark EMPTY>

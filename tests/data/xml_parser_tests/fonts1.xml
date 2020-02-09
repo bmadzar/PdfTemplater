@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE Document SYSTEM "doctypes/pdftemplater.dtd">
+<Document title="test" description="test">
+    <Font name="helvetica" style=""/>
+    <Page id="page1" height="100" width="100" number="1">
+    </Page>
+</Document>

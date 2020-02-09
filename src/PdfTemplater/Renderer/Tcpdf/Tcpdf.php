@@ -25,4 +25,14 @@ class Tcpdf extends \TCPDF
 
         $this->tcpdflink = false;
     }
+
+    public function Header()
+    {
+        // No-op
+    }
+
+    public function Footer()
+    {
+        // No-op
+    }
 }

@@ -65,7 +65,10 @@ class Parser implements ParserInterface
 
         foreach ($subtree['fonts'] ?? [] as $id => $font) {
             $child = $this->buildFont($font);
-            $child->setId((string)$id);
+
+            if ($child->getAttribute('name') === null) {
+                $child->setAttribute('name', (string)$id);
+            }
 
             $node->addChild($child);
         }

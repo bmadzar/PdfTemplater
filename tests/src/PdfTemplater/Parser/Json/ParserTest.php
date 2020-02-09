@@ -16,7 +16,9 @@ use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
 {
-    private const DATA_FILE_PATH = __DIR__ . '/../../../../data/json_parser_tests';
+    private const DATA_FILE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'json_parser_tests';
 
     private function readDataFile(string $dataFile): string
     {
@@ -114,5 +116,30 @@ class ParserTest extends TestCase
         $this->expectException(ParseLogicException::class);
 
         $parser->parse($data);
+    }
+
+    public function testFont1()
+    {
+        $data = $this->readDataFile('fonts1.json');
+
+        $parser = new Parser();
+
+        $nodeTree = $parser->parse($data);
+
+        $this->assertInstanceOf(Node::class, $nodeTree);
+
+        /** @var Node[] $fonts */
+        $fonts = [];
+
+        foreach($nodeTree->getChildren() as $node) {
+            if($node->getType() === 'font') {
+                $fonts[] = $node;
+            }
+        }
+        unset($node);
+
+        $this->assertCount(1, $fonts);
+
+        $this->assertSame('helvetica', $fonts[0]->getAttribute('name'));
     }
 }

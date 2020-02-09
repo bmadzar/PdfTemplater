@@ -18,6 +18,10 @@ use PHPUnit\Framework\TestCase;
 class ElementBuilderTest extends TestCase
 {
 
+    const TEST_IMAGE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'test_data' . \DIRECTORY_SEPARATOR . 'test_image.png';
+
     public function testCreateElementInvalid()
     {
         $test = new ElementBuilder();
@@ -149,7 +153,7 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
+        $data = \base64_encode(\file_get_contents(self::TEST_IMAGE_PATH));
 
         $node = new Node('image', null, [
             'data'   => $data,
@@ -208,7 +212,7 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
+        $data = \base64_encode(\file_get_contents(self::TEST_IMAGE_PATH));
 
         $node = new Node('image', null, [
             'data'   => $data,
@@ -228,7 +232,7 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
+        $data = \base64_encode(\file_get_contents(self::TEST_IMAGE_PATH));
 
         $node = new Node('image', null, [
             'data'   => $data,
@@ -334,7 +338,7 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = __DIR__ . '/../../../../data/test_data/test_image.png';
+        $data = self::TEST_IMAGE_PATH;
 
         $node = new Node('imagefile', null, [
             'file'   => $data,
@@ -393,7 +397,7 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = __DIR__ . '/../../../../data/test_data/test_image.png';
+        $data = self::TEST_IMAGE_PATH;
 
         $node = new Node('imagefile', null, [
             'file'   => $data,
@@ -413,7 +417,7 @@ class ElementBuilderTest extends TestCase
     {
         $test = new ElementBuilder();
 
-        $data = __DIR__ . '/../../../../data/test_data/test_image.png';
+        $data = self::TEST_IMAGE_PATH;
 
         $node = new Node('imagefile', null, [
             'file'   => $data,

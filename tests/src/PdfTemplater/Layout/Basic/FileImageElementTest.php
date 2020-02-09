@@ -8,15 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 class FileImageElementTest extends TestCase
 {
+    private const DATA_FILE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'test_data';
+
     /**
      * @var string First test file
      */
-    private static string $fd1 = __DIR__ . '/../../../../data/test_data/test_image.png';
+    private static string $fd1 = self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_image.png';
 
     /**
      * @var string Second test file
      */
-    private static string $fd2 = __DIR__ . '/../../../../data/test_data/test_image_2.png';
+    private static string $fd2 = self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_image_2.png';
 
     public function testSetAltText()
     {

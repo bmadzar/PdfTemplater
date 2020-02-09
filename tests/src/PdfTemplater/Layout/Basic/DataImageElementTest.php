@@ -9,6 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 class DataImageElementTest extends TestCase
 {
+    private const DATA_FILE_PATH =
+        __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
+        'data' . \DIRECTORY_SEPARATOR . 'test_data';
+
     /**
      * @var string First test file
      */
@@ -24,8 +28,8 @@ class DataImageElementTest extends TestCase
      */
     public static function setUpBeforeClass(): void
     {
-        self::$fd1 = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image.png'));
-        self::$fd2 = \base64_encode(\file_get_contents(__DIR__ . '/../../../../data/test_data/test_image_2.png'));
+        self::$fd1 = \base64_encode(\file_get_contents(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_image.png'));
+        self::$fd2 = \base64_encode(\file_get_contents(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_image_2.png'));
     }
 
     public function testGetImageData()
@@ -94,6 +98,6 @@ class DataImageElementTest extends TestCase
 
         $this->assertNotNull($if);
         $this->assertFileIsReadable($if);
-        $this->assertFileEquals(__DIR__ . '/../../../../data/test_data/test_image.png', $if);
+        $this->assertFileEquals(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'test_image.png', $if);
     }
 }
