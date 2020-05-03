@@ -15,6 +15,7 @@
     "smalot/pdfparser": "v0.14.0"
   },
   "require": {
+    "php": "7.4.*",
     "ext-json": "*",
     "ext-dom": "*",
     "ext-libxml": "*"
