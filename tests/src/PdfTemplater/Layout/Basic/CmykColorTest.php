@@ -29,10 +29,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.5, $test->getBlack());
         $this->assertSame(5.0, $test->getBlack(0, 10));
+    }
+
+    public function testGetBlackInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getBlack(10, 0);
+        $test->getBlack(100, 0);
+    }
+
+    public function testGetBlackInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlack(0, 0);
     }
 
     public function testGetLightness()
@@ -54,10 +68,24 @@ class CmykColorTest extends TestCase
 
         $this->assertEqualsWithDelta(0.48, $test->getGreen(), 0.000005);
         $this->assertSame(122.4, $test->getGreen(0, 255));
+    }
+
+    public function testGetGreenInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getGreen(255, 0);
+        $test->getGreen(100, 0);
+    }
+
+    public function testGetGreenInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getGreen(0, 0);
     }
 
     public function testGetHex()
@@ -73,10 +101,24 @@ class CmykColorTest extends TestCase
 
         $this->assertEqualsWithDelta(0.083333, $test->getHue(), 0.00001);
         $this->assertSame(21.25, $test->getHue(0, 255));
+    }
+
+    public function testGetHueInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getHue(255, 0);
+        $test->getHue(100, 0);
+    }
+
+    public function testGetHueInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getHue(0, 0);
     }
 
     public function testSetCyan()
@@ -216,10 +258,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.5, $test->getYellow());
         $this->assertSame(5.0, $test->getYellow(0, 10));
+    }
+
+    public function testGetYellowInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getYellow(10, 0);
+        $test->getYellow(100, 0);
+    }
+
+    public function testGetYellowInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getYellow(0, 0);
     }
 
     public function testGetCmyk()
@@ -236,10 +292,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.42, $test->getBlue());
         $this->assertSame(107.1, $test->getBlue(0, 255));
+    }
+
+    public function testGetBlueInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getBlue(255, 0);
+        $test->getBlue(100, 0);
+    }
+
+    public function testGetBlueInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlue(0, 0);
     }
 
     public function testGetRed()
@@ -248,10 +318,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.54, $test->getRed());
         $this->assertSame(137.7, $test->getRed(0, 255));
+    }
+
+    public function testGetRedInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getRed(255, 0);
+        $test->getRed(100, 0);
+    }
+
+    public function testGetRedInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getRed(0, 0);
     }
 
     public function testGetCyan()
@@ -264,10 +348,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.5, $test->getCyan());
         $this->assertSame(5.0, $test->getCyan(0, 10));
+    }
+
+    public function testGetCyanInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getCyan(10, 0);
+        $test->getCyan(100, 0);
+    }
+
+    public function testGetCyanInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getCyan(0, 0);
     }
 
     public function testGetHsl()
@@ -303,10 +401,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.5, $test->getAlpha());
         $this->assertSame(5.0, $test->getAlpha(0, 10));
+    }
+
+    public function testGetAlphaInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getAlpha(10, 0);
+        $test->getAlpha(100, 0);
+    }
+
+    public function testGetAlphaInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getAlpha(0, 0);
     }
 
     public function testGetRgb()
@@ -369,10 +481,24 @@ class CmykColorTest extends TestCase
 
         $this->assertSame(0.5, $test->getMagenta());
         $this->assertSame(5.0, $test->getMagenta(0, 10));
+    }
+
+    public function testGetMagentaInvalid1()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
 
         $this->expectException(LayoutArgumentException::class);
 
-        $test->getMagenta(10, 0);
+        $test->getMagenta(100, 0);
+    }
+
+    public function testGetMagentaInvalid2()
+    {
+        $test = new CmykColor(0, 0, 0, 0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getMagenta(0, 0);
     }
 
     public function testSetAlpha()

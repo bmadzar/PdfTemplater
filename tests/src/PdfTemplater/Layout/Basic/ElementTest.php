@@ -32,6 +32,15 @@ class ElementTest extends TestCase
         $this->assertSame('test2', $test->getId());
     }
 
+    public function testSetIdInvalid()
+    {
+        $test = new Element('test', 0.0, 0.0, 1.0, 1.0);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->setId('');
+    }
+
     public function testSetLeft()
     {
         $test = new Element('test', 0.0, 0.0, 1.0, 1.0);

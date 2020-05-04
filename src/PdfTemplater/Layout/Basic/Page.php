@@ -112,7 +112,7 @@ class Page implements PageInterface
             if ($layer instanceof Layer) {
                 $this->addLayer($layer);
             } else {
-                throw new LayoutArgumentException('Invalid Layer supplied!');
+                throw new \TypeError('Invalid Layer supplied!');
             }
         }
     }

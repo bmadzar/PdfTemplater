@@ -7,6 +7,7 @@ use PdfTemplater\Layout\Basic\Document;
 use PdfTemplater\Layout\Basic\Font;
 use PdfTemplater\Layout\Basic\Page;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Util\Type;
 
 class DocumentTest extends TestCase
 {
@@ -115,6 +116,26 @@ class DocumentTest extends TestCase
         $this->assertSame($page3, $test->getPage(3));
     }
 
+    public function testSetPagesInvalid1()
+    {
+        $test = new Document();
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setPages(['page1']);
+    }
+
+    public function testSetPagesInvalid2()
+    {
+        $test = new Document();
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setPages([new \stdClass()]);
+    }
+
     public function testResetPages()
     {
         $test = new Document();
@@ -152,6 +173,25 @@ class DocumentTest extends TestCase
         $test->setMetadata(['author' => 'test2', 'title' => 'test3']);
 
         $this->assertEquals(['author' => 'test2', 'title' => 'test3'], $test->getMetadata());
+    }
+
+    public function testSetMetadataInvalid1()
+    {
+        $test = new Document();
+
+        $this->expectException(\TypeError::class);
+
+        $test->setMetadata(['author' => new \stdClass()]);
+    }
+
+    public function testSetMetadataInvalid2()
+    {
+        $test = new Document();
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setMetadata(['author' => []]);
     }
 
     public function testAddPage()

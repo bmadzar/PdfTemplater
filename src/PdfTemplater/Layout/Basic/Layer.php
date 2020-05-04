@@ -51,7 +51,7 @@ class Layer implements LayerInterface
             if ($element instanceof Element) {
                 $this->addElement($element);
             } else {
-                throw new LayoutArgumentException('Invalid Element supplied!');
+                throw new \TypeError('Invalid Element supplied!');
             }
         }
         unset($element);

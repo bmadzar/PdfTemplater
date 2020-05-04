@@ -21,6 +21,24 @@ class RgbColorTest extends TestCase
         $test->getSaturation(255, 0);
     }
 
+    public function testGetSaturationInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getSaturation(100, 0);
+    }
+
+    public function testGetSaturationInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getSaturation(0, 0);
+    }
+
     public function testGetHsl()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
@@ -89,6 +107,24 @@ class RgbColorTest extends TestCase
         $test->getCyan(255, 0);
     }
 
+    public function testGetCyanInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getCyan(100, 0);
+    }
+
+    public function testGetCyanInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getCyan(0, 0);
+    }
+
     public function testGetGreen()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
@@ -99,6 +135,24 @@ class RgbColorTest extends TestCase
         $this->expectException(LayoutArgumentException::class);
 
         $test->getGreen(255, 0);
+    }
+
+    public function testGetGreenInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getGreen(100, 0);
+    }
+
+    public function testGetGreenInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getGreen(0, 0);
     }
 
     public function testCreateFromHex()
@@ -145,6 +199,24 @@ class RgbColorTest extends TestCase
         $test->getBlue(255, 0);
     }
 
+    public function testGetBlueInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlue(100, 0);
+    }
+
+    public function testGetBlueInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlue(0, 0);
+    }
+
     public function testSetRed()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
@@ -164,6 +236,24 @@ class RgbColorTest extends TestCase
         $this->expectException(LayoutArgumentException::class);
 
         $test->getLightness(255, 0);
+    }
+
+    public function testGetLightnessInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getLightness(100, 0);
+    }
+
+    public function testGetLightnessInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getLightness(0, 0);
     }
 
     public function testGetHex()
@@ -194,6 +284,24 @@ class RgbColorTest extends TestCase
         $test->getYellow(255, 0);
     }
 
+    public function testGetYellowInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getYellow(100, 0);
+    }
+
+    public function testGetYellowInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getYellow(0, 0);
+    }
+
     public function testGetBlack()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
@@ -204,6 +312,24 @@ class RgbColorTest extends TestCase
         $this->expectException(LayoutArgumentException::class);
 
         $test->getBlack(255, 0);
+    }
+    
+    public function testGetBlackInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlack(100, 0);
+    }
+
+    public function testGetBlackInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlack(0, 0);
     }
 
     public function testGetRed()
@@ -218,6 +344,24 @@ class RgbColorTest extends TestCase
         $test->getRed(255, 0);
     }
 
+    public function testGetRedInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getRed(100, 0);
+    }
+
+    public function testGetRedInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getRed(0, 0);
+    }
+
     public function testGetMagenta()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
@@ -230,6 +374,24 @@ class RgbColorTest extends TestCase
         $test->getAlpha(255, 0);
     }
 
+    public function testGetMagentaInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getMagenta(100, 0);
+    }
+
+    public function testGetMagentaInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getMagenta(0, 0);
+    }
+
     public function testGetAlpha()
     {
         $test = new RgbColor(0.1, 0.2, 0.3, 0.4);
@@ -240,6 +402,24 @@ class RgbColorTest extends TestCase
         $this->expectException(LayoutArgumentException::class);
 
         $test->getAlpha(255, 0);
+    }
+
+    public function testGetAlphaInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getAlpha(100, 0);
+    }
+
+    public function testGetAlphaInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getAlpha(0, 0);
     }
 
     public function testSetBlue()
@@ -261,6 +441,24 @@ class RgbColorTest extends TestCase
         $this->expectException(LayoutArgumentException::class);
 
         $test->getHue(255, 0);
+    }
+
+    public function testGetHueInvalid1()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getHue(100, 0);
+    }
+
+    public function testGetHueInvalid2()
+    {
+        $test = new RgbColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getHue(0, 0);
     }
 
     public function testGetMixed()

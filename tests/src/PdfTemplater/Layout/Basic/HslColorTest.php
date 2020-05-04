@@ -207,6 +207,24 @@ class HslColorTest extends TestCase
         $this->assertSame(0.0, $test->getCyan(0, 100));
     }
 
+    public function testGetCyanInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getCyan(100, 0);
+    }
+
+    public function testGetCyanInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getCyan(0, 0);
+    }
+
     public function testGetAlpha()
     {
         $test = new HslColor(0.1, 0.2, 0.3);
@@ -260,6 +278,24 @@ class HslColorTest extends TestCase
         $this->assertSame(64.0, $test->getBlack(0, 100));
     }
 
+    public function testGetBlackInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlack(100, 0);
+    }
+
+    public function testGetBlackInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlack(0, 0);
+    }
+
     public function testGetCmyk()
     {
         $test = new HslColor(0.1, 0.2, 0.3);
@@ -291,6 +327,24 @@ class HslColorTest extends TestCase
 
         $this->assertSame(0.24, $test->getBlue());
         $this->assertSame(24.0, $test->getBlue(0, 100));
+    }
+
+    public function testGetBlueInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlue(100, 0);
+    }
+
+    public function testGetBlueInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getBlue(0, 0);
     }
 
     public function testGetHue()
@@ -336,6 +390,24 @@ class HslColorTest extends TestCase
         $this->assertEqualsWithDelta(33.3333, $test->getYellow(0, 100), 0.0001);
     }
 
+    public function testGetYellowInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getYellow(100, 0);
+    }
+
+    public function testGetYellowInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getYellow(0, 0);
+    }
+
     public function testGetSaturation()
     {
         $test = new HslColor(0.1, 0.2, 0.3);
@@ -377,6 +449,24 @@ class HslColorTest extends TestCase
 
         $this->assertSame(0.312, $test->getGreen());
         $this->assertSame(31.2, $test->getGreen(0, 100));
+    }
+
+    public function testGetGreenInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getGreen(100, 0);
+    }
+
+    public function testGetGreenInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getGreen(0, 0);
     }
 
     public function testSetSaturation()
@@ -461,6 +551,24 @@ class HslColorTest extends TestCase
         $this->assertSame(36.0, $test->getRed(0, 100));
     }
 
+    public function testGetRedInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getRed(100, 0);
+    }
+
+    public function testGetRedInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getRed(0, 0);
+    }
+
     public function testGetMagenta()
     {
         $test = new HslColor(0.1, 0.2, 0.3);
@@ -471,5 +579,23 @@ class HslColorTest extends TestCase
 
         $this->assertEqualsWithDelta(0.1333, $test->getMagenta(), 0.0001);
         $this->assertEqualsWithDelta(13.3333, $test->getMagenta(0, 100), 0.0001);
+    }
+
+    public function testGetMagentaInvalid1()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getMagenta(100, 0);
+    }
+
+    public function testGetMagentaInvalid2()
+    {
+        $test = new HslColor(0.1, 0.2, 0.3);
+
+        $this->expectException(LayoutArgumentException::class);
+
+        $test->getMagenta(0, 0);
     }
 }

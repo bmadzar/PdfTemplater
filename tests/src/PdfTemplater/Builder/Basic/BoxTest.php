@@ -212,6 +212,36 @@ class BoxTest extends TestCase
         $this->assertTrue($box1->isResolved());
     }
 
+    public function testDoubleResolution()
+    {
+        $box1 = new Box('test');
+        $box2 = new Box('test2');
+
+        $box1->setRight(1.0, 'test2');
+
+        $box2->setRight(1.0, null);
+
+        $box1->resolve($box2);
+        $this->assertTrue($box1->isResolved());
+
+        // Should not throw an exception
+        $box1->resolve($box2);
+        $this->assertTrue($box1->isResolved());
+    }
+
+    public function testResolutionCycleCheckSelf()
+    {
+        $box1 = new Box('test1');
+        $box2 = new Box('test2');
+
+        $box1->setWidthPercentage(100.0, 'test2');
+        $box2->setWidthPercentage(100.0, 'test1');
+
+        $this->expectException(ConstraintException::class);
+
+        $box1->resolve($box1);
+    }
+
     public function testResolutionCycleCheckSingle()
     {
         $box1 = new Box('test1');
@@ -223,6 +253,70 @@ class BoxTest extends TestCase
         $this->expectException(ConstraintException::class);
 
         $box1->resolve($box2);
+    }
+
+    public function positionList()
+    {
+        return [['right'], ['left'], ['top'], ['bottom']];
+    }
+
+    public function dimensionList()
+    {
+        return [['width'], ['height']];
+    }
+
+    /**
+     * @dataProvider positionList
+     * @param string $dim
+     */
+    public function testRelativeToSelfInvalid1(string $dim)
+    {
+        $box1 = new Box('test');
+
+        $this->expectException(ConstraintException::class);
+
+        $box1->{'set' . \ucfirst($dim)}(1.0, 'test');
+    }
+
+    /**
+     * @dataProvider dimensionList
+     * @param string $dim
+     */
+    public function testRelativeToSelfInvalid2(string $dim)
+    {
+        $box1 = new Box('test');
+
+        $this->expectException(ConstraintException::class);
+
+        $box1->{'set' . \ucfirst($dim) . 'Percentage'}(100.0, 'test');
+    }
+
+    /**
+     * @dataProvider positionList
+     * @param string $dim
+     */
+    public function testRelativeNull1(string $dim)
+    {
+        $box1 = new Box('test');
+        $box2 = new Box('test2');
+
+        $this->expectException(ConstraintException::class);
+
+        $box1->{'set' . \ucfirst($dim)}(null, 'test2');
+    }
+
+    /**
+     * @dataProvider dimensionList
+     * @param string $dim
+     */
+    public function testRelativeNull2(string $dim)
+    {
+        $box1 = new Box('test');
+        $box2 = new Box('test2');
+
+        $this->expectException(ConstraintException::class);
+
+        $box1->{'set' . \ucfirst($dim) . 'Percentage'}(null, 'test2');
     }
 
     /**
@@ -256,7 +350,7 @@ class BoxTest extends TestCase
             $this->markTestSkipped();
         }
 
-        $boxData         = $this->loadBoxData($dataFile);
+        $boxData = $this->loadBoxData($dataFile);
         $resolvedBoxData = [];
 
         while (\count($boxData) > \count($resolvedBoxData)) {
@@ -328,11 +422,11 @@ class BoxTest extends TestCase
         while ($line = \fgetcsv($fh)) {
             $line = \array_combine($header, $line);
 
-            $box    = new Box($line['id']);
+            $box = new Box($line['id']);
             $finals = [];
 
             foreach (['Right', 'Left', 'Top', 'Bottom'] as $dim) {
-                $ldim  = \strtolower($dim);
+                $ldim = \strtolower($dim);
                 $ldimr = $ldim . 'Relative';
 
                 if (isset($line[$ldim]) && $line[$ldim] !== '') {
@@ -350,7 +444,7 @@ class BoxTest extends TestCase
             unset($dim);
 
             foreach (['Width', 'Height'] as $dim) {
-                $ldim  = \strtolower($dim);
+                $ldim = \strtolower($dim);
                 $ldimr = $ldim . 'Relative';
                 $ldimp = $ldim . 'Percentage';
 

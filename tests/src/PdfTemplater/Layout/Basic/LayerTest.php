@@ -65,6 +65,26 @@ class LayerTest extends TestCase
         $this->assertInstanceOf(Element::class, $test->getElement('test3'));
     }
 
+    public function testSetElementsInvalid1()
+    {
+        $test = new Layer(1);
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setElements(['el1']);
+    }
+
+    public function testSetElementsInvalid2()
+    {
+        $test = new Layer(1);
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setElements([new \stdClass()]);
+    }
+
     public function testResetElements()
     {
         $test = new Layer(1);

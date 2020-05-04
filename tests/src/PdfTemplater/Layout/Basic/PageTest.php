@@ -170,6 +170,26 @@ class PageTest extends TestCase
         $this->assertSame($layer3, $test->getLayer(5));
     }
 
+    public function testSetLayersInvalid1()
+    {
+        $test = new Page(1, 1.0, 1.0, []);
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setLayers(['layer3']);
+    }
+
+    public function testSetLayersInvalid2()
+    {
+        $test = new Page(1, 1.0, 1.0, []);
+
+        $this->expectException(\TypeError::class);
+
+        /** @noinspection PhpParamsInspection */
+        $test->setLayers([new \stdClass()]);
+    }
+
     public function testSetHeight()
     {
         $test = new Page(1, 1.0, 1.0, []);
