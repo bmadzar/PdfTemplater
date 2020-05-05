@@ -12,7 +12,8 @@
   "require-dev": {
     "tecnickcom/tcpdf": "^6.2.13",
     "phpunit/phpunit": "^8.5",
-    "smalot/pdfparser": "v0.14.0"
+    "smalot/pdfparser": "v0.14.0",
+    "ext-curl": "*"
   },
   "require": {
     "php": "7.4.*",
@@ -22,7 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "PdfTemplater\\": "src/PdfTemplater"
+      "PdfTemplater\\": ["src/PdfTemplater", "tests/src/PdfTemplater"]
     }
   }
 }
