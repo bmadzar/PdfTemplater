@@ -11,8 +11,9 @@ if (\PHP_SAPI !== 'cli') {
 
 function generate(): int
 {
-    $steps = [0, 1 / 5, 1 / 4, 1 / 3, 2 / 5, 1 / 2, 3 / 5, 2 / 3, 3 / 4, 4 / 5, 1];
-    $api_url = 'http://localhost:3000';
+    $steps = [0, 1 / 5, 1 / 4, 1 / 3, 4 / 5, 1];
+    $alpha_steps = [0, 1 / 2, 1]; // Alpha is not modified during color conversion
+    $api_url = 'http://localhost:3000'; // colorvert
 
     $fh = \fopen(__DIR__ . \DIRECTORY_SEPARATOR . 'conversion.csv', 'w');
 
@@ -32,15 +33,15 @@ function generate(): int
     foreach ($steps as $r) {
         foreach ($steps as $g) {
             foreach ($steps as $b) {
-                foreach ($steps as $a) {
-                    \curl_setopt($ch, \CURLOPT_URL, $api_url . '/rgb/' . round($r * 255) . '/' . round($g * 255) . '/' . round($b * 255) . '/');
-                    $result = \curl_exec($ch);
+                \curl_setopt($ch, \CURLOPT_URL, $api_url . '/rgb/' . round($r * 255) . '/' . round($g * 255) . '/' . round($b * 255) . '/');
+                $result = \curl_exec($ch);
 
-                    if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                    foreach ($alpha_steps as $a) {
                         \fputcsv($fh, [
-                            $r,
-                            $g,
-                            $b,
+                            round($r * 255) / 255,
+                            round($g * 255) / 255,
+                            round($b * 255) / 255,
                             $result_data['cmyk']['c'] / 100,
                             $result_data['cmyk']['m'] / 100,
                             $result_data['cmyk']['y'] / 100,
@@ -51,8 +52,9 @@ function generate(): int
                             $a,
                         ]);
                     }
+                    unset($a);
                 }
-                unset($a);
+
             }
             unset($b);
         }
@@ -64,27 +66,27 @@ function generate(): int
         foreach ($steps as $m) {
             foreach ($steps as $y) {
                 foreach ($steps as $k) {
-                    foreach ($steps as $a) {
-                        \curl_setopt($ch, \CURLOPT_URL, $api_url . '/cmyk/' . round($c * 100) . '/' . round($m * 100) . '/' . round($y * 100) . '/' . round($k * 100) . '/');
-                        $result = \curl_exec($ch);
+                    \curl_setopt($ch, \CURLOPT_URL, $api_url . '/cmyk/' . round($c * 100) . '/' . round($m * 100) . '/' . round($y * 100) . '/' . round($k * 100) . '/');
+                    $result = \curl_exec($ch);
 
-                        if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                    if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                        foreach ($alpha_steps as $a) {
                             \fputcsv($fh, [
                                 $result_data['rgb']['r'] / 255,
                                 $result_data['rgb']['g'] / 255,
                                 $result_data['rgb']['b'] / 255,
-                                $c,
-                                $m,
-                                $y,
-                                $k,
+                                round($c, 2),
+                                round($m, 2),
+                                round($y, 2),
+                                round($k, 2),
                                 $result_data['hsl']['h'] / 360,
                                 $result_data['hsl']['s'] / 100,
                                 $result_data['hsl']['l'] / 100,
                                 $a,
                             ]);
                         }
+                        unset($a);
                     }
-                    unset($a);
                 }
                 unset($k);
             }
@@ -97,11 +99,12 @@ function generate(): int
     foreach ($steps as $h) {
         foreach ($steps as $s) {
             foreach ($steps as $l) {
-                foreach ($steps as $a) {
-                    \curl_setopt($ch, \CURLOPT_URL, $api_url . '/hsl/' . round($h * 360) . '/' . round($s * 100) . '/' . round($l * 100) . '/');
-                    $result = \curl_exec($ch);
 
-                    if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                \curl_setopt($ch, \CURLOPT_URL, $api_url . '/hsl/' . round($h * 360) . '/' . round($s * 100) . '/' . round($l * 100) . '/');
+                $result = \curl_exec($ch);
+
+                if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                    foreach ($alpha_steps as $a) {
                         \fputcsv($fh, [
                             $result_data['rgb']['r'] / 255,
                             $result_data['rgb']['g'] / 255,
@@ -110,14 +113,14 @@ function generate(): int
                             $result_data['cmyk']['m'] / 100,
                             $result_data['cmyk']['y'] / 100,
                             $result_data['cmyk']['k'] / 100,
-                            $h,
-                            $s,
-                            $l,
+                            round($h * 360) / 360,
+                            round($s, 2),
+                            round($l, 2),
                             $a,
                         ]);
                     }
+                    unset($a);
                 }
-                unset($a);
             }
             unset($l);
         }
