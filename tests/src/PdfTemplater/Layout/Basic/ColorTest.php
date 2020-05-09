@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PdfTemplater\Layout\Basic;
@@ -13,7 +14,7 @@ abstract class ColorTest extends TestCase
         __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
         'data' . \DIRECTORY_SEPARATOR . 'color_data';
 
-    private const DELTA = 0.025;
+    private const DELTA = 0.03;
 
     abstract protected function getInstance(array $inputData): Color;
 
@@ -152,7 +153,26 @@ abstract class ColorTest extends TestCase
 
         $header = \fgetcsv($fh) ?: [];
 
-        if (\array_diff(['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'black', 'hue', 'saturation', 'lightness', 'alpha'], $header)) {
+        if (\array_diff(
+            [
+                'red',
+                'green',
+                'blue',
+                'cyan',
+                'magenta',
+                'yellow',
+                'black',
+                'cyan-naive',
+                'magenta-naive',
+                'yellow-naive',
+                'black-naive',
+                'hue',
+                'saturation',
+                'lightness',
+                'alpha',
+            ],
+            $header
+        )) {
             \fclose($fh);
             $this->markTestSkipped('Missing fields in conversion.csv');
         }
@@ -175,10 +195,12 @@ abstract class ColorTest extends TestCase
         $this->assertEqualsWithDelta($inputData['red'], $test->getRed(), self::DELTA);
         $this->assertEqualsWithDelta($inputData['green'], $test->getGreen(), self::DELTA);
         $this->assertEqualsWithDelta($inputData['blue'], $test->getBlue(), self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['cyan'], $test->getCyan(), self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['magenta'], $test->getMagenta(), self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['yellow'], $test->getYellow(), self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['black'], $test->getBlack(), self::DELTA);
+        if ($inputData['black-naive'] <= 0.99) {
+            $this->assertEqualsWithDelta($inputData['cyan-naive'], $test->getCyan(), self::DELTA);
+            $this->assertEqualsWithDelta($inputData['magenta-naive'], $test->getMagenta(), self::DELTA);
+            $this->assertEqualsWithDelta($inputData['yellow-naive'], $test->getYellow(), self::DELTA);
+        }
+        $this->assertEqualsWithDelta($inputData['black-naive'], $test->getBlack(), self::DELTA);
 
         if ($inputData['lightness'] >= 0.01 && $inputData['lightness'] <= 0.99) { // White and black
             if ($inputData['saturation'] >= 0.01) { // Grey
@@ -196,16 +218,18 @@ abstract class ColorTest extends TestCase
         $this->assertEqualsWithDelta($inputData['alpha'], $test->getAlpha(), self::DELTA);
 
         [$r, $g, $b] = $test->getRgb();
-        //[$c, $m, $y, $k] = $test->getCmyk();
+        [$c, $m, $y, $k] = $test->getCmyk();
         [$h, $s, $l] = $test->getHsl();
 
         $this->assertEqualsWithDelta($inputData['red'], $r, self::DELTA);
         $this->assertEqualsWithDelta($inputData['green'], $g, self::DELTA);
         $this->assertEqualsWithDelta($inputData['blue'], $b, self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['cyan'], $c, self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['magenta'], $m, self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['yellow'], $y, self::DELTA);
-        //$this->assertEqualsWithDelta($inputData['black'], $k, self::DELTA);
+        if ($inputData['black-naive'] <= 0.99) {
+            $this->assertEqualsWithDelta($inputData['cyan-naive'], $c, self::DELTA);
+            $this->assertEqualsWithDelta($inputData['magenta-naive'], $m, self::DELTA);
+            $this->assertEqualsWithDelta($inputData['yellow-naive'], $y, self::DELTA);
+        }
+        $this->assertEqualsWithDelta($inputData['black-naive'], $k, self::DELTA);
 
         if ($inputData['lightness'] >= 0.01 && $inputData['lightness'] <= 0.99) { // White and black
             if ($inputData['saturation'] >= 0.01) { // Grey
@@ -240,41 +264,44 @@ abstract class ColorTest extends TestCase
 
         $header = \fgetcsv($fh) ?: [];
 
-        if (\array_diff([
-            'red1',
-            'green1',
-            'blue1',
-            'cyan1',
-            'magenta1',
-            'yellow1',
-            'black1',
-            'hue1',
-            'saturation1',
-            'lightness1',
-            'alpha1',
-            'red2',
-            'green2',
-            'blue2',
-            'cyan2',
-            'magenta2',
-            'yellow2',
-            'black2',
-            'hue2',
-            'saturation2',
-            'lightness2',
-            'alpha2',
-            'red',
-            'green',
-            'blue',
-            'cyan',
-            'magenta',
-            'yellow',
-            'black',
-            'hue',
-            'saturation',
-            'lightness',
-            'alpha',
-        ], $header)) {
+        if (\array_diff(
+            [
+                'red1',
+                'green1',
+                'blue1',
+                'cyan1',
+                'magenta1',
+                'yellow1',
+                'black1',
+                'hue1',
+                'saturation1',
+                'lightness1',
+                'alpha1',
+                'red2',
+                'green2',
+                'blue2',
+                'cyan2',
+                'magenta2',
+                'yellow2',
+                'black2',
+                'hue2',
+                'saturation2',
+                'lightness2',
+                'alpha2',
+                'red',
+                'green',
+                'blue',
+                'cyan',
+                'magenta',
+                'yellow',
+                'black',
+                'hue',
+                'saturation',
+                'lightness',
+                'alpha',
+            ],
+            $header
+        )) {
             \fclose($fh);
             $this->markTestSkipped('Missing fields in mixing.csv');
         }
@@ -304,10 +331,12 @@ abstract class ColorTest extends TestCase
         $this->assertEqualsWithDelta($outputData['red'], $test->getRed(), self::DELTA);
         $this->assertEqualsWithDelta($outputData['green'], $test->getGreen(), self::DELTA);
         $this->assertEqualsWithDelta($outputData['blue'], $test->getBlue(), self::DELTA);
-        //$this->assertEqualsWithDelta($outputData['cyan'], $test->getCyan(), self::DELTA);
-        //$this->assertEqualsWithDelta($outputData['magenta'], $test->getMagenta(), self::DELTA);
-        //$this->assertEqualsWithDelta($outputData['yellow'], $test->getYellow(), self::DELTA);
-        //$this->assertEqualsWithDelta($outputData['black'], $test->getBlack(), self::DELTA);
+        if ($outputData['black-naive'] <= 0.99) {
+            $this->assertEqualsWithDelta($outputData['cyan-naive'], $test->getCyan(), self::DELTA);
+            $this->assertEqualsWithDelta($outputData['magenta-naive'], $test->getMagenta(), self::DELTA);
+            $this->assertEqualsWithDelta($outputData['yellow-naive'], $test->getYellow(), self::DELTA);
+        }
+        $this->assertEqualsWithDelta($outputData['black-naive'], $test->getBlack(), self::DELTA);
 
         if ($outputData['lightness'] >= 0.01 && $outputData['lightness'] <= 0.99) { // White and black
             if ($outputData['saturation'] >= 0.01) { // Grey

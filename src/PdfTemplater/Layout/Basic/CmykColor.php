@@ -5,9 +5,11 @@ namespace PdfTemplater\Layout\Basic;
 
 
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\ColorConverter;
+use PdfTemplater\Layout\ConvertibleColor;
 use PdfTemplater\Layout\LayoutArgumentException;
 
-class CmykColor implements Color
+class CmykColor implements ConvertibleColor
 {
     /**
      * @var float
@@ -35,21 +37,28 @@ class CmykColor implements Color
     private float $alpha;
 
     /**
+     * @var ColorConverter|null
+     */
+    private ?ColorConverter $converter;
+
+    /**
      * CmykColor constructor.
      *
-     * @param float $cyan
-     * @param float $magenta
-     * @param float $yellow
-     * @param float $black
-     * @param float $alpha
+     * @param float               $cyan
+     * @param float               $magenta
+     * @param float               $yellow
+     * @param float               $black
+     * @param float               $alpha
+     * @param ColorConverter|null $converter
      */
-    public function __construct(float $cyan, float $magenta, float $yellow, float $black, float $alpha = 1.0)
+    public function __construct(float $cyan, float $magenta, float $yellow, float $black, float $alpha = 1.0, ?ColorConverter $converter = null)
     {
         $this->setCyan($cyan);
         $this->setMagenta($magenta);
         $this->setYellow($yellow);
         $this->setBlack($black);
         $this->setAlpha($alpha);
+        $this->setConverter($converter);
     }
 
     /**
@@ -447,5 +456,25 @@ class CmykColor implements Color
         } else {
             return new self(0.0, 0.0, 0.0, 0.0, 0.0);
         }
+    }
+
+    /**
+     * Sets the ColorConverter used to convert between CMYK and RGB.
+     *
+     * @param ColorConverter|null $converter
+     */
+    public function setConverter(?ColorConverter $converter): void
+    {
+        $this->converter = $converter;
+    }
+
+    /**
+     * Gets the ColorConverter used to convert between CMYK and RGB.
+     *
+     * @return ColorConverter|null
+     */
+    public function getConverter(): ?ColorConverter
+    {
+        return $this->converter;
     }
 }

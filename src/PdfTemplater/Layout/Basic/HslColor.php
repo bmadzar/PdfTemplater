@@ -5,6 +5,8 @@ namespace PdfTemplater\Layout\Basic;
 
 
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\ColorConverter;
+use PdfTemplater\Layout\ConvertibleColor;
 use PdfTemplater\Layout\LayoutArgumentException;
 
 /**
@@ -14,7 +16,7 @@ use PdfTemplater\Layout\LayoutArgumentException;
  *
  * @package PdfTemplater\Layout\Basic
  */
-class HslColor implements Color
+class HslColor implements ConvertibleColor
 {
     /**
      * @var float
@@ -37,19 +39,26 @@ class HslColor implements Color
     private float $alpha;
 
     /**
+     * @var ColorConverter|null
+     */
+    private ?ColorConverter $converter;
+
+    /**
      * HslColor constructor.
      *
-     * @param float $hue
-     * @param float $saturation
-     * @param float $lightness
-     * @param float $alpha
+     * @param float               $hue
+     * @param float               $saturation
+     * @param float               $lightness
+     * @param float               $alpha
+     * @param ColorConverter|null $converter
      */
-    public function __construct(float $hue, float $saturation, float $lightness, float $alpha = 1.0)
+    public function __construct(float $hue, float $saturation, float $lightness, float $alpha = 1.0, ?ColorConverter $converter = null)
     {
         $this->setHue($hue);
         $this->setSaturation($saturation);
         $this->setLightness($lightness);
         $this->setAlpha($alpha);
+        $this->setConverter($converter);
     }
 
     /**
@@ -326,7 +335,7 @@ class HslColor implements Color
 
         $ob = 1 - $this->getBlack();
 
-        return ((($ob - $this->getRed()) / $ob) * $max) + $min;
+        return ($ob < 0.001 ? 0.0 : ((($ob - $this->getRed()) / $ob) * $max)) + $min;
     }
 
     /**
@@ -345,7 +354,7 @@ class HslColor implements Color
 
         $ob = 1 - $this->getBlack();
 
-        return ((($ob - $this->getGreen()) / $ob) * $max) + $min;
+        return ($ob < 0.001 ? 0.0 : ((($ob - $this->getGreen()) / $ob) * $max)) + $min;
     }
 
     /**
@@ -364,7 +373,7 @@ class HslColor implements Color
 
         $ob = 1 - $this->getBlack();
 
-        return ((($ob - $this->getBlue()) / $ob) * $max) + $min;
+        return ($ob < 0.001 ? 0.0 : ((($ob - $this->getBlue()) / $ob) * $max)) + $min;
     }
 
     /**
@@ -414,5 +423,25 @@ class HslColor implements Color
         $mixed = $fgRgb->getMixed($background);
 
         return new self($mixed->getHue(), $mixed->getSaturation(), $mixed->getLightness(), $mixed->getAlpha());
+    }
+
+    /**
+     * Sets the ColorConverter used to convert between CMYK and RGB/HSL.
+     *
+     * @param ColorConverter|null $converter
+     */
+    public function setConverter(?ColorConverter $converter): void
+    {
+        $this->converter = $converter;
+    }
+
+    /**
+     * Gets the ColorConverter used to convert between CMYK and RGB/HSL.
+     *
+     * @return ColorConverter|null
+     */
+    public function getConverter(): ?ColorConverter
+    {
+        return $this->converter;
     }
 }

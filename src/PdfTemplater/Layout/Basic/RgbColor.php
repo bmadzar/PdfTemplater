@@ -1,10 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PdfTemplater\Layout\Basic;
 
 
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\ColorConverter;
+use PdfTemplater\Layout\ConvertibleColor;
 use PdfTemplater\Layout\LayoutArgumentException;
 
 /**
@@ -14,7 +17,7 @@ use PdfTemplater\Layout\LayoutArgumentException;
  *
  * @package PdfTemplater\Layout\Basic
  */
-class RgbColor implements Color
+class RgbColor implements ConvertibleColor
 {
     /**
      * @var float
@@ -37,19 +40,26 @@ class RgbColor implements Color
     private float $alpha;
 
     /**
+     * @var ColorConverter|null
+     */
+    private ?ColorConverter $converter;
+
+    /**
      * RgbColor constructor.
      *
-     * @param float $red
-     * @param float $green
-     * @param float $blue
-     * @param float $alpha
+     * @param float               $red
+     * @param float               $green
+     * @param float               $blue
+     * @param float               $alpha
+     * @param ColorConverter|null $converter
      */
-    public function __construct(float $red, float $green, float $blue, float $alpha = 1.0)
+    public function __construct(float $red, float $green, float $blue, float $alpha = 1.0, ?ColorConverter $converter = null)
     {
         $this->setRed($red);
         $this->setGreen($green);
         $this->setBlue($blue);
         $this->setAlpha($alpha);
+        $this->setConverter($converter);
     }
 
     /**
@@ -493,5 +503,25 @@ class RgbColor implements Color
         } else {
             return new self(0.0, 0.0, 0.0, 0.0);
         }
+    }
+
+    /**
+     * Sets the ColorConverter used to convert between CMYK and RGB.
+     *
+     * @param ColorConverter|null $converter
+     */
+    public function setConverter(?ColorConverter $converter): void
+    {
+        $this->converter = $converter;
+    }
+
+    /**
+     * Gets the ColorConverter used to convert between CMYK and RGB.
+     *
+     * @return ColorConverter|null
+     */
+    public function getConverter(): ?ColorConverter
+    {
+        return $this->converter;
     }
 }
