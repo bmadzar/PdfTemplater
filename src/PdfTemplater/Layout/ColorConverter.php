@@ -29,6 +29,13 @@ interface ColorConverter
     public function setColorProfiles(string $rgbProfile, string $cmykProfile): void;
 
     /**
+     * Returns the ICC color profiles used, as a 2-element array.
+     *
+     * @return string[]
+     */
+    public function getColorProfiles(): array;
+
+    /**
      * Converts the supplied RGB values (0.0-1.0) to CMYK (0.0-1.0).
      *
      * @param float $r

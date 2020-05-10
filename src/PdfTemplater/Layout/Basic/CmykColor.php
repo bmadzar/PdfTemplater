@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PdfTemplater\Layout\Basic;
@@ -452,9 +453,9 @@ class CmykColor implements ConvertibleColor
             $ny = (((1 - $fa) * $ba * $by) + ($fa * $fy)) / $na;
             $nk = (((1 - $fa) * $ba * $bk) + ($fa * $fk)) / $na;
 
-            return new self($nc, $nm, $ny, $nk, $na);
+            return new self($nc, $nm, $ny, $nk, $na, $this->getConverter());
         } else {
-            return new self(0.0, 0.0, 0.0, 0.0, 0.0);
+            return new self(0.0, 0.0, 0.0, 0.0, 0.0, $this->getConverter());
         }
     }
 

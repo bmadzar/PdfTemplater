@@ -65,11 +65,12 @@ class RgbColor implements ConvertibleColor
     /**
      * Creates an RgbColor from a hex string.
      *
-     * @param string $hex
+     * @param string              $hex
+     * @param ColorConverter|null $converter
      * @return RgbColor
      * @throws LayoutArgumentException If $hex is not a valid hex string
      */
-    public static function createFromHex(string $hex): self
+    public static function createFromHex(string $hex, ?ColorConverter $converter = null): self
     {
         $hex = \ltrim(\trim($hex), '#');
 
@@ -85,7 +86,8 @@ class RgbColor implements ConvertibleColor
             (float)\base_convert(\substr($hex, 0, 2), 16, 10) / 0xFF,
             (float)\base_convert(\substr($hex, 2, 2), 16, 10) / 0xFF,
             (float)\base_convert(\substr($hex, 4, 2), 16, 10) / 0xFF,
-            1.0
+            1.0,
+            $converter
         );
     }
 
@@ -499,9 +501,9 @@ class RgbColor implements ConvertibleColor
             $ng = $this->applyGamma($ng);
             $nb = $this->applyGamma($nb);
 
-            return new self($nr, $ng, $nb, $na);
+            return new self($nr, $ng, $nb, $na, $this->getConverter());
         } else {
-            return new self(0.0, 0.0, 0.0, 0.0);
+            return new self(0.0, 0.0, 0.0, 0.0, $this->getConverter());
         }
     }
 

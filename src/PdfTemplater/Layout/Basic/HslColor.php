@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PdfTemplater\Layout\Basic;
@@ -418,11 +419,11 @@ class HslColor implements ConvertibleColor
             return clone $this;
         }
 
-        $fgRgb = new RgbColor($this->getRed(), $this->getGreen(), $this->getBlue(), $this->getAlpha());
+        $fgRgb = new RgbColor($this->getRed(), $this->getGreen(), $this->getBlue(), $this->getAlpha(), $this->getConverter());
 
         $mixed = $fgRgb->getMixed($background);
 
-        return new self($mixed->getHue(), $mixed->getSaturation(), $mixed->getLightness(), $mixed->getAlpha());
+        return new self($mixed->getHue(), $mixed->getSaturation(), $mixed->getLightness(), $mixed->getAlpha(), $mixed->getConverter());
     }
 
     /**
