@@ -146,7 +146,13 @@ class CmykColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        return ((1 - $this->cyan) * (1 - $this->black) * $max) + $min;
+        if ($this->converter && $this->converter->isEnabled()) {
+            $rgb = $this->converter->cmykToRgb($this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack());
+
+            return ($rgb[0] * $max) + $min;
+        } else {
+            return ((1 - $this->cyan) * (1 - $this->black) * $max) + $min;
+        }
     }
 
     /**
@@ -163,7 +169,13 @@ class CmykColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        return ((1 - $this->magenta) * (1 - $this->black) * $max) + $min;
+        if ($this->converter && $this->converter->isEnabled()) {
+            $rgb = $this->converter->cmykToRgb($this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack());
+
+            return ($rgb[1] * $max) + $min;
+        } else {
+            return ((1 - $this->magenta) * (1 - $this->black) * $max) + $min;
+        }
     }
 
     /**
@@ -180,7 +192,13 @@ class CmykColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        return ((1 - $this->yellow) * (1 - $this->black) * $max) + $min;
+        if ($this->converter && $this->converter->isEnabled()) {
+            $rgb = $this->converter->cmykToRgb($this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack());
+
+            return ($rgb[2] * $max) + $min;
+        } else {
+            return ((1 - $this->yellow) * (1 - $this->black) * $max) + $min;
+        }
     }
 
     /**
@@ -214,9 +232,7 @@ class CmykColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $r = $this->getRed();
-        $g = $this->getGreen();
-        $b = $this->getBlue();
+        [$r, $g, $b] = $this->getRgb();
 
         $cmax  = \max($r, $g, $b);
         $cmin  = \min($r, $g, $b);
@@ -257,8 +273,10 @@ class CmykColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $cmax  = \max($this->getRed(), $this->getGreen(), $this->getBlue());
-        $cmin  = \min($this->getRed(), $this->getGreen(), $this->getBlue());
+        [$r, $g, $b] = $this->getRgb();
+
+        $cmax  = \max($r, $g, $b);
+        $cmin  = \min($r, $g, $b);
         $delta = $cmax - $cmin;
 
         if ($delta < 0.001) {
@@ -282,8 +300,10 @@ class CmykColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $cmax = \max($this->getRed(), $this->getGreen(), $this->getBlue());
-        $cmin = \min($this->getRed(), $this->getGreen(), $this->getBlue());
+        [$r, $g, $b] = $this->getRgb();
+
+        $cmax  = \max($r, $g, $b);
+        $cmin  = \min($r, $g, $b);
 
         return ((($cmax + $cmin) / 2) * $max) + $min;
     }
@@ -393,7 +413,17 @@ class CmykColor implements ConvertibleColor
      */
     public function getRgb(float $min = 0.0, float $max = 1.0): array
     {
-        return [$this->getRed($min, $max), $this->getGreen($min, $max), $this->getBlue($min, $max)];
+        if ($this->converter && $this->converter->isEnabled()) {
+            $rgb = $this->converter->cmykToRgb($this->getCyan(), $this->getMagenta(), $this->getYellow(), $this->getBlack());
+
+            return [
+                ($rgb[0] * $max) + $min,
+                ($rgb[1] * $max) + $min,
+                ($rgb[2] * $max) + $min,
+            ];
+        } else {
+            return [$this->getRed($min, $max), $this->getGreen($min, $max), $this->getBlue($min, $max)];
+        }
     }
 
     /**

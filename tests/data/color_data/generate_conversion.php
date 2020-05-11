@@ -38,6 +38,7 @@ function generate(): int {
         'saturation',
         'lightness',
         'alpha',
+        'source',
     ]);
 
     $ch = \curl_init();
@@ -71,6 +72,7 @@ function generate(): int {
                             $result_data['hsl']['s'] / 100,
                             $result_data['hsl']['l'] / 100,
                             $a,
+                            'RGB',
                         ]);
                     }
                     unset($a);
@@ -114,6 +116,7 @@ function generate(): int {
                                 $result_data['hsl']['s'] / 100,
                                 $result_data['hsl']['l'] / 100,
                                 $a,
+                                'CMYK',
                             ]);
                         }
                         unset($a);
@@ -158,6 +161,7 @@ function generate(): int {
                             \round($s, 2),
                             \round($l, 2),
                             $a,
+                            'RGB',
                         ]);
                     }
                     unset($a);

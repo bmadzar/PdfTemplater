@@ -16,9 +16,9 @@ use PdfTemplater\Layout\ColorConverterRuntimeException;
  */
 class TransIcc implements ColorConverter
 {
-    private const CMD_NAME = 'transicc';
-    private const CMD_ARGS_RGB_TO_CMYK = ['-i', 'INPUT', '-o', 'OUTPUT'];
-    private const CMD_ARGS_CMYK_TO_RGB = ['-i', 'INPUT', '-o', 'OUTPUT'];
+    protected const CMD_NAME = 'transicc';
+    protected const CMD_ARGS_RGB_TO_CMYK = ['-i', 'INPUT', '-o', 'OUTPUT', '-n'];
+    protected const CMD_ARGS_CMYK_TO_RGB = ['-i', 'INPUT', '-o', 'OUTPUT', '-n'];
 
     /**
      * @var string|null
@@ -38,12 +38,17 @@ class TransIcc implements ColorConverter
     /**
      * @var array[]
      */
-    private array $cache_rgb_to_cmyk = [];
+    private array $cacheRgbToCmyk = [];
 
     /**
      * @var array[]
      */
-    private array $cache_cmyk_to_rgb = [];
+    private array $cacheCmykToRgb = [];
+
+    /**
+     * @var bool|null
+     */
+    private ?bool $cacheAvailable = null;
 
     /**
      * TransIcc constructor.
@@ -65,18 +70,20 @@ class TransIcc implements ColorConverter
     {
         if (!$this->rgbProfile || !$this->cmykProfile) {
             return false;
-        } else {
-            $return_var = null;
-            $output     = null;
+        } elseif ($this->cacheAvailable === null) {
+            $exitCode = null;
+            $output   = null;
 
             if (\PHP_OS_FAMILY === 'Windows') {
-                \exec('where /Q ' . self::CMD_NAME, $output, $return_var);
+                \exec('where /Q ' . static::CMD_NAME, $output, $exitCode);
             } else {
-                \exec('which ' . self::CMD_NAME, $output, $return_var);
+                \exec('which ' . static::CMD_NAME, $output, $exitCode);
             }
 
-            return $return_var === 0;
+            $this->cacheAvailable = ($exitCode === 0);
         }
+
+        return $this->cacheAvailable;
     }
 
     /**
@@ -124,8 +131,8 @@ class TransIcc implements ColorConverter
         }
 
         // Clear caches
-        $this->cache_cmyk_to_rgb = [];
-        $this->cache_rgb_to_cmyk = [];
+        $this->cacheCmykToRgb = [];
+        $this->cacheRgbToCmyk = [];
     }
 
     /**
@@ -153,18 +160,20 @@ class TransIcc implements ColorConverter
      */
     public function rgbToCmyk(float $r, float $g, float $b): array
     {
-        if (!$this->isEnabled()) {
+        if ($this->isEnabled() === null) {
+            throw new ColorConverterRuntimeException('Converter is not available');
+        } elseif ($this->isEnabled() === false) {
             throw new ColorConverterException('Converter is disabled');
         }
 
         $key = \sprintf('%F|%F|%F', $r, $g, $b);
 
-        if (isset($this->cache_rgb_to_cmyk[$key])) {
-            return $this->cache_rgb_to_cmyk[$key];
+        if (isset($this->cacheRgbToCmyk[$key])) {
+            return $this->cacheRgbToCmyk[$key];
         }
 
-        $cmd = [self::CMD_NAME];
-        foreach (self::CMD_ARGS_RGB_TO_CMYK as $arg) {
+        $cmd = [static::CMD_NAME];
+        foreach (static::CMD_ARGS_RGB_TO_CMYK as $arg) {
             if ($arg === 'INPUT') {
                 $cmd[] = $this->rgbProfile;
             } elseif ($arg === 'OUTPUT') {
@@ -177,26 +186,41 @@ class TransIcc implements ColorConverter
 
         $pipes = [];
 
-        $ph = \proc_open($cmd, [['pipe', 'r'], ['pipe', 'w']], $pipes, __DIR__, [], ['bypass_shell' => true]);
+        /** @noinspection PhpParamsInspection */
+        $ph = \proc_open($cmd, [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes, __DIR__, [], ['bypass_shell' => true]);
 
         if ($ph && $pipes[0] && $pipes[1]) {
-            if (\fwrite($pipes[0], \sprintf("%F\n%F\n%F\n", $r, $g, $b)) !== false) {
-                if (($output = \fgets($pipes[1])) !== false) {
+            if (\fwrite($pipes[0], \sprintf("%F %F %F", $r * 255, $g * 255, $b * 255)) !== false) {
+                \fclose($pipes[0]);
+                if (($output = \fgets($pipes[1], 35)) !== false) {
+                    \fclose($pipes[1]);
+                    \fclose($pipes[2]);
                     \proc_close($ph);
 
-                    $cmyk = \array_map('floatval', \explode(' ', \trim($output)));
+                    $cmyk = \array_map('\floatval', \explode(' ', \trim($output)));
 
                     if (\count($cmyk) === 4) {
-                        $this->cache_rgb_to_cmyk[$key] = $cmyk;
+                        $cmyk[0] /= 100;
+                        $cmyk[1] /= 100;
+                        $cmyk[2] /= 100;
+                        $cmyk[3] /= 100;
+
+                        $this->cacheRgbToCmyk[$key] = $cmyk;
 
                         return $cmyk;
                     }
                 } else {
+                    \fclose($pipes[0]);
+                    \fclose($pipes[1]);
+                    \fclose($pipes[2]);
                     \proc_close($ph);
 
                     throw new ColorConverterRuntimeException('Error performing color conversion: bad output');
                 }
             } else {
+                \fclose($pipes[0]);
+                \fclose($pipes[1]);
+                \fclose($pipes[2]);
                 \proc_close($ph);
 
                 throw new ColorConverterRuntimeException('Error performing color conversion: bad input');
@@ -219,18 +243,20 @@ class TransIcc implements ColorConverter
      */
     public function cmykToRgb(float $c, float $m, float $y, float $k): array
     {
-        if (!$this->isEnabled()) {
+        if ($this->isEnabled() === null) {
+            throw new ColorConverterRuntimeException('Converter is not available');
+        } elseif ($this->isEnabled() === false) {
             throw new ColorConverterException('Converter is disabled');
         }
 
         $key = \sprintf('%F|%F|%F|%F', $c, $m, $y, $k);
 
-        if (isset($this->cache_cmyk_to_rgb[$key])) {
-            return $this->cache_cmyk_to_rgb[$key];
+        if (isset($this->cacheCmykToRgb[$key])) {
+            return $this->cacheCmykToRgb[$key];
         }
 
-        $cmd = [self::CMD_NAME];
-        foreach (self::CMD_ARGS_CMYK_TO_RGB as $arg) {
+        $cmd = [static::CMD_NAME];
+        foreach (static::CMD_ARGS_CMYK_TO_RGB as $arg) {
             if ($arg === 'INPUT') {
                 $cmd[] = $this->cmykProfile;
             } elseif ($arg === 'OUTPUT') {
@@ -244,26 +270,39 @@ class TransIcc implements ColorConverter
 
         $pipes = [];
 
-        $ph = \proc_open($cmd, [['pipe', 'r'], ['pipe', 'w']], $pipes, __DIR__, [], ['bypass_shell' => true]);
+        /** @noinspection PhpParamsInspection */
+        $ph = \proc_open($cmd, [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes, __DIR__, [], ['bypass_shell' => true]);
 
         if ($ph && $pipes[0] && $pipes[1]) {
-            if (\fwrite($pipes[0], \sprintf("%F\n%F\n%F\n%F\n", $c, $m, $y, $k)) !== false) {
-                if (($output = \fgets($pipes[1])) !== false) {
+            if (\fwrite($pipes[0], \sprintf("%F %F %F %F ", $c * 100, $m * 100, $y * 100, $k * 100)) !== false) {
+                \fclose($pipes[0]);
+                if (($output = \fgets($pipes[1], 35)) !== false) {
+                    \fclose($pipes[1]);
+                    \fclose($pipes[2]);
                     \proc_close($ph);
 
-                    $rgb = \array_map('floatval', \explode(' ', \trim($output)));
+                    $rgb = \array_map('\floatval', \explode(' ', \trim($output)));
 
                     if (\count($rgb) === 3) {
-                        $this->cache_cmyk_to_rgb[$key] = $rgb;
+                        $rgb[0] /= 255;
+                        $rgb[1] /= 255;
+                        $rgb[2] /= 255;
+
+                        $this->cacheCmykToRgb[$key] = $rgb;
 
                         return $rgb;
                     }
                 } else {
+                    \fclose($pipes[1]);
+                    \fclose($pipes[2]);
                     \proc_close($ph);
 
                     throw new ColorConverterRuntimeException('Error performing color conversion: bad output');
                 }
             } else {
+                \fclose($pipes[0]);
+                \fclose($pipes[1]);
+                \fclose($pipes[2]);
                 \proc_close($ph);
 
                 throw new ColorConverterRuntimeException('Error performing color conversion: bad input');

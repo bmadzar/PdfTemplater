@@ -5,20 +5,28 @@ declare(strict_types=1);
 namespace PdfTemplater\Layout\Basic;
 
 use PdfTemplater\Layout\Color;
+use PdfTemplater\Layout\ColorConverter;
 use PdfTemplater\Layout\LayoutArgumentException;
 use PHPUnit\Framework\TestCase;
 
 abstract class ColorTest extends TestCase
 {
-    private const DATA_FILE_PATH =
+    protected const DATA_FILE_PATH =
         __DIR__ . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR . '..' . \DIRECTORY_SEPARATOR .
         'data' . \DIRECTORY_SEPARATOR . 'color_data';
 
-    private const DELTA = 0.03;
+    protected const DELTA = 0.03;
 
-    abstract protected function getInstance(array $inputData): Color;
+    abstract protected function getInstance(array $inputData, ?ColorConverter $converter = null): Color;
 
     abstract protected function getBasicInstance(): Color;
+
+    protected static ?ColorConverter $converter = null;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$converter = new StubConverter();
+    }
 
     public function getGettersForLimitTests(): array
     {
@@ -170,6 +178,7 @@ abstract class ColorTest extends TestCase
                 'saturation',
                 'lightness',
                 'alpha',
+                'source',
             ],
             $header
         )) {
@@ -178,7 +187,7 @@ abstract class ColorTest extends TestCase
         }
 
         while ($line = \fgetcsv($fh)) {
-            yield [\array_combine($header, \array_map('floatval', $line))];
+            yield [['source' => $line[15]] + \array_combine($header, \array_map('\floatval', $line))];
         }
 
         \fclose($fh);
@@ -353,5 +362,4 @@ abstract class ColorTest extends TestCase
         $this->assertEqualsWithDelta($outputData['lightness'], $test->getLightness(), self::DELTA);
         $this->assertEqualsWithDelta($outputData['alpha'], $test->getAlpha(), self::DELTA);
     }
-
 }

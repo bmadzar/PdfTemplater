@@ -369,9 +369,15 @@ class RgbColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $ob = 1 - $this->getBlack();
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
 
-        return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->red) / $ob) * $max) + $min;
+            return ($cmyk[0] * $max) + $min;
+        } else {
+            $ob = 1 - $this->getBlack();
+
+            return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->red) / $ob) * $max) + $min;
+        }
     }
 
     /**
@@ -388,9 +394,15 @@ class RgbColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $ob = 1 - $this->getBlack();
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
 
-        return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->green) / $ob) * $max) + $min;
+            return ($cmyk[1] * $max) + $min;
+        } else {
+            $ob = 1 - $this->getBlack();
+
+            return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->green) / $ob) * $max) + $min;
+        }
     }
 
     /**
@@ -407,9 +419,15 @@ class RgbColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $ob = 1 - $this->getBlack();
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
 
-        return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->blue) / $ob) * $max) + $min;
+            return ($cmyk[2] * $max) + $min;
+        } else {
+            $ob = 1 - $this->getBlack();
+
+            return $ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->blue) / $ob) * $max) + $min;
+        }
     }
 
     /**
@@ -426,7 +444,13 @@ class RgbColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        return (\min(1 - $this->red, 1 - $this->blue, 1 - $this->green) * $max) + $min;
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
+
+            return ($cmyk[3] * $max) + $min;
+        } else {
+            return (\min(1 - $this->red, 1 - $this->blue, 1 - $this->green) * $max) + $min;
+        }
     }
 
     /**
@@ -438,7 +462,18 @@ class RgbColor implements ConvertibleColor
      */
     public function getCmyk(float $min = 0.0, float $max = 1.0): array
     {
-        return [$this->getCyan($min, $max), $this->getMagenta($min, $max), $this->getYellow($min, $max), $this->getBlack($min, $max)];
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
+
+            return [
+                ($cmyk[0] * $max) + $min,
+                ($cmyk[1] * $max) + $min,
+                ($cmyk[2] * $max) + $min,
+                ($cmyk[3] * $max) + $min,
+            ];
+        } else {
+            return [$this->getCyan($min, $max), $this->getMagenta($min, $max), $this->getYellow($min, $max), $this->getBlack($min, $max)];
+        }
     }
 
     private function applyGamma(float $val): float

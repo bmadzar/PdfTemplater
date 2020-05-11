@@ -84,3 +84,5 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Adobe ICC profiles
+/tests/data/color_data/profiles/*.icc

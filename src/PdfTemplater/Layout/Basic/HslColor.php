@@ -334,9 +334,15 @@ class HslColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $ob = 1 - $this->getBlack();
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
 
-        return ($ob < 0.001 ? 0.0 : ((($ob - $this->getRed()) / $ob) * $max)) + $min;
+            return ($cmyk[0] * $max) + $min;
+        } else {
+            $ob = 1 - $this->getBlack();
+
+            return ($ob < 0.001 ? 0.0 : ((($ob - $this->getRed()) / $ob) * $max)) + $min;
+        }
     }
 
     /**
@@ -353,9 +359,15 @@ class HslColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $ob = 1 - $this->getBlack();
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
 
-        return ($ob < 0.001 ? 0.0 : ((($ob - $this->getGreen()) / $ob) * $max)) + $min;
+            return ($cmyk[1] * $max) + $min;
+        } else {
+            $ob = 1 - $this->getBlack();
+
+            return ($ob < 0.001 ? 0.0 : ((($ob - $this->getGreen()) / $ob) * $max)) + $min;
+        }
     }
 
     /**
@@ -372,9 +384,15 @@ class HslColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        $ob = 1 - $this->getBlack();
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
 
-        return ($ob < 0.001 ? 0.0 : ((($ob - $this->getBlue()) / $ob) * $max)) + $min;
+            return ($cmyk[2] * $max) + $min;
+        } else {
+            $ob = 1 - $this->getBlack();
+
+            return ($ob < 0.001 ? 0.0 : ((($ob - $this->getBlue()) / $ob) * $max)) + $min;
+        }
     }
 
     /**
@@ -391,7 +409,13 @@ class HslColor implements ConvertibleColor
             throw new LayoutArgumentException('Min must be less than max.');
         }
 
-        return (\min(1 - $this->getRed(), 1 - $this->getBlue(), 1 - $this->getGreen()) * $max) + $min;
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
+
+            return ($cmyk[3] * $max) + $min;
+        } else {
+            return (\min(1 - $this->getRed(), 1 - $this->getBlue(), 1 - $this->getGreen()) * $max) + $min;
+        }
     }
 
     /**
@@ -403,7 +427,18 @@ class HslColor implements ConvertibleColor
      */
     public function getCmyk(float $min = 0.0, float $max = 1.0): array
     {
-        return [$this->getCyan($min, $max), $this->getMagenta($min, $max), $this->getYellow($min, $max), $this->getBlack($min, $max)];
+        if ($this->converter && $this->converter->isEnabled()) {
+            $cmyk = $this->converter->rgbToCmyk($this->getRed(), $this->getGreen(), $this->getBlue());
+
+            return [
+                ($cmyk[0] * $max) + $min,
+                ($cmyk[1] * $max) + $min,
+                ($cmyk[2] * $max) + $min,
+                ($cmyk[3] * $max) + $min,
+            ];
+        } else {
+            return [$this->getCyan($min, $max), $this->getMagenta($min, $max), $this->getYellow($min, $max), $this->getBlack($min, $max)];
+        }
     }
 
     /**
