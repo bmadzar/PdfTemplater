@@ -237,7 +237,7 @@ class RgbColor implements ConvertibleColor
         $cmin  = \min($this->red, $this->green, $this->blue);
         $delta = $cmax - $cmin;
 
-        if ($delta < 0.001) {
+        if ($delta < \PHP_FLOAT_EPSILON) {
             return 0.0;
         } elseif ($cmax === $this->red) {
             $h = ($this->green - $this->blue) / $delta;
@@ -276,7 +276,7 @@ class RgbColor implements ConvertibleColor
         $cmin  = \min($this->red, $this->green, $this->blue);
         $delta = $cmax - $cmin;
 
-        if ($delta < 0.001) {
+        if ($delta < \PHP_FLOAT_EPSILON) {
             return 0.0;
         } else {
             return (($delta / (1 - \abs($cmax + $cmin - 1))) * $max) + $min;

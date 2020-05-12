@@ -238,7 +238,7 @@ class CmykColor implements ConvertibleColor
         $cmin  = \min($r, $g, $b);
         $delta = $cmax - $cmin;
 
-        if ($delta < 0.001) {
+        if ($delta < \PHP_FLOAT_EPSILON) {
             return 0.0;
         } elseif ($cmax === $r) {
             $h = ($g - $b) / $delta;
@@ -279,7 +279,7 @@ class CmykColor implements ConvertibleColor
         $cmin  = \min($r, $g, $b);
         $delta = $cmax - $cmin;
 
-        if ($delta < 0.001) {
+        if ($delta < \PHP_FLOAT_EPSILON) {
             return 0.0;
         } else {
             return (($delta / (1 - \abs($cmax + $cmin - 1))) * $max) + $min;

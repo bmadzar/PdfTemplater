@@ -341,7 +341,7 @@ class HslColor implements ConvertibleColor
         } else {
             $ob = 1 - $this->getBlack();
 
-            return ($ob < 0.001 ? 0.0 : ((($ob - $this->getRed()) / $ob) * $max)) + $min;
+            return ($ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->getRed()) / $ob) * $max)) + $min;
         }
     }
 
@@ -366,7 +366,7 @@ class HslColor implements ConvertibleColor
         } else {
             $ob = 1 - $this->getBlack();
 
-            return ($ob < 0.001 ? 0.0 : ((($ob - $this->getGreen()) / $ob) * $max)) + $min;
+            return ($ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->getGreen()) / $ob) * $max)) + $min;
         }
     }
 
@@ -391,7 +391,7 @@ class HslColor implements ConvertibleColor
         } else {
             $ob = 1 - $this->getBlack();
 
-            return ($ob < 0.001 ? 0.0 : ((($ob - $this->getBlue()) / $ob) * $max)) + $min;
+            return ($ob < \PHP_FLOAT_EPSILON ? 0.0 : ((($ob - $this->getBlue()) / $ob) * $max)) + $min;
         }
     }
 
