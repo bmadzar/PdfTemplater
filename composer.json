@@ -13,7 +13,8 @@
     "tecnickcom/tcpdf": "^6.2.13",
     "phpunit/phpunit": "^8.5",
     "smalot/pdfparser": "v0.14.0",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-gd": "*"
   },
   "require": {
     "php": "7.4.*",

@@ -86,3 +86,5 @@ $RECYCLE.BIN/
 
 # Adobe ICC profiles
 /tests/data/color_data/profiles/*.icc
+/vendor/
+/.phpunit.result.cache
