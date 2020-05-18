@@ -25,10 +25,12 @@ function generate(): int
     }
 
     \fputcsv($fh, [
+        'idx',
         'red',
         'green',
         'blue',
         'alpha',
+        'source',
     ]);
 
     $gh1 = \imagecreatetruecolor($dim, $dim);
@@ -60,7 +62,14 @@ function generate(): int
                     \imageline($gh1, 0, $idx, $dim - 1, $idx, $c1);
                     \imageline($gh2, $idx, 0, $idx, $dim - 1, $c2);
 
-                    \fputcsv($fh, [$color[0] / 255, $color[1] / 255, $color[2] / 255, $color[3] / 127]);
+                    \fputcsv($fh, [
+                        $idx,
+                        $color[0] / 255,
+                        $color[1] / 255,
+                        $color[2] / 255,
+                        $color[3] / 127,
+                        'RGB',
+                    ]);
 
                     $idx += 1;
                 }
