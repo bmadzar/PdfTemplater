@@ -6,7 +6,6 @@ namespace PdfTemplater\Layout\Basic;
 
 use PdfTemplater\Layout\Element;
 use PdfTemplater\Layout\Layer as LayerInterface;
-use PdfTemplater\Layout\LayoutArgumentException;
 
 /**
  * Class Layer

@@ -298,7 +298,6 @@ class BoxTest extends TestCase
     public function testRelativeNull1(string $dim)
     {
         $box1 = new Box('test');
-        $box2 = new Box('test2');
 
         $this->expectException(ConstraintException::class);
 
@@ -312,7 +311,6 @@ class BoxTest extends TestCase
     public function testRelativeNull2(string $dim)
     {
         $box1 = new Box('test');
-        $box2 = new Box('test2');
 
         $this->expectException(ConstraintException::class);
 

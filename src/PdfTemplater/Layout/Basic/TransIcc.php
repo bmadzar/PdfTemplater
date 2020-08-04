@@ -186,7 +186,6 @@ class TransIcc implements ColorConverter
 
         $pipes = [];
 
-        /** @noinspection PhpParamsInspection */
         $ph = \proc_open($cmd, [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes, __DIR__, [], ['bypass_shell' => true]);
 
         if ($ph && $pipes[0] && $pipes[1]) {
@@ -270,7 +269,6 @@ class TransIcc implements ColorConverter
 
         $pipes = [];
 
-        /** @noinspection PhpParamsInspection */
         $ph = \proc_open($cmd, [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes, __DIR__, [], ['bypass_shell' => true]);
 
         if ($ph && $pipes[0] && $pipes[1]) {

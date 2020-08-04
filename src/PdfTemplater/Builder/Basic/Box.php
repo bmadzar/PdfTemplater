@@ -115,7 +115,7 @@ class Box
     }
 
     /**
-     * @param float       $top
+     * @param float|null  $top
      * @param string|null $topRelative
      */
     public function setTop(?float $top, ?string $topRelative): void
@@ -143,7 +143,7 @@ class Box
     }
 
     /**
-     * @param float       $left
+     * @param float|null  $left
      * @param string|null $leftRelative
      */
     public function setLeft(?float $left, ?string $leftRelative): void
@@ -171,7 +171,7 @@ class Box
     }
 
     /**
-     * @param float $width
+     * @param float|null $width
      */
     public function setWidth(?float $width): void
     {
@@ -198,7 +198,7 @@ class Box
     }
 
     /**
-     * @param float $height
+     * @param float|null $height
      */
     public function setHeight(?float $height): void
     {
@@ -225,7 +225,7 @@ class Box
     }
 
     /**
-     * @param float       $widthPercentage
+     * @param float|null  $widthPercentage
      * @param string|null $widthRelative
      */
     public function setWidthPercentage(?float $widthPercentage, ?string $widthRelative): void
@@ -261,7 +261,7 @@ class Box
     }
 
     /**
-     * @param float       $heightPercentage
+     * @param float|null  $heightPercentage
      * @param string|null $heightRelative
      */
     public function setHeightPercentage(?float $heightPercentage, ?string $heightRelative): void

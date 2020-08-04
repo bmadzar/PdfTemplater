@@ -7,7 +7,6 @@ use PdfTemplater\Layout\Basic\Document;
 use PdfTemplater\Layout\Basic\Font;
 use PdfTemplater\Layout\Basic\Page;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Util\Type;
 
 class DocumentTest extends TestCase
 {

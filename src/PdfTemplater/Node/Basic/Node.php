@@ -25,7 +25,7 @@ class Node implements NodeInterface
     private string $id;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|null
      */
     private ?NodeInterface $parent;
 

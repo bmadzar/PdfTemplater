@@ -74,7 +74,6 @@ class FontBuilder
                 break;
             default:
                 throw new BuildArgumentException('Invalid font style.');
-                break;
         }
 
         try {

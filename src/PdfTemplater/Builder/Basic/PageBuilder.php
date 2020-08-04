@@ -259,7 +259,6 @@ class PageBuilder
      */
     private function doLayout(array $boxes): void
     {
-        $resolved = [];
         $unresolved = $boxes;
 
         while ($unresolved) {
@@ -282,7 +281,6 @@ class PageBuilder
                     }
 
                     unset($unresolved[$box->getId()]);
-                    $resolved[$box->getId()] = $box;
                 }
             }
             unset($box);
