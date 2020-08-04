@@ -12,7 +12,7 @@ if (\PHP_SAPI !== 'cli') {
 function generate(): int {
     $steps       = [0, 1 / 5, 1 / 4, 1 / 3, 4 / 5, 1];
     $alpha_steps = [0, 1 / 2, 1]; // Alpha is not modified during color conversion
-    $api_url     = 'http://10.0.0.5:3003'; // colorvert
+    $api_url     = 'http://localhost:3001'; // colorvert
 
     $fh = \fopen(__DIR__ . \DIRECTORY_SEPARATOR . 'conversion.csv', 'w');
 

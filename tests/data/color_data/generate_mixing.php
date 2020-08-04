@@ -13,6 +13,7 @@ if (\PHP_SAPI !== 'cli') {
 function generate(): int
 {
     $steps = [0, 1 / 5, 1 / 4, 1 / 3, 4 / 5, 1];
+    $api_url     = 'http://localhost:3001'; // colorvert
 
     $dim = \count($steps) ** 4;
 
@@ -29,6 +30,17 @@ function generate(): int
         'red',
         'green',
         'blue',
+        'cyan',
+        'magenta',
+        'yellow',
+        'black',
+        'cyan-naive',
+        'magenta-naive',
+        'yellow-naive',
+        'black-naive',
+        'hue',
+        'saturation',
+        'lightness',
         'alpha',
         'source',
     ]);
@@ -50,36 +62,64 @@ function generate(): int
 
     $idx = 0;
 
+    $ch = \curl_init();
+
+    \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+    \curl_setopt($ch, \CURLOPT_HTTPHEADER, ['Accept: application/json']);
+
     foreach ($steps as $r) {
         foreach ($steps as $g) {
             foreach ($steps as $b) {
-                foreach ($steps as $a) {
-                    $color = [(int)\round($r * 255), (int)\round($g * 255), (int)\round($b * 255), (int)\round($a * 127)];
+                \curl_setopt($ch, \CURLOPT_URL, $api_url . '/rgb/' . \round($r * 255) . '/' . \round($g * 255) . '/' . \round($b * 255) . '/');
+                $result = \curl_exec($ch);
 
-                    $c1 = \imagecolorallocatealpha($gh1, ...$color);
-                    $c2 = \imagecolorallocatealpha($gh2, ...$color);
+                if ($result && ($result_data = \json_decode($result, true)) && \json_last_error() === \JSON_ERROR_NONE) {
+                    $max = \max($r, $g, $b);
 
-                    \imageline($gh1, 0, $idx, $dim - 1, $idx, $c1);
-                    \imageline($gh2, $idx, 0, $idx, $dim - 1, $c2);
+                    foreach ($steps as $a) {
+                        $color = [(int)\round($r * 255), (int)\round($g * 255), (int)\round($b * 255), (int)\round($a * 127)];
 
-                    \fputcsv($fh, [
-                        $idx,
-                        $color[0] / 255,
-                        $color[1] / 255,
-                        $color[2] / 255,
-                        $color[3] / 127,
-                        'RGB',
-                    ]);
+                        $c1 = \imagecolorallocatealpha($gh1, ...$color);
+                        $c2 = \imagecolorallocatealpha($gh2, ...$color);
 
-                    $idx += 1;
+                        \imageline($gh1, 0, $idx, $dim - 1, $idx, $c1);
+                        \imageline($gh2, $idx, 0, $idx, $dim - 1, $c2);
+
+                        \fputcsv(
+                            $fh,
+                            [
+                                $idx,
+                                \round($r * 255) / 255,
+                                \round($g * 255) / 255,
+                                \round($b * 255) / 255,
+                                $result_data['cmyk']['c'] / 100,
+                                $result_data['cmyk']['m'] / 100,
+                                $result_data['cmyk']['y'] / 100,
+                                $result_data['cmyk']['k'] / 100,
+                                $max >= 0.01 ? \round(($max - $r) / $max, 2) : 0.0,
+                                $max >= 0.01 ? \round(($max - $g) / $max, 2) : 0.0,
+                                $max >= 0.01 ? \round(($max - $b) / $max, 2) : 0.0,
+                                $max >= 0.01 ? \round(1 - $max, 2) : 1.0,
+                                $result_data['hsl']['h'] / 360,
+                                $result_data['hsl']['s'] / 100,
+                                $result_data['hsl']['l'] / 100,
+                                \round($a * 127) / 127,
+                                'RGB',
+                            ]
+                        );
+
+                        $idx += 1;
+                    }
+                    unset($a);
                 }
-                unset($a);
             }
             unset($b);
         }
         unset($g);
     }
     unset($r);
+
+    \curl_close($ch);
 
     \fclose($fh);
 
