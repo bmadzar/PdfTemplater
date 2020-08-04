@@ -7,6 +7,7 @@ namespace PdfTemplater\Layout\Basic;
 use PdfTemplater\Layout\Color;
 use PdfTemplater\Layout\ColorConverter;
 use PdfTemplater\Layout\LayoutArgumentException;
+use PdfTemplater\Test\DataFile;
 use PHPUnit\Framework\TestCase;
 
 abstract class ColorTest extends TestCase
@@ -153,13 +154,14 @@ abstract class ColorTest extends TestCase
 
     public function generateColorConversionData(): \Generator
     {
-        $fh = \fopen(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'conversion.csv', 'r');
-
-        if ($fh === false) {
-            $this->markTestSkipped('Cannot read data file: conversion.csv');
+        try {
+            $fh = new DataFile(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'conversion.csv');
+        } catch (\RuntimeException $ex) {
+            $this->markTestSkipped($ex->getMessage());
         }
 
-        $header = \fgetcsv($fh) ?: [];
+        /** @noinspection PhpUndefinedVariableInspection */
+        $header = $fh->getParsedLine() ?: [];
 
         if (\array_diff(
             [
@@ -182,15 +184,12 @@ abstract class ColorTest extends TestCase
             ],
             $header
         )) {
-            \fclose($fh);
             $this->markTestSkipped('Missing fields in conversion.csv');
         }
 
-        while ($line = \fgetcsv($fh)) {
+        while ($line = $fh->getParsedLine()) {
             yield [['source' => $line[15]] + \array_combine($header, \array_map('\floatval', $line))];
         }
-
-        \fclose($fh);
     }
 
     /**
@@ -265,38 +264,18 @@ abstract class ColorTest extends TestCase
 
     public function generateColorMixingData(): \Generator
     {
-        $fh = \fopen(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'mixing.csv', 'r');
-
-        if ($fh === false) {
-            $this->markTestSkipped('Cannot read data file: mixing.csv');
+        try {
+            $fh = new DataFile(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'mixing.csv');
+        } catch (\RuntimeException $ex) {
+            $this->markTestSkipped($ex->getMessage());
         }
 
-        $header = \fgetcsv($fh) ?: [];
+        /** @noinspection PhpUndefinedVariableInspection */
+        $header = $fh->getParsedLine() ?: [];
 
         if (\array_diff(
             [
-                'red1',
-                'green1',
-                'blue1',
-                'cyan1',
-                'magenta1',
-                'yellow1',
-                'black1',
-                'hue1',
-                'saturation1',
-                'lightness1',
-                'alpha1',
-                'red2',
-                'green2',
-                'blue2',
-                'cyan2',
-                'magenta2',
-                'yellow2',
-                'black2',
-                'hue2',
-                'saturation2',
-                'lightness2',
-                'alpha2',
+                'idx',
                 'red',
                 'green',
                 'blue',
@@ -304,22 +283,84 @@ abstract class ColorTest extends TestCase
                 'magenta',
                 'yellow',
                 'black',
+                'cyan-naive',
+                'magenta-naive',
+                'yellow-naive',
+                'black-naive',
                 'hue',
                 'saturation',
                 'lightness',
                 'alpha',
+                'source',
             ],
             $header
         )) {
-            \fclose($fh);
             $this->markTestSkipped('Missing fields in mixing.csv');
         }
 
-        while ($line = \fgetcsv($fh)) {
-            yield [\array_combine($header, $line)];
+        $sourceData = [];
+
+        while ($line = $fh->getParsedLine()) {
+            $line                          = \array_combine($header, $line);
+            $sourceData[(int)$line['idx']] = $line;
+        }
+        unset($line, $fh);
+
+        try {
+            $fh = new DataFile(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'mixing-combined.csv');
+        } catch (\RuntimeException $ex) {
+            $this->markTestSkipped($ex->getMessage());
         }
 
-        \fclose($fh);
+        /** @noinspection PhpUndefinedVariableInspection */
+        $header = $fh->getParsedLine() ?: [];
+
+        if (\array_diff(
+            [
+                'row',
+                'col',
+                'red',
+                'green',
+                'blue',
+                'cyan',
+                'magenta',
+                'yellow',
+                'black',
+                'cyan-naive',
+                'magenta-naive',
+                'yellow-naive',
+                'black-naive',
+                'hue',
+                'saturation',
+                'lightness',
+                'alpha',
+                'source',
+            ],
+            $header
+        )) {
+            $this->markTestSkipped('Missing fields in mixing-combined.csv');
+        }
+
+        while ($line = $fh->getParsedLine()) {
+            $line = \array_combine($header, $line);
+
+            if (!isset($sourceData[(int)$line['row']], $sourceData[(int)$line['col']])) {
+                $this->markTestSkipped('Data mismatch in mixing files.');
+            }
+
+            $inputData1 = $sourceData[(int)$line['col']];
+            $inputData2 = $sourceData[(int)$line['row']];
+            $outputData = $line;
+
+            unset($inputData1['idx'], $inputData2['idx'], $outputData['row'], $outputData['col']);
+
+            yield [
+                \array_map('floatval', $inputData1),
+                \array_map('floatval', $inputData2),
+                \array_map('floatval', $outputData),
+            ];
+        }
+        unset($line, $fh);
     }
 
     /**

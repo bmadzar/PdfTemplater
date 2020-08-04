@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PdfTemplater\Builder\Basic;
 
+use PdfTemplater\Test\DataFile;
 use PHPUnit\Framework\TestCase;
 
 class BoxTest extends TestCase
@@ -333,7 +334,7 @@ class BoxTest extends TestCase
         if ($dir === false) {
             $this->markTestIncomplete('Could not read data dir.');
         } else {
-            $dir = \array_filter($dir, fn(string $file) => \substr($file, -4) === '.csv');
+            $dir = \array_filter($dir, fn(string $file) => \substr($file, -4) === '.csv' || \substr($file, -7) === '.csv.gz');
 
             foreach ($dir as $file) {
                 yield $file => [self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . $file];
@@ -344,10 +345,6 @@ class BoxTest extends TestCase
 
     private function doResolutionTest(string $dataFile): void
     {
-        if (!\is_readable($dataFile) || !\is_file($dataFile)) {
-            $this->markTestSkipped();
-        }
-
         $boxData = $this->loadBoxData($dataFile);
         $resolvedBoxData = [];
 
@@ -400,24 +397,23 @@ class BoxTest extends TestCase
      */
     private function loadBoxData(string $dataFile): array
     {
-        $fh = \fopen($dataFile, 'r');
-
-        if ($fh === false) {
-            $this->markTestSkipped(\sprintf('Cannot read data file: [%s]', $dataFile));
+        try {
+            $fh = new DataFile($dataFile);
+        } catch (\RuntimeException $ex) {
+            $this->markTestSkipped($ex->getMessage());
         }
 
-        $header = \fgetcsv($fh) ?: [];
+        /** @noinspection PhpUndefinedVariableInspection */
+        $header = $fh->getParsedLine() ?: [];
 
         if (\array_diff(['finalLeft', 'finalRight', 'finalTop', 'finalBottom', 'finalHeight', 'finalWidth'], $header)) {
-            \fclose($fh);
             $this->markTestSkipped(\sprintf('Skipping data file [%s]; missing final fields.', $dataFile));
         } elseif (!\in_array('id', $header, true)) {
-            \fclose($fh);
             $this->markTestSkipped(\sprintf('Skipping data file [%s]; missing ID field.', $dataFile));
         }
 
         $boxData = [];
-        while ($line = \fgetcsv($fh)) {
+        while ($line = $fh->getParsedLine()) {
             $line = \array_combine($header, $line);
 
             $box = new Box($line['id']);
@@ -459,8 +455,6 @@ class BoxTest extends TestCase
             $boxData[$box->getId()] = ['box' => $box, 'finals' => $finals];
         }
         unset($line, $box, $finals, $header);
-
-        \fclose($fh);
 
         return $boxData;
     }

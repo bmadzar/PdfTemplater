@@ -6,6 +6,7 @@ namespace PdfTemplater\Layout\Basic;
 
 
 use PdfTemplater\Layout\ColorConverter;
+use PdfTemplater\Test\DataFile;
 use PHPUnit\Framework\SkippedTestError;
 
 class StubConverter implements ColorConverter
@@ -19,13 +20,13 @@ class StubConverter implements ColorConverter
 
     public function __construct()
     {
-        $fh = \fopen(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'conversion.csv', 'r');
-
-        if ($fh === false) {
-            throw new SkippedTestError('Cannot read data file: conversion.csv');
+        try {
+            $fh = new DataFile(self::DATA_FILE_PATH . \DIRECTORY_SEPARATOR . 'conversion.csv');
+        } catch (\RuntimeException $ex) {
+            throw new SkippedTestError($ex->getMessage());
         }
 
-        $header = \fgetcsv($fh) ?: [];
+        $header = $fh->getParsedLine() ?: [];
 
         if (\array_diff(
             [
@@ -48,11 +49,10 @@ class StubConverter implements ColorConverter
             ],
             $header
         )) {
-            \fclose($fh);
             throw new SkippedTestError('Missing fields in conversion.csv');
         }
 
-        while ($line = \fgetcsv($fh)) {
+        while ($line = $fh->getParsedLine()) {
             $line = \array_combine($header, \array_map('\floatval', $line));
 
             $this->rgbCmyk[\sprintf('%F.2|%F.2|%F.2', $line['red'], $line['green'], $line['blue'])] = [
@@ -69,8 +69,6 @@ class StubConverter implements ColorConverter
             ];
         }
         unset($line);
-
-        \fclose($fh);
     }
 
     /**

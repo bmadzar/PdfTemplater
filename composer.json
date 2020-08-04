@@ -14,7 +14,8 @@
     "phpunit/phpunit": "^8.5",
     "smalot/pdfparser": "v0.14.0",
     "ext-curl": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-zlib": "*"
   },
   "require": {
     "php": "7.4.*",
@@ -24,7 +25,17 @@
   },
   "autoload": {
     "psr-4": {
-      "PdfTemplater\\": ["src/PdfTemplater", "tests/src/PdfTemplater"]
+      "PdfTemplater\\": [
+        "src/PdfTemplater"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PdfTemplater\\": [
+        "tests/src/PdfTemplater",
+        "tests/support/PdfTemplater"
+      ]
     }
   }
 }
